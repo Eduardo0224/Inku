@@ -1,0 +1,39 @@
+# Commit Message Template
+# Format: [type](scope): emoji title_in_english
+#
+# Example: [feat](InkuUI): ✨ Add new button component
+#
+# Types:
+#   feat:     New feature
+#   fix:      Bug fix
+#   docs:     Documentation changes
+#   style:    Code style changes (formatting, no logic change)
+#   refactor: Code refactoring
+#   test:     Adding or updating tests
+#   chore:    Build process or auxiliary tool changes
+#   perf:     Performance improvements
+#
+# Scopes:
+#   App module names (e.g., MovieList, Auth, Home)
+#   InkuUI (for design system)
+#   Core (for shared services/models)
+#   Config (for project configuration)
+#
+# Emojis (examples):
+#   ✨ New feature
+#   🐛 Bug fix
+#   📚 Documentation
+#   🎨 UI/Style
+#   ♻️  Refactor
+#   ✅ Tests
+#   🔧 Config/Chore
+#   ⚡️ Performance
+#   🚀 Release
+#   🎉 Initial commit
+#
+# [type](scope): emoji title_in_english
+#
+# Detailed description of changes:
+# - What changed
+# - Why it changed
+# - Any breaking changes or important notes
