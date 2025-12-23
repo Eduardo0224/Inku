@@ -65,3 +65,29 @@ struct Manga: Identifiable, Codable, Hashable, Sendable {
         status?.capitalized ?? "Unknown"
     }
 }
+
+// MARK: - Test Data
+
+extension Manga {
+
+    static let testData: Self = .init(
+        id: 0,
+        title: "",
+        titleEnglish: nil,
+        titleJapanese: nil,
+        sypnosis: nil,
+        background: nil,
+        mainPicture: nil,
+        url: nil,
+        volumes: nil,
+        chapters: nil,
+        status: nil,
+        score: nil,
+        startDate: nil,
+        endDate: nil,
+        authors: [],
+        genres: [],
+        demographics: [],
+        themes: []
+    )
+}

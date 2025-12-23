@@ -20,3 +20,13 @@ struct Demographic: Identifiable, Codable, Hashable, Sendable {
     let id: String
     let demographic: String
 }
+
+// MARK: - Test Data
+
+extension Demographic {
+
+    static let testData: Self = .init(
+        id: "",
+        demographic: ""
+    )
+}

@@ -20,3 +20,13 @@ struct MangaListResponse: Codable, Sendable {
     let data: [Manga]
     let metadata: PaginationMetadata
 }
+
+// MARK: - Test Data
+
+extension MangaListResponse {
+
+    static let testData: Self = .init(
+        data: [],
+        metadata: .testData
+    )
+}

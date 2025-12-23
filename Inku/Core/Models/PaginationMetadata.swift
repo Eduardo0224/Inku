@@ -32,3 +32,14 @@ struct PaginationMetadata: Codable, Hashable, Sendable {
         page < totalPages
     }
 }
+
+// MARK: - Test Data
+
+extension PaginationMetadata {
+
+    static let testData: Self = .init(
+        total: 0,
+        page: 0,
+        per: 0
+    )
+}

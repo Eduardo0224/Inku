@@ -28,3 +28,15 @@ struct Author: Identifiable, Codable, Hashable, Sendable {
         "\(firstName) \(lastName)"
     }
 }
+
+// MARK: - Test Data
+
+extension Author {
+
+    static let testData: Self = .init(
+        id: "",
+        firstName: "",
+        lastName: "",
+        role: ""
+    )
+}

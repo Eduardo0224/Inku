@@ -20,3 +20,13 @@ struct Theme: Identifiable, Codable, Hashable, Sendable {
     let id: String
     let theme: String
 }
+
+// MARK: - Test Data
+
+extension Theme {
+
+    static let testData: Self = .init(
+        id: "",
+        theme: ""
+    )
+}

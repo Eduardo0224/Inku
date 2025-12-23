@@ -20,3 +20,13 @@ struct Genre: Identifiable, Codable, Hashable, Sendable {
     let id: String
     let genre: String
 }
+
+// MARK: - Test Data
+
+extension Genre {
+
+    static let testData: Self = .init(
+        id: "",
+        genre: ""
+    )
+}
