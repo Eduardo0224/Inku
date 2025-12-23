@@ -1,0 +1,67 @@
+//
+//  Manga.swift
+//  Inku
+//
+//  Created by Eduardo Andrade on 22/12/25.
+//
+//  Swift Developer Program (SDP26) - Otoño 2025
+//  Apple Coding Academy
+//
+//  For educational purposes only.
+//  Copyright © 2025 Eduardo Andrade. All rights reserved.
+//
+
+import Foundation
+
+struct Manga: Identifiable, Codable, Hashable, Sendable {
+
+    // MARK: - Properties
+
+    let id: Int
+    let title: String
+    let titleEnglish: String?
+    let titleJapanese: String?
+    let sypnosis: String?
+    let background: String?
+    let mainPicture: String?
+    let url: String?
+    let volumes: Int?
+    let chapters: Int?
+    let status: String?
+    let score: Double?
+    let startDate: Date?
+    let endDate: Date?
+    let authors: [Author]
+    let genres: [Genre]
+    let demographics: [Demographic]
+    let themes: [Theme]
+
+    // MARK: - Computed Properties
+
+    var displayTitle: String {
+        title
+    }
+
+    var coverImageURL: URL? {
+        guard let mainPicture = mainPicture else { return nil }
+        // Remove quotes if present in the JSON
+        let cleanURL = mainPicture.replacingOccurrences(of: "\"", with: "")
+        return URL(string: cleanURL)
+    }
+
+    var mangaURL: URL? {
+        guard let url = url else { return nil }
+        // Remove quotes if present in the JSON
+        let cleanURL = url.replacingOccurrences(of: "\"", with: "")
+        return URL(string: cleanURL)
+    }
+
+    var formattedScore: String {
+        guard let score = score else { return "N/A" }
+        return score.formatted(.number.precision(.fractionLength(2)))
+    }
+
+    var statusText: String {
+        status?.capitalized ?? "Unknown"
+    }
+}
