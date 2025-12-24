@@ -154,24 +154,24 @@ final class MangaListViewModel: MangaListViewModelProtocol {
             print("[MangaListViewModel] NetworkError: \(networkError)")
 
             // Generic message to user (security)
-            errorMessage = "Something went wrong"
+            errorMessage = L10n.Error.generic
         } else if let urlError = error as? URLError {
             print("[MangaListViewModel] URLError: \(urlError.code)")
 
             // Specific messages only for connectivity issues
             switch urlError.code {
             case .notConnectedToInternet:
-                errorMessage = "No internet connection"
+                errorMessage = L10n.Error.network
             case .timedOut:
-                errorMessage = "Request timed out"
+                errorMessage = L10n.Error.timeout
             case .cancelled:
                 return
             default:
-                errorMessage = "Something went wrong"
+                errorMessage = L10n.Error.generic
             }
         } else {
             print("[MangaListViewModel] Unknown error: \(error)")
-            errorMessage = "Something went wrong"
+            errorMessage = L10n.Error.generic
         }
     }
 }

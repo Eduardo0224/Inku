@@ -1,0 +1,132 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "EMPTY_SUBTITLE" : {
+      "comment" : "Subtitle to display when the manga list is empty.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try adjusting your filters"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intenta ajustar los filtros"
+          }
+        }
+      }
+    },
+    "EMPTY_TITLE" : {
+      "comment" : "Title of the empty state view in the manga list screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No manga found"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró manga"
+          }
+        }
+      }
+    },
+    "PLACEHOLDER_SEARCH" : {
+      "comment" : "Placeholder text in the search bar of the Manga List screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search manga..."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar manga..."
+          }
+        }
+      }
+    },
+    "SCREEN_TITLE" : {
+      "comment" : "Title of the manga list screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manga"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manga"
+          }
+        }
+      }
+    },
+    "SECTION_FEATURED" : {
+      "comment" : "Title of the section that shows the most recently added mangas.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Featured"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Destacados"
+          }
+        }
+      }
+    },
+    "SECTION_POPULAR" : {
+      "comment" : "Title of the section that shows the most popular mangas.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Popular"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Populares"
+          }
+        }
+      }
+    },
+    "SECTION_RECENT" : {
+      "comment" : "Title of the section that shows the user's recently viewed mangas.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recently Added"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadidos recientemente"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
