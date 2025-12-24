@@ -52,13 +52,13 @@ protocol MangaListInteractorProtocol: Sendable {
 
     /// Fetches all available genres
     /// - Returns: Array of Genre objects
-    func fetchGenres() async throws -> [Genre]
+    func fetchGenres() async throws -> [String]
 
     /// Fetches all available demographics
     /// - Returns: Array of Demographic objects
-    func fetchDemographics() async throws -> [Demographic]
+    func fetchDemographics() async throws -> [String]
 
     /// Fetches all available themes
     /// - Returns: Array of Theme objects
-    func fetchThemes() async throws -> [Theme]
+    func fetchThemes() async throws -> [String]
 }

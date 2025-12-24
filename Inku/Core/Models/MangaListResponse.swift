@@ -17,7 +17,7 @@ struct MangaListResponse: Codable, Sendable {
 
     // MARK: - Properties
 
-    let data: [Manga]
+    let items: [Manga]
     let metadata: PaginationMetadata
 }
 
@@ -26,7 +26,7 @@ struct MangaListResponse: Codable, Sendable {
 extension MangaListResponse {
 
     static let testData: Self = .init(
-        data: [],
+        items: [.testData],
         metadata: .testData
     )
 }

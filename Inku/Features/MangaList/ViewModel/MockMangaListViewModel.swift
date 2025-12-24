@@ -30,20 +30,18 @@ final class MockMangaListViewModel: MangaListViewModelProtocol {
     var demographics: [Demographic] = []
     var themes: [Theme] = []
 
-    var selectedGenre: String?
-    var selectedDemographic: String?
-    var selectedTheme: String?
+    var selectedFilter: MangaFilter = .none
 
     // MARK: - Computed Properties
 
     var isFilterActive: Bool {
-        selectedGenre != nil || selectedDemographic != nil || selectedTheme != nil
+        selectedFilter != .none
     }
 
     // MARK: - Functions
 
     func loadMangas() async {
-        // Mock implementation - no operation
+        mangas = [.testData]
     }
 
     func loadMoreMangas() async {
@@ -51,18 +49,99 @@ final class MockMangaListViewModel: MangaListViewModelProtocol {
     }
 
     func loadFilterOptions() async {
-        // Mock implementation - no operation
+        genres = [
+            "Action",
+            "Adventure",
+            "Award Winning",
+            "Drama",
+            "Fantasy",
+            "Horror",
+            "Supernatural",
+            "Mystery",
+            "Slice of Life",
+            "Comedy",
+            "Sci-Fi",
+            "Suspense",
+            "Sports",
+            "Ecchi",
+            "Romance",
+            "Girls Love",
+            "Boys Love",
+            "Gourmet",
+            "Erotica",
+            "Hentai",
+            "Avant Garde"
+        ].map { .init(id: UUID().uuidString, genre: $0) }
+
+        demographics = [
+            "Seinen",
+            "Shounen",
+            "Shoujo",
+            "Josei",
+            "Kids"
+        ].map { .init(id: UUID().uuidString, demographic: $0) }
+
+        themes = [
+            "Gore",
+            "Military",
+            "Mythology",
+            "Psychological",
+            "Historical",
+            "Samurai",
+            "Romantic Subtext",
+            "School",
+            "Adult Cast",
+            "Parody",
+            "Super Power",
+            "Team Sports",
+            "Delinquents",
+            "Workplace",
+            "Survival",
+            "Childcare",
+            "Iyashikei",
+            "Reincarnation",
+            "Showbiz",
+            "Anthropomorphic",
+            "Love Polygon",
+            "Music",
+            "Mecha",
+            "Combat Sports",
+            "Isekai",
+            "Gag Humor",
+            "Crossdressing",
+            "Reverse Harem",
+            "Martial Arts",
+            "Visual Arts",
+            "Harem",
+            "Otaku Culture",
+            "Time Travel",
+            "Video Game",
+            "Strategy Game",
+            "Vampire",
+            "Mahou Shoujo",
+            "High Stakes Game",
+            "CGDCT",
+            "Organized Crime",
+            "Detective",
+            "Performing Arts",
+            "Medical",
+            "Space",
+            "Memoir",
+            "Villainess",
+            "Racing",
+            "Pets",
+            "Magical Sex Shift",
+            "Educational",
+            "Idols (Female)",
+            "Idols (Male)"
+        ].map { .init(id: UUID().uuidString, theme: $0) }
     }
 
-    func applyFilter(genre: String? = nil, demographic: String? = nil, theme: String? = nil) async {
-        selectedGenre = genre
-        selectedDemographic = demographic
-        selectedTheme = theme
+    func applyFilter(_ filter: MangaFilter) async {
+        selectedFilter = filter
     }
 
     func clearFilters() async {
-        selectedGenre = nil
-        selectedDemographic = nil
-        selectedTheme = nil
+        await applyFilter(.none)
     }
 }

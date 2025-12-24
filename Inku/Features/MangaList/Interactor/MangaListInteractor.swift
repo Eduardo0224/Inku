@@ -50,15 +50,15 @@ final class MangaListInteractor: MangaListInteractorProtocol {
         return try await networkService.get(endpoint: API.Endpoints.listMangaByTheme(theme), queryItems: queryItems)
     }
 
-    func fetchGenres() async throws -> [Genre] {
+    func fetchGenres() async throws -> [String] {
         try await networkService.get(endpoint: API.Endpoints.listGenres)
     }
 
-    func fetchDemographics() async throws -> [Demographic] {
+    func fetchDemographics() async throws -> [String] {
         try await networkService.get(endpoint: API.Endpoints.listDemographics)
     }
 
-    func fetchThemes() async throws -> [Theme] {
+    func fetchThemes() async throws -> [String] {
         try await networkService.get(endpoint: API.Endpoints.listThemes)
     }
 

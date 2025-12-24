@@ -41,14 +41,12 @@ final class MangaListViewModel: MangaListViewModelProtocol {
     var demographics: [Demographic] = []
     var themes: [Theme] = []
 
-    var selectedGenre: String?
-    var selectedDemographic: String?
-    var selectedTheme: String?
+    var selectedFilter: MangaFilter = .none
 
     // MARK: - Computed Properties
 
     var isFilterActive: Bool {
-        selectedGenre != nil || selectedDemographic != nil || selectedTheme != nil
+        selectedFilter != .none
     }
 
     // MARK: - Initializers
@@ -70,7 +68,7 @@ final class MangaListViewModel: MangaListViewModelProtocol {
 
         do {
             let response = try await fetchCurrentFilter(page: currentPage, per: itemsPerPage)
-            mangas = response.data
+            mangas = response.items
             hasMorePages = response.metadata.hasMorePages
         } catch {
             handleError(error)
@@ -87,7 +85,7 @@ final class MangaListViewModel: MangaListViewModelProtocol {
 
         do {
             let response = try await fetchCurrentFilter(page: nextPage, per: itemsPerPage)
-            mangas.append(contentsOf: response.data)
+            mangas.append(contentsOf: response.items)
             currentPage = nextPage
             hasMorePages = response.metadata.hasMorePages
         } catch {
@@ -107,43 +105,35 @@ final class MangaListViewModel: MangaListViewModelProtocol {
                 themesResult
             )
 
-            genres = fetchedGenres
-            demographics = fetchedDemographics
-            themes = fetchedThemes
+            genres = fetchedGenres.map { .init(id: UUID().uuidString, genre: $0) }
+            demographics = fetchedDemographics.map { .init(id: UUID().uuidString, demographic: $0) }
+            themes = fetchedThemes.map { .init(id: UUID().uuidString, theme: $0) }
         } catch {
             handleError(error)
         }
     }
 
-    func applyFilter(genre: String? = nil, demographic: String? = nil, theme: String? = nil) async {
-        selectedGenre = genre
-        selectedDemographic = demographic
-        selectedTheme = theme
+    func applyFilter(_ filter: MangaFilter) async {
+        selectedFilter = filter
         await loadMangas()
     }
 
     func clearFilters() async {
-        selectedGenre = nil
-        selectedDemographic = nil
-        selectedTheme = nil
-        await loadMangas()
+        await applyFilter(.none)
     }
 
     // MARK: - Private Functions
 
     private func fetchCurrentFilter(page: Int, per: Int) async throws -> MangaListResponse {
-        if let genre = selectedGenre {
-            return try await interactor.fetchMangasByGenre(genre, page: page, per: per)
-        } else if let demographic = selectedDemographic {
-            return try await interactor.fetchMangasByDemographic(
-                demographic,
-                page: page,
-                per: per
-            )
-        } else if let theme = selectedTheme {
-            return try await interactor.fetchMangasByTheme(theme, page: page, per: per)
-        } else {
-            return try await interactor.fetchMangas(page: page, per: per)
+        switch selectedFilter {
+        case .genre(let value):
+            try await interactor.fetchMangasByGenre(value, page: page, per: per)
+        case .demographic(let value):
+            try await interactor.fetchMangasByDemographic(value, page: page,per: per)
+        case .theme(let value):
+            try await interactor.fetchMangasByTheme(value, page: page, per: per)
+        case .none:
+            try await interactor.fetchMangas(page: page, per: per)
         }
     }
 

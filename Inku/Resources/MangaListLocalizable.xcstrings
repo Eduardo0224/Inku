@@ -126,6 +126,78 @@
           }
         }
       }
+    },
+    "FILTER_CLEAR" : {
+      "comment" : "Button to clear all active filters.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear Filters"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limpiar Filtros"
+          }
+        }
+      }
+    },
+    "FILTER_GENRE" : {
+      "comment" : "Title of the genre filter submenu.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Genre"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Género"
+          }
+        }
+      }
+    },
+    "FILTER_DEMOGRAPHIC" : {
+      "comment" : "Title of the demographic filter submenu.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Demographic"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Demográfico"
+          }
+        }
+      }
+    },
+    "FILTER_THEME" : {
+      "comment" : "Title of the theme filter submenu.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Theme"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tema"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

@@ -33,15 +33,17 @@ final class MockMangaListInteractor: MangaListInteractorProtocol {
         .testData
     }
 
-    func fetchGenres() async throws -> [Genre] {
+    func fetchGenres() async throws -> [String] {
+        [
+            Genre.testData.genre
+        ]
+    }
+
+    func fetchDemographics() async throws -> [String] {
         []
     }
 
-    func fetchDemographics() async throws -> [Demographic] {
-        []
-    }
-
-    func fetchThemes() async throws -> [Theme] {
+    func fetchThemes() async throws -> [String] {
         []
     }
 }

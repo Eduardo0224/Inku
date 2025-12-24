@@ -25,8 +25,13 @@ struct Genre: Identifiable, Codable, Hashable, Sendable {
 
 extension Genre {
 
-    static let testData: Self = .init(
+    static let emptyData: Self = .init(
         id: "",
         genre: ""
+    )
+
+    static let testData: Self = .init(
+        id: "72C8E862-334F-4F00-B8EC-E1E4125BB7CD",
+        genre: "Action"
     )
 }

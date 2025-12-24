@@ -70,7 +70,7 @@ struct Manga: Identifiable, Codable, Hashable, Sendable {
 
 extension Manga {
 
-    static let testData: Self = .init(
+    static let emptyData: Self = .init(
         id: 0,
         title: "",
         titleEnglish: nil,
@@ -89,5 +89,32 @@ extension Manga {
         genres: [],
         demographics: [],
         themes: []
+    )
+
+    static let testData: Self = .init(
+        id: 1,
+        title: "One Piece",
+        titleEnglish: "One Piece",
+        titleJapanese: "ワンピース",
+        sypnosis: "Monkey D. Luffy refuses to let anyone or anything stand in the way of his quest to become the king of all pirates. With a course charted for the treacherous waters of the Grand Line and beyond, this is one captain who'll never give up until he's claimed the greatest treasure on Earth: the Legendary One Piece!",
+        background: nil,
+        mainPicture: "https://cdn.myanimelist.net/images/manga/3/216464.jpg",
+        url: "https://myanimelist.net/manga/13/One_Piece",
+        volumes: nil,
+        chapters: nil,
+        status: "Publishing",
+        score: 9.21,
+        startDate: nil,
+        endDate: nil,
+        authors: [],
+        genres: [
+            .testData
+        ],
+        demographics: [
+            Demographic(id: "1", demographic: "Shounen")
+        ],
+        themes: [
+            Theme(id: "1", theme: "Super Power")
+        ]
     )
 }
