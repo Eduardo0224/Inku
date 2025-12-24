@@ -25,8 +25,13 @@ struct Demographic: Identifiable, Codable, Hashable, Sendable {
 
 extension Demographic {
 
-    static let testData: Self = .init(
+    static let emptyData: Self = .init(
         id: "",
         demographic: ""
+    )
+
+    static let testData: Self = .init(
+        id: "CE425E7E-C7CD-42DB-ADE3-1AB9AD16386D",
+        demographic: "Seinen"
     )
 }

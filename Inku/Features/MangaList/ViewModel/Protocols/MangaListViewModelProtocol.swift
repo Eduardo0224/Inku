@@ -14,7 +14,7 @@
 import Foundation
 
 @MainActor
-protocol MangaListViewModelProtocol: AnyObject, Observable {
+protocol MangaListViewModelProtocol: Observable {
 
     // MARK: - Properties
 

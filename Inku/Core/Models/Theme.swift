@@ -25,8 +25,13 @@ struct Theme: Identifiable, Codable, Hashable, Sendable {
 
 extension Theme {
 
-    static let testData: Self = .init(
+    static let emptyData: Self = .init(
         id: "",
         theme: ""
+    )
+
+    static let testData: Self = .init(
+        id: "82728A80-0DBE-4B64-A295-A25555A4A4A5",
+        theme: "Gore"
     )
 }

@@ -107,14 +107,8 @@ extension Manga {
         startDate: nil,
         endDate: nil,
         authors: [],
-        genres: [
-            .testData
-        ],
-        demographics: [
-            Demographic(id: "1", demographic: "Shounen")
-        ],
-        themes: [
-            Theme(id: "1", theme: "Super Power")
-        ]
+        genres: [.testData],
+        demographics: [.testData],
+        themes: [.testData]
     )
 }
