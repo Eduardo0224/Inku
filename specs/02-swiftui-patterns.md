@@ -133,24 +133,278 @@ struct MovieDetailView: View {
 
 ```swift
 struct MovieContentView: View {
-    
+
     // MARK: - Properties
-    
+
     let movie: Movie
     @Bindable var viewModel: MovieDetailViewModel
-    
+
     // MARK: - Body
-    
+
     var body: some View {
         VStack {
             Text(movie.title)
-            
+
             // Can create bindings with $
             Toggle("Favorite", isOn: $viewModel.isFavorite)
         }
     }
 }
 ```
+
+## ViewModel Type: Protocol vs Concrete Class
+
+**Rule**: Use concrete class types for ViewModels unless there's a specific need for abstraction.
+
+### When to Use Concrete Class (Recommended)
+
+For ViewModels that are:
+- ✅ Specific to a single View
+- ✅ Not shared across multiple views
+- ✅ Simple dependency injection via Interactor
+
+```swift
+struct MangaListView: View {
+    // ✅ Use concrete type
+    @State private var viewModel: MangaListViewModel
+
+    init(interactor: MangaListInteractorProtocol = MangaListInteractor()) {
+        self.viewModel = MangaListViewModel(interactor: interactor)
+    }
+}
+```
+
+**Why concrete class?**
+- Clearer code (no protocol needed)
+- View owns and creates the ViewModel
+- Testing via Interactor injection (not ViewModel mocking)
+- Simpler dependency graph
+
+### When to Use Protocol
+
+Only use protocol when:
+- ⚠️ ViewModel is shared across multiple views
+- ⚠️ Need to inject entire ViewModel (not recommended)
+- ⚠️ Complex testing scenarios requiring ViewModel mocks
+
+```swift
+// ⚠️ Only if truly needed
+protocol MangaListViewModelProtocol: Observable {
+    var mangas: [Manga] { get }
+    func loadMangas() async
+}
+
+struct MangaListView: View {
+    @State private var viewModel: MangaListViewModelProtocol
+
+    init(viewModel: MangaListViewModelProtocol) {
+        self._viewModel = .init(initialValue: viewModel)
+    }
+}
+```
+
+**Important**: When using protocols, DO NOT include `AnyObject` constraint:
+
+```swift
+// ❌ WRONG
+protocol MangaListViewModelProtocol: AnyObject, Observable { }
+
+// ✅ CORRECT
+protocol MangaListViewModelProtocol: Observable { }
+```
+
+The `Observable` protocol already requires reference semantics, so `AnyObject` is redundant and causes conflicts with `@Observable` macro.
+
+## Error Handling Pattern
+
+ViewModels should handle errors with security and user experience in mind:
+
+1. **Log detailed errors** for debugging
+2. **Show generic messages** to users (security)
+3. **Provide specific messages** only for user-actionable errors (connectivity)
+
+```swift
+@Observable
+@MainActor
+final class MangaListViewModel {
+
+    var errorMessage: String?
+
+    func loadMangas() async {
+        do {
+            let response = try await interactor.fetchMangas(page: 1, per: 20)
+            mangas = response.items
+        } catch {
+            handleError(error)
+        }
+    }
+
+    // MARK: - Private Functions
+
+    private func handleError(_ error: Error) {
+        // Log detailed error for debugging (use OSLog in production)
+        print("[MangaListViewModel] Error: \(error)")
+
+        // Generic message to user (security)
+        if let networkError = error as? NetworkError {
+            // Don't expose internal error details
+            errorMessage = L10n.Error.generic
+        } else if let urlError = error as? URLError {
+            // Specific messages only for connectivity issues
+            switch urlError.code {
+            case .notConnectedToInternet:
+                errorMessage = L10n.Error.network
+            case .timedOut:
+                errorMessage = L10n.Error.timeout
+            case .cancelled:
+                // Don't show error for cancelled requests
+                return
+            default:
+                errorMessage = L10n.Error.generic
+            }
+        } else {
+            errorMessage = L10n.Error.generic
+        }
+    }
+}
+```
+
+### Displaying Errors in Views
+
+```swift
+struct MangaListView: View {
+    @State private var viewModel: MangaListViewModel
+
+    var body: some View {
+        contentView
+            .alert(
+                L10n.Error.title,
+                isPresented: Binding(
+                    get: { viewModel.errorMessage != nil },
+                    set: { if !$0 { viewModel.errorMessage = nil } }
+                )
+            ) {
+                Button(L10n.Common.ok, role: .cancel) {
+                    viewModel.errorMessage = nil
+                }
+                Button(L10n.Common.retry) {
+                    Task { await viewModel.loadMangas() }
+                }
+            } message: {
+                if let errorMessage = viewModel.errorMessage {
+                    Text(errorMessage)
+                }
+            }
+    }
+}
+```
+
+## Pagination Pattern
+
+For infinite scrolling and paginated content:
+
+```swift
+@Observable
+@MainActor
+final class MangaListViewModel {
+
+    // MARK: - Private Properties
+
+    @ObservationIgnored
+    private let interactor: MangaListInteractorProtocol
+
+    @ObservationIgnored
+    private var currentPage = 1
+
+    @ObservationIgnored
+    private let itemsPerPage = 20
+
+    // MARK: - Properties
+
+    var mangas: [Manga] = []
+    var isLoading = false
+    var isLoadingMore = false  // Separate from initial loading
+    var hasMorePages = true
+
+    // MARK: - Functions
+
+    func loadMangas() async {
+        guard !isLoading else { return }
+
+        isLoading = true
+        currentPage = 1
+        mangas = []
+        defer { isLoading = false }
+
+        do {
+            let response = try await interactor.fetchMangas(page: currentPage, per: itemsPerPage)
+            mangas = response.items
+            hasMorePages = response.metadata.hasMorePages
+        } catch {
+            handleError(error)
+        }
+    }
+
+    func loadMoreMangas() async {
+        // Guard against multiple simultaneous loads
+        guard !isLoadingMore, !isLoading, hasMorePages else { return }
+
+        isLoadingMore = true
+        defer { isLoadingMore = false }
+
+        let nextPage = currentPage + 1
+
+        do {
+            let response = try await interactor.fetchMangas(page: nextPage, per: itemsPerPage)
+            mangas.append(contentsOf: response.items)
+            currentPage = nextPage
+            hasMorePages = response.metadata.hasMorePages
+        } catch {
+            handleError(error)
+        }
+    }
+}
+```
+
+### Pagination in Views
+
+```swift
+struct MangaListView: View {
+    @State private var viewModel: MangaListViewModel
+
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 16) {
+                ForEach(viewModel.mangas) { manga in
+                    MangaRowView(manga: manga)
+                        .onAppear {
+                            // Trigger load more when last item appears
+                            if manga == viewModel.mangas.last {
+                                Task {
+                                    await viewModel.loadMoreMangas()
+                                }
+                            }
+                        }
+                }
+
+                if viewModel.isLoadingMore {
+                    ProgressView()
+                        .padding()
+                }
+            }
+            .padding()
+        }
+        .task { await viewModel.loadMangas() }
+    }
+}
+```
+
+**Key Points**:
+- Use `@ObservationIgnored` for pagination state (currentPage)
+- Separate `isLoading` (initial) from `isLoadingMore` (pagination)
+- Guard against multiple simultaneous loads
+- Check last item with `manga == viewModel.mangas.last`
+- Show loading indicator only during pagination
 
 ## View Componentization
 
