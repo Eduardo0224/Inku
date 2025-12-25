@@ -117,46 +117,50 @@ final class SpyMovieInteractor: MovieInteractorProtocol, @unchecked Sendable {
 
 ## ViewModel Tests with Swift Testing
 
+### Pattern 1: Creating SUT in Each Test (Basic)
+
+Use when tests need different configurations:
+
 ```swift
 import Testing
 @testable import MyApp
 
 @MainActor
 struct MovieListViewModelTests {
-    
+
     // MARK: - Properties
-    
+
     let spyInteractor = SpyMovieInteractor()
-    
+
     // MARK: - Load Movies Tests
-    
+
     @Test("Load movies successfully updates movies array")
     func loadMoviesSuccess() async {
         // Given
         let expectedMovies = Movie.samples
         spyInteractor.moviesToReturn = expectedMovies
         let viewModel = MovieListViewModel(interactor: spyInteractor)
-        
+
         // When
         await viewModel.loadMovies()
-        
+
         // Then
         #expect(viewModel.movies == expectedMovies)
         #expect(viewModel.errorMessage == nil)
         #expect(viewModel.isLoading == false)
         #expect(spyInteractor.fetchMoviesWasCalled == true)
     }
-    
+
     @Test("Load movies failure sets error message")
     func loadMoviesFailure() async {
         // Given
         spyInteractor.shouldThrowError = true
         spyInteractor.errorToThrow = NetworkError.serverError(500)
         let viewModel = MovieListViewModel(interactor: spyInteractor)
-        
+
         // When
         await viewModel.loadMovies()
-        
+
         // Then
         #expect(viewModel.movies.isEmpty)
         #expect(viewModel.errorMessage != nil)
@@ -165,6 +169,82 @@ struct MovieListViewModelTests {
     }
 }
 ```
+
+### Pattern 2: Creating SUT in init() (Recommended)
+
+**Recommended** when most tests use the same SUT configuration:
+
+```swift
+import Testing
+@testable import MyApp
+
+@MainActor
+struct MovieListViewModelTests {
+
+    // MARK: - Subject Under Test
+
+    let sut: MovieListViewModel
+
+    // MARK: - Spies
+
+    let spyInteractor: SpyMovieInteractor
+
+    // MARK: - Initializers
+
+    init() {
+        spyInteractor = SpyMovieInteractor()
+        sut = MovieListViewModel(interactor: spyInteractor)
+    }
+
+    // MARK: - Load Movies Tests
+
+    @Test("Load movies successfully updates movies array")
+    func loadMoviesSuccess() async {
+        // Given
+        let expectedMovies = Movie.samples
+        spyInteractor.moviesToReturn = expectedMovies
+
+        // When
+        await sut.loadMovies()
+
+        // Then
+        #expect(sut.movies == expectedMovies)
+        #expect(sut.errorMessage == nil)
+        #expect(sut.isLoading == false)
+        #expect(spyInteractor.fetchMoviesWasCalled == true)
+    }
+
+    @Test("Load movies failure sets error message")
+    func loadMoviesFailure() async {
+        // Given
+        spyInteractor.shouldThrowError = true
+        spyInteractor.errorToThrow = NetworkError.serverError(500)
+
+        // When
+        await sut.loadMovies()
+
+        // Then
+        #expect(sut.movies.isEmpty)
+        #expect(sut.errorMessage != nil)
+        #expect(sut.isLoading == false)
+        #expect(spyInteractor.fetchMoviesWasCalled == true)
+    }
+}
+```
+
+**Benefits of Pattern 2**:
+- ✅ Less repetition (DRY principle)
+- ✅ Clearer test intent (no setup noise)
+- ✅ Named `sut` (Subject Under Test) for clarity
+- ✅ Consistent test structure
+
+**MARK Structure**:
+1. `// MARK: - Subject Under Test` → SUT instance
+2. `// MARK: - Spies` → Spy dependencies
+3. `// MARK: - Initializers` → Setup
+4. `// MARK: - Tests` → Test methods
+5. `// MARK: - Test Data` → Static sample data
+6. `// MARK: - Arguments` → Argument structs
 
 ## Using @Test with Arguments (Structured Pattern)
 
