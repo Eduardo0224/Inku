@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D5A7EB122F0163DA001B368C /* InkuUI in Frameworks */ = {isa = PBXBuildFile; productRef = D5A7EB112F0163DA001B368C /* InkuUI */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		D5A761502EF6DBB70043DFF3 /* Inku.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inku.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5A7EB122F0163DA001B368C /* InkuUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +70,7 @@
 			);
 			name = Inku;
 			packageProductDependencies = (
+				D5A7EB112F0163DA001B368C /* InkuUI */,
 			);
 			productName = Inku;
 			productReference = D5A761502EF6DBB70043DFF3 /* Inku.app */;
@@ -94,6 +100,9 @@
 			);
 			mainGroup = D5A761472EF6DBB70043DFF3;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				D5A7EB102F0163DA001B368C /* XCRemoteSwiftPackageReference "InkuUI" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D5A761512EF6DBB70043DFF3 /* Products */;
 			projectDirPath = "";
@@ -336,6 +345,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D5A7EB102F0163DA001B368C /* XCRemoteSwiftPackageReference "InkuUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Eduardo0224/InkuUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D5A7EB112F0163DA001B368C /* InkuUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D5A7EB102F0163DA001B368C /* XCRemoteSwiftPackageReference "InkuUI" */;
+			productName = InkuUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D5A761482EF6DBB70043DFF3 /* Project object */;
 }
