@@ -111,4 +111,29 @@ extension Manga {
         demographics: [.testData],
         themes: [.testData]
     )
+
+    static let skeletonData: Self = .init(
+        id: 0,
+        title: "Loading Manga Title",
+        titleEnglish: nil,
+        titleJapanese: "読み込み中",
+        sypnosis: nil,
+        background: nil,
+        mainPicture: nil,
+        url: nil,
+        volumes: nil,
+        chapters: nil,
+        status: "Publishing",
+        score: 8.5,
+        startDate: nil,
+        endDate: nil,
+        authors: [],
+        genres: [
+            Genre(id: "skeleton-1", genre: "Genre One"),
+            Genre(id: "skeleton-2", genre: "Genre Two"),
+            Genre(id: "skeleton-3", genre: "Genre Three")
+        ],
+        demographics: [.testData],
+        themes: [.testData]
+    )
 }

@@ -1,0 +1,15 @@
+{
+  "originHash" : "d3b079ed74b6c6008108c9b86657c2fb179ba2007e3ca48fd43ef3f518ac7118",
+  "pins" : [
+    {
+      "identity" : "inkuui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Eduardo0224/InkuUI",
+      "state" : {
+        "revision" : "28d7b1a25f87dcae1e3ec3f2aff690db11caede0",
+        "version" : "1.1.0"
+      }
+    }
+  ],
+  "version" : 3
+}

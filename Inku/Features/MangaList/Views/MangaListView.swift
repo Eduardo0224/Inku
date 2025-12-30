@@ -12,6 +12,7 @@
 //
 
 import SwiftUI
+import InkuUI
 
 struct MangaListView: View {
 
@@ -30,8 +31,10 @@ struct MangaListView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if viewModel.isLoading && viewModel.mangas.isEmpty {
-                    LoadingStateView()
+                if let errorMessage = viewModel.errorMessage, viewModel.mangas.isEmpty {
+                    errorView(message: errorMessage)
+                } else if viewModel.isLoading && viewModel.mangas.isEmpty {
+                    skeletonView
                 } else if viewModel.mangas.isEmpty {
                     EmptyStateView()
                 } else {
@@ -42,12 +45,13 @@ struct MangaListView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     filterMenu
+                        .disabled(viewModel.errorMessage != nil)
                 }
             }
             .alert(
                 L10n.Error.title,
                 isPresented: Binding(
-                    get: { viewModel.errorMessage != nil },
+                    get: { viewModel.errorMessage != nil && !viewModel.mangas.isEmpty },
                     set: { if !$0 { viewModel.errorMessage = nil } }
                 )
             ) {
@@ -75,7 +79,7 @@ struct MangaListView: View {
 
     private var contentView: some View {
         ScrollView {
-            LazyVStack(spacing: 16) {
+            LazyVStack(spacing: InkuSpacing.spacing16) {
                 ForEach(viewModel.mangas) { manga in
                     MangaRowView(manga: manga)
                         .onAppear {
@@ -88,12 +92,38 @@ struct MangaListView: View {
                 }
 
                 if viewModel.isLoadingMore {
-                    ProgressView()
-                        .padding()
+                    InkuLoadingView(message: L10n.Common.loading)
+                        .padding(InkuSpacing.spacing16)
                 }
             }
-            .padding()
+            .padding(InkuSpacing.spacing16)
         }
+        .background(Color.inkuSurface)
+    }
+
+    private var skeletonView: some View {
+        ScrollView {
+            LazyVStack(spacing: InkuSpacing.spacing16) {
+                ForEach(0..<10, id: \.self) { _ in
+                    MangaRowView(manga: .skeletonData, isLoading: true)
+                }
+            }
+            .padding(InkuSpacing.spacing16)
+        }
+        .scrollDisabled(true)
+        .background(Color.inkuSurface)
+    }
+
+    private func errorView(message: String) -> some View {
+        InkuErrorView(
+            message: message,
+            retryActionTitle: L10n.Common.retry
+        ) {
+            Task {
+                await viewModel.loadMangas()
+            }
+        }
+        .background(Color.inkuSurface)
     }
 
     private var filterMenu: some View {
@@ -203,4 +233,8 @@ struct MangaListView: View {
 
 #Preview("With Mock Data") {
     MangaListView(interactor: MockMangaListInteractor())
+}
+
+#Preview("With Error") {
+    MangaListView(interactor: MockMangaListInteractorWithError())
 }
