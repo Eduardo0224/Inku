@@ -12,20 +12,15 @@
 //
 
 import SwiftUI
+import InkuUI
 
 struct LoadingStateView: View {
 
     // MARK: - Body
 
     var body: some View {
-        VStack(spacing: 16) {
-            ProgressView()
-                .scaleEffect(1.5)
-
-            Text(L10n.Common.loading)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-        }
+        InkuLoadingView(message: L10n.Common.loading)
+            .background(Color.inkuSurface)
     }
 }
 

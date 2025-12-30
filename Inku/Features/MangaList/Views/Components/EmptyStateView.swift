@@ -12,17 +12,19 @@
 //
 
 import SwiftUI
+import InkuUI
 
 struct EmptyStateView: View {
 
     // MARK: - Body
 
     var body: some View {
-        ContentUnavailableView {
-            Label(L10n.MangaList.Empty.title, systemImage: "books.vertical")
-        } description: {
-            Text(L10n.MangaList.Empty.subtitle)
-        }
+        InkuEmptyView(
+            icon: "books.vertical",
+            title: L10n.MangaList.Empty.title,
+            subtitle: L10n.MangaList.Empty.subtitle
+        )
+        .background(Color.inkuSurface)
     }
 }
 

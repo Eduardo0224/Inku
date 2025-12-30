@@ -47,3 +47,38 @@ final class MockMangaListInteractor: MangaListInteractorProtocol {
         []
     }
 }
+
+// MARK: - Mock Error
+
+final class MockMangaListInteractorWithError: MangaListInteractorProtocol {
+
+    // MARK: - Functions
+
+    func fetchMangas(page: Int, per: Int) async throws -> MangaListResponse {
+        throw URLError(.notConnectedToInternet)
+    }
+
+    func fetchMangasByGenre(_ genre: String, page: Int, per: Int) async throws -> MangaListResponse {
+        throw URLError(.notConnectedToInternet)
+    }
+
+    func fetchMangasByDemographic(_ demographic: String, page: Int, per: Int) async throws -> MangaListResponse {
+        throw URLError(.notConnectedToInternet)
+    }
+
+    func fetchMangasByTheme(_ theme: String, page: Int, per: Int) async throws -> MangaListResponse {
+        throw URLError(.notConnectedToInternet)
+    }
+
+    func fetchGenres() async throws -> [String] {
+        throw URLError(.notConnectedToInternet)
+    }
+
+    func fetchDemographics() async throws -> [String] {
+        throw URLError(.notConnectedToInternet)
+    }
+
+    func fetchThemes() async throws -> [String] {
+        throw URLError(.notConnectedToInternet)
+    }
+}
