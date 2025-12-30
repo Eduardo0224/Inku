@@ -8,6 +8,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **MangaList Feature** - First complete MVP feature
+  - Browse 64,000+ manga titles with pagination (infinite scroll)
+  - Filter by genre, demographic, and theme
+  - Skeleton loading pattern with shimmer effect
+  - Smart error handling (full-screen view vs alert)
+  - InkuUI design system integration
+  - Complete Clean Architecture implementation (Models, Interactor, ViewModel, Views)
+  - Comprehensive test suite (ViewModel and Interactor tests)
+  - Localization support (Spanish/English)
+  - Dark mode support with proper contrast
+- InkuUI Design System Package (v1.1.0)
+  - Design tokens (spacing, radius, colors, typography)
+  - Reusable components (InkuMangaRow, InkuEmptyView, InkuErrorView, InkuLoadingView, InkuBadge, InkuCoverImage)
+  - Skeleton loading modifier with shimmer effect
+  - Component documentation and previews
+- Core Services
+  - NetworkService for API communication
+  - CacheService for data caching
+- Core Models
+  - Manga, Author, Genre, Demographic, Theme
+  - MangaListResponse with pagination metadata
 - Project specifications in `specs/` directory
   - Architecture specification (Clean Architecture, 4 layers)
   - SwiftUI patterns and component guidelines
