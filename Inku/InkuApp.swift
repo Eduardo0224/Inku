@@ -11,7 +11,7 @@ import SwiftUI
 struct InkuApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MangaListView()
         }
     }
 }
