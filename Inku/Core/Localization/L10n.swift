@@ -64,4 +64,49 @@ enum L10n {
             static let theme = String(localized: .MangaListLocalizable.filterTheme)
         }
     }
+
+    // MARK: - Manga Detail (MangaDetailLocalizable.xcstrings)
+
+    enum MangaDetail {
+
+        enum Screen {
+            static let title = String(localized: .MangaDetailLocalizable.screenTitle)
+        }
+
+        enum Stats {
+            static let score = String(localized: .MangaDetailLocalizable.statsScore)
+            static let volumes = String(localized: .MangaDetailLocalizable.statsVolumes)
+            static let chapters = String(localized: .MangaDetailLocalizable.statsChapters)
+            static let status = String(localized: .MangaDetailLocalizable.statsStatus)
+        }
+
+        enum Synopsis {
+            static let title = String(localized: .MangaDetailLocalizable.synopsisTitle)
+            static let readMore = String(localized: .MangaDetailLocalizable.synopsisReadMore)
+            static let readLess = String(localized: .MangaDetailLocalizable.synopsisReadLess)
+            static let empty = String(localized: .MangaDetailLocalizable.synopsisEmpty)
+        }
+
+        enum Authors {
+            static let title = String(localized: .MangaDetailLocalizable.authorsTitle)
+            static let empty = String(localized: .MangaDetailLocalizable.authorsEmpty)
+        }
+
+        enum Tags {
+            static let title = String(localized: .MangaDetailLocalizable.tagsTitle)
+            static let empty = String(localized: .MangaDetailLocalizable.tagsEmpty)
+        }
+
+        enum Publication {
+            static let title = String(localized: .MangaDetailLocalizable.publicationTitle)
+            static let unknown = String(localized: .MangaDetailLocalizable.publicationUnknown)
+            static let present = String(localized: .MangaDetailLocalizable.publicationPresent)
+            static let since = String(localized: .MangaDetailLocalizable.publicationSince)
+        }
+
+        enum Background {
+            static let title = String(localized: .MangaDetailLocalizable.backgroundTitle)
+            static let button = String(localized: .MangaDetailLocalizable.backgroundButton)
+        }
+    }
 }

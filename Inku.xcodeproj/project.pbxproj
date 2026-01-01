@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D5A7EB122F0163DA001B368C /* InkuUI in Frameworks */ = {isa = PBXBuildFile; productRef = D5A7EB112F0163DA001B368C /* InkuUI */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		D575EC092EFC8A9B00F99309 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -15,9 +19,6 @@
 			remoteInfo = Inku;
 		};
 /* End PBXContainerItemProxy section */
-/* Begin PBXBuildFile section */
-		D5A7EB122F0163DA001B368C /* InkuUI in Frameworks */ = {isa = PBXBuildFile; productRef = D5A7EB112F0163DA001B368C /* InkuUI */; };
-/* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		D575EC052EFC8A9B00F99309 /* InkuTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InkuTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
