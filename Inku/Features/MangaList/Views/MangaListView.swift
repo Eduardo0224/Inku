@@ -72,6 +72,9 @@ struct MangaListView: View {
                 await viewModel.loadMangas()
                 await viewModel.loadFilterOptions()
             }
+            .navigationDestination(for: Manga.self) { manga in
+                MangaDetailView(manga: manga)
+            }
         }
     }
 
@@ -81,14 +84,17 @@ struct MangaListView: View {
         ScrollView {
             LazyVStack(spacing: InkuSpacing.spacing16) {
                 ForEach(viewModel.mangas) { manga in
-                    MangaRowView(manga: manga)
-                        .onAppear {
-                            if manga == viewModel.mangas.last {
-                                Task {
-                                    await viewModel.loadMoreMangas()
-                                }
+                    NavigationLink(value: manga) {
+                        MangaRowView(manga: manga)
+                    }
+                    .buttonStyle(.plain)
+                    .task {
+                        if manga == viewModel.mangas.last {
+                            Task {
+                                await viewModel.loadMoreMangas()
                             }
                         }
+                    }
                 }
 
                 if viewModel.isLoadingMore {
