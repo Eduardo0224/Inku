@@ -42,6 +42,7 @@ final class MangaListViewModel: MangaListViewModelProtocol {
     var themes: [Theme] = []
 
     var selectedFilter: MangaFilter = .none
+    private(set) var hasLoadedInitialData = false
 
     // MARK: - Computed Properties
 
@@ -56,6 +57,17 @@ final class MangaListViewModel: MangaListViewModelProtocol {
     }
 
     // MARK: - Functions
+
+    func loadInitialDataIfNeeded() async {
+        guard !hasLoadedInitialData else { return }
+
+        async let mangasTask: Void = loadMangas()
+        async let filtersTask: Void = loadFilterOptions()
+
+        _ = await (mangasTask, filtersTask)
+
+        hasLoadedInitialData = true
+    }
 
     func loadMangas() async {
         guard !isLoading else { return }

@@ -29,11 +29,13 @@ protocol MangaListViewModelProtocol: Observable {
     var themes: [Theme] { get }
 
     var selectedFilter: MangaFilter { get }
+    var hasLoadedInitialData: Bool { get }
 
     var isFilterActive: Bool { get }
 
     // MARK: - Functions
 
+    func loadInitialDataIfNeeded() async
     func loadMangas() async
     func loadMoreMangas() async
     func loadFilterOptions() async

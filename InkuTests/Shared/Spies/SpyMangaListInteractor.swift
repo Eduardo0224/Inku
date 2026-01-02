@@ -44,6 +44,22 @@ final class SpyMangaListInteractor: MangaListInteractorProtocol, @unchecked Send
 
     // MARK: - Functions
 
+    func reset() {
+        fetchMangasWasCalled = false
+        fetchMangasByGenreWasCalled = false
+        fetchMangasByDemographicWasCalled = false
+        fetchMangasByThemeWasCalled = false
+        fetchGenresWasCalled = false
+        fetchDemographicsWasCalled = false
+        fetchThemesWasCalled = false
+
+        lastFetchedGenre = nil
+        lastFetchedDemographic = nil
+        lastFetchedTheme = nil
+        lastPage = nil
+        lastPer = nil
+    }
+
     func fetchMangas(page: Int, per: Int) async throws -> MangaListResponse {
         fetchMangasWasCalled = true
         lastPage = page
