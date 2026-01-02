@@ -69,8 +69,7 @@ struct MangaListView: View {
                 }
             }
             .task {
-                await viewModel.loadMangas()
-                await viewModel.loadFilterOptions()
+                await viewModel.loadInitialDataIfNeeded()
             }
             .navigationDestination(for: Manga.self) { manga in
                 MangaDetailView(manga: manga)

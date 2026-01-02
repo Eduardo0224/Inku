@@ -36,6 +36,55 @@ extension MangaListTests {
             sut = MangaListViewModel(interactor: spyInteractor)
         }
 
+        // MARK: - Load Initial Data Tests
+
+        @Test("Load initial data if needed loads data on first call")
+        func loadInitialDataFirstCall() async {
+            // Given
+            spyInteractor.mangasToReturn = Self.sampleMangas
+            spyInteractor.genresToReturn = Self.sampleGenres
+            spyInteractor.demographicsToReturn = Self.sampleDemographics
+            spyInteractor.themesToReturn = Self.sampleThemes
+            #expect(sut.hasLoadedInitialData == false)
+
+            // When
+            await sut.loadInitialDataIfNeeded()
+
+            // Then
+            #expect(sut.hasLoadedInitialData == true)
+            #expect(sut.mangas == Self.sampleMangas)
+            #expect(sut.genres.map(\.genre) == Self.sampleGenres)
+            #expect(sut.demographics.map(\.demographic) == Self.sampleDemographics)
+            #expect(sut.themes.map(\.theme) == Self.sampleThemes)
+            #expect(spyInteractor.fetchMangasWasCalled == true)
+            #expect(spyInteractor.fetchGenresWasCalled == true)
+            #expect(spyInteractor.fetchDemographicsWasCalled == true)
+            #expect(spyInteractor.fetchThemesWasCalled == true)
+        }
+
+        @Test("Load initial data if needed skips loading on subsequent calls")
+        func loadInitialDataSubsequentCalls() async {
+            // Given
+            spyInteractor.mangasToReturn = Self.sampleMangas
+            spyInteractor.genresToReturn = Self.sampleGenres
+            spyInteractor.demographicsToReturn = Self.sampleDemographics
+            spyInteractor.themesToReturn = Self.sampleThemes
+            await sut.loadInitialDataIfNeeded()
+
+            // Reset spy flags
+            spyInteractor.reset()
+
+            // When - second call
+            await sut.loadInitialDataIfNeeded()
+
+            // Then - should NOT call interactor again
+            #expect(sut.hasLoadedInitialData == true)
+            #expect(spyInteractor.fetchMangasWasCalled == false)
+            #expect(spyInteractor.fetchGenresWasCalled == false)
+            #expect(spyInteractor.fetchDemographicsWasCalled == false)
+            #expect(spyInteractor.fetchThemesWasCalled == false)
+        }
+
         // MARK: - Load Mangas Tests
 
         @Test("Load mangas successfully updates mangas array")

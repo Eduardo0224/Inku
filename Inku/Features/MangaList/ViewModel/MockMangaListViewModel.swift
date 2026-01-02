@@ -31,6 +31,7 @@ final class MockMangaListViewModel: MangaListViewModelProtocol {
     var themes: [Theme] = []
 
     var selectedFilter: MangaFilter = .none
+    var hasLoadedInitialData: Bool = false
 
     // MARK: - Computed Properties
 
@@ -39,6 +40,10 @@ final class MockMangaListViewModel: MangaListViewModelProtocol {
     }
 
     // MARK: - Functions
+
+    func loadInitialDataIfNeeded() async {
+        // Mock implementation - no operation
+    }
 
     func loadMangas() async {
         mangas = [.testData]
