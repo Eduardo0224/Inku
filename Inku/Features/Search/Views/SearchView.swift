@@ -35,7 +35,7 @@ struct SearchView: View {
                     emptyStateView
                 } else if viewModel.showsNoResults {
                     noResultsView
-                } else if viewModel.isSearching && viewModel.searchResults.isEmpty {
+                } else if viewModel.isSearching && !viewModel.hasResults {
                     skeletonView
                 } else {
                     resultsView
@@ -55,7 +55,7 @@ struct SearchView: View {
             .alert(
                 L10n.Error.title,
                 isPresented: Binding(
-                    get: { viewModel.errorMessage != nil && !viewModel.searchResults.isEmpty },
+                    get: { viewModel.errorMessage != nil && viewModel.hasResults },
                     set: { if !$0 { viewModel.errorMessage = nil } }
                 )
             ) {
@@ -105,8 +105,19 @@ struct SearchView: View {
     }
 
     private var resultsView: some View {
+        Group {
+            switch viewModel.searchScope {
+            case .title:
+                mangaResultsView
+            case .author:
+                authorResultsView
+            }
+        }
+    }
+
+    private var mangaResultsView: some View {
         InkuListContainer(
-            title: resultsTitle,
+            title: mangaResultsTitle,
             subtitle: viewModel.searchText.isEmpty ? nil : L10n.Search.Results.forQuery(viewModel.searchText),
             scrollDismissesKeyboard: .immediately
         ) {
@@ -115,7 +126,7 @@ struct SearchView: View {
                     columns: Array(repeating: GridItem(.flexible(), spacing: InkuSpacing.spacing16), count: 2),
                     spacing: InkuSpacing.spacing16
                 ) {
-                    ForEach(viewModel.searchResults) { manga in
+                    ForEach(viewModel.mangaResults) { manga in
                         NavigationLink(value: manga) {
                             InkuSearchResultCard(
                                 imageURL: manga.coverImageURL,
@@ -126,7 +137,7 @@ struct SearchView: View {
                         }
                         .buttonStyle(.plain)
                         .task {
-                            if manga == viewModel.searchResults.last {
+                            if manga == viewModel.mangaResults.last {
                                 Task {
                                     await viewModel.loadMoreResults()
                                 }
@@ -144,13 +155,48 @@ struct SearchView: View {
         }
     }
 
-    private var resultsTitle: String {
-        let count = viewModel.searchResults.count
+    private var authorResultsView: some View {
+        InkuListContainer(
+            title: authorResultsTitle,
+            subtitle: viewModel.searchText.isEmpty ? nil : L10n.Search.Results.forQuery(viewModel.searchText),
+            scrollDismissesKeyboard: .immediately
+        ) {
+            LazyVStack(spacing: InkuSpacing.spacing12) {
+                ForEach(viewModel.authorResults) { author in
+                    InkuAuthorResultCard(
+                        firstName: author.firstName,
+                        lastName: author.lastName,
+                        role: author.role
+                    )
+                }
+            }
+        }
+    }
+
+    private var mangaResultsTitle: String {
+        let count = viewModel.mangaResults.count
+        let resultWord = count == 1 ? L10n.Search.Results.singular : L10n.Search.Results.plural
+        return "\(count) \(resultWord)"
+    }
+
+    private var authorResultsTitle: String {
+        let count = viewModel.authorResults.count
         let resultWord = count == 1 ? L10n.Search.Results.singular : L10n.Search.Results.plural
         return "\(count) \(resultWord)"
     }
 
     private var skeletonView: some View {
+        Group {
+            switch viewModel.searchScope {
+            case .title:
+                mangaSkeletonView
+            case .author:
+                authorSkeletonView
+            }
+        }
+    }
+
+    private var mangaSkeletonView: some View {
         InkuListContainer(
             title: L10n.Search.Results.searching,
             subtitle: viewModel.searchText.isEmpty ? nil : L10n.Search.Results.forQuery(viewModel.searchText),
@@ -167,6 +213,26 @@ struct SearchView: View {
                         title: "Loading Title",
                         subtitle: "Loading Subtitle",
                         badge: "Genre",
+                        isLoading: true
+                    )
+                }
+            }
+        }
+    }
+
+    private var authorSkeletonView: some View {
+        InkuListContainer(
+            title: L10n.Search.Results.searching,
+            subtitle: viewModel.searchText.isEmpty ? nil : L10n.Search.Results.forQuery(viewModel.searchText),
+            showsDivider: true,
+            scrollDisabled: true
+        ) {
+            LazyVStack(spacing: InkuSpacing.spacing12) {
+                ForEach(0..<20, id: \.self) { _ in
+                    InkuAuthorResultCard(
+                        firstName: "Loading",
+                        lastName: "Author",
+                        role: "Role",
                         isLoading: true
                     )
                 }

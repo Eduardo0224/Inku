@@ -35,7 +35,7 @@ final class SearchInteractor: SearchInteractorProtocol {
         )
     }
 
-    func searchMangasByAuthor(_ name: String) async throws -> [Manga] {
+    func searchAuthorsByName(_ name: String) async throws -> [Author] {
         try await networkService.get(endpoint: API.Endpoints.searchAuthor(name))
     }
 

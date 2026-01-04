@@ -20,7 +20,8 @@ protocol SearchViewModelProtocol: Observable {
 
     var searchText: String { get set }
     var searchScope: SearchScope { get set }
-    var searchResults: [Manga] { get }
+    var mangaResults: [Manga] { get }
+    var authorResults: [Author] { get }
     var isSearching: Bool { get }
     var isLoadingMore: Bool { get }
     var errorMessage: String? { get set }
@@ -28,6 +29,7 @@ protocol SearchViewModelProtocol: Observable {
 
     var showsEmptyState: Bool { get }
     var showsNoResults: Bool { get }
+    var hasResults: Bool { get }
 
     // MARK: - Functions
 

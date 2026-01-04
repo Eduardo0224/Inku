@@ -18,66 +18,138 @@ import Testing
 extension SearchTests {
 
     @Suite("Interactor Tests")
+    @MainActor
     struct InteractorTests {
 
         // MARK: - Subject Under Test
 
-        let sut = SearchInteractor(networkService: MockNetworkService())
+        let sut: SearchInteractor
+
+        // MARK: - Spies
+
+        let spyNetworkService: SpyNetworkService
+
+        // MARK: - Initializers
+
+        init() {
+            spyNetworkService = SpyNetworkService()
+            sut = SearchInteractor(networkService: spyNetworkService)
+        }
 
         // MARK: - Search by Title Tests
 
         @Test("Search by title makes correct API call")
-        func searchByTitle() async throws {
+        func searchByTitleSuccess() async throws {
             // Given
             let searchText = "One Piece"
             let page = 1
             let per = 20
+            spyNetworkService.dataToReturn = Self.sampleMangaListResponse
 
             // When
             let response = try await sut.searchMangasByTitle(searchText, page: page, per: per)
 
             // Then
-            #expect(response.items.isEmpty == false)
-            #expect(response.metadata.page == page)
-            #expect(response.metadata.per == per)
+            #expect(response.items.count == Self.sampleMangaListResponse.items.count)
+            #expect(spyNetworkService.getWasCalled == true)
+            #expect(spyNetworkService.lastEndpoint == API.Endpoints.searchMangaContains(searchText))
+            #expect(spyNetworkService.lastQueryItems?.contains(where: { $0.name == "page" }) == true)
+            #expect(spyNetworkService.lastQueryItems?.contains(where: { $0.name == "per" }) == true)
+        }
+
+        @Test("Search by title network failure throws error")
+        func searchByTitleFailure() async throws {
+            // Given
+            spyNetworkService.shouldThrowError = true
+            spyNetworkService.errorToThrow = NetworkError.serverError(500)
+
+            // When/Then
+            await #expect(throws: NetworkError.self) {
+                _ = try await sut.searchMangasByTitle("One Piece", page: 1, per: 20)
+            }
         }
 
         // MARK: - Search by Author Tests
 
-        @Test("Search by author makes correct API call")
-        func searchByAuthor() async throws {
+        @Test("Search authors by name makes correct API call")
+        func searchAuthorsByNameSuccess() async throws {
             // Given
             let authorName = "Eiichiro Oda"
+            spyNetworkService.dataToReturn = Self.sampleAuthors
 
             // When
-            let mangas = try await sut.searchMangasByAuthor(authorName)
+            let authors = try await sut.searchAuthorsByName(authorName)
 
             // Then
-            #expect(mangas.isEmpty == false)
+            #expect(authors.count == Self.sampleAuthors.count)
+            #expect(spyNetworkService.getWasCalled == true)
+            #expect(spyNetworkService.lastEndpoint == API.Endpoints.searchAuthor(authorName))
+        }
+
+        @Test("Search authors by name network failure throws error")
+        func searchAuthorsByNameFailure() async throws {
+            // Given
+            spyNetworkService.shouldThrowError = true
+            spyNetworkService.errorToThrow = NetworkError.notFound
+
+            // When/Then
+            await #expect(throws: NetworkError.self) {
+                _ = try await sut.searchAuthorsByName("Unknown Author")
+            }
+        }
+
+        // MARK: - Pagination Tests
+
+        @Test(
+            "Search by title with pagination parameters",
+            arguments: [
+                .init(page: 1, per: 20),
+                .init(page: 2, per: 20),
+                .init(page: 1, per: 50),
+                .init(page: 3, per: 10)
+            ] as [PaginationArgument]
+        )
+        private func searchByTitleWithPagination(argument: PaginationArgument) async throws {
+            // Given
+            spyNetworkService.dataToReturn = Self.sampleMangaListResponse
+
+            // When
+            _ = try await sut.searchMangasByTitle("manga", page: argument.page, per: argument.per)
+
+            // Then
+            let pageQuery = spyNetworkService.lastQueryItems?.first(where: { $0.name == "page" })
+            let perQuery = spyNetworkService.lastQueryItems?.first(where: { $0.name == "per" })
+
+            #expect(pageQuery?.value == "\(argument.page)")
+            #expect(perQuery?.value == "\(argument.per)")
         }
     }
 }
 
-// MARK: - Mock Network Service
+// MARK: - Test Data
 
-private final class MockNetworkService: NetworkServiceProtocol {
+private extension SearchTests.InteractorTests {
 
-    func get<T: Decodable>(
-        endpoint: String,
-        queryItems: [URLQueryItem]?
-    ) async throws -> T {
-        if endpoint.contains("mangasContains") {
-            return MangaListResponse.testData as! T
-        } else if endpoint.contains("author") {
-            return [Manga.testData] as! T
+    static let sampleMangaListResponse = MangaListResponse(
+        items: [.testData],
+        metadata: .testData
+    )
+
+    static let sampleAuthors: [Author] = [
+        .testData
+    ]
+}
+
+// MARK: - Arguments
+
+private extension SearchTests.InteractorTests {
+
+    struct PaginationArgument: CustomTestStringConvertible {
+        let page: Int
+        let per: Int
+
+        var testDescription: String {
+            "page: \(page), per: \(per)"
         }
-        throw NetworkError.invalidResponse
-    }
-
-    func post<T: Decodable, U: Encodable>(
-        endpoint: String,
-        body: U
-    ) async throws -> T {
-        throw NetworkError.invalidResponse
     }
 }

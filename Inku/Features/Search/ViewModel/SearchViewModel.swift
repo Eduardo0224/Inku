@@ -48,7 +48,8 @@ final class SearchViewModel: SearchViewModelProtocol {
         }
     }
 
-    var searchResults: [Manga] = []
+    var mangaResults: [Manga] = []
+    var authorResults: [Author] = []
     var isSearching = false
     var isLoadingMore = false
     var errorMessage: String?
@@ -57,11 +58,15 @@ final class SearchViewModel: SearchViewModelProtocol {
     // MARK: - Computed Properties
 
     var showsEmptyState: Bool {
-        searchText.isEmpty && searchResults.isEmpty
+        searchText.isEmpty && mangaResults.isEmpty && authorResults.isEmpty
     }
 
     var showsNoResults: Bool {
-        !searchText.isEmpty && searchResults.isEmpty && !isSearching
+        !searchText.isEmpty && mangaResults.isEmpty && authorResults.isEmpty && !isSearching
+    }
+
+    var hasResults: Bool {
+        !mangaResults.isEmpty || !authorResults.isEmpty
     }
 
     // MARK: - Initializers
@@ -74,7 +79,8 @@ final class SearchViewModel: SearchViewModelProtocol {
 
     func performSearch() async {
         guard !searchText.isEmpty else {
-            searchResults = []
+            mangaResults = []
+            authorResults = []
             return
         }
 
@@ -82,7 +88,8 @@ final class SearchViewModel: SearchViewModelProtocol {
 
         isSearching = true
         currentPage = 1
-        searchResults = []
+        mangaResults = []
+        authorResults = []
         errorMessage = nil
         defer { isSearching = false }
 
@@ -94,12 +101,12 @@ final class SearchViewModel: SearchViewModelProtocol {
                     page: currentPage,
                     per: itemsPerPage
                 )
-                searchResults = response.items
+                mangaResults = response.items
                 hasMorePages = response.metadata.hasMorePages
 
             case .author:
-                let mangas = try await interactor.searchMangasByAuthor(searchText)
-                searchResults = mangas
+                let authors = try await interactor.searchAuthorsByName(searchText)
+                authorResults = authors
                 hasMorePages = false
             }
         } catch {
@@ -122,7 +129,7 @@ final class SearchViewModel: SearchViewModelProtocol {
                 page: nextPage,
                 per: itemsPerPage
             )
-            searchResults.append(contentsOf: response.items)
+            mangaResults.append(contentsOf: response.items)
             currentPage = nextPage
             hasMorePages = response.metadata.hasMorePages
         } catch {
@@ -133,7 +140,8 @@ final class SearchViewModel: SearchViewModelProtocol {
     func clearSearch() {
         searchTask?.cancel()
         searchText = ""
-        searchResults = []
+        mangaResults = []
+        authorResults = []
         errorMessage = nil
         currentPage = 1
         hasMorePages = true
@@ -145,7 +153,8 @@ final class SearchViewModel: SearchViewModelProtocol {
         searchTask?.cancel()
 
         guard !searchText.isEmpty else {
-            searchResults = []
+            mangaResults = []
+            authorResults = []
             return
         }
 

@@ -21,7 +21,7 @@ final class MockSearchInteractor: SearchInteractorProtocol {
         .testData
     }
 
-    func searchMangasByAuthor(_ name: String) async throws -> [Manga] {
+    func searchAuthorsByName(_ name: String) async throws -> [Author] {
         [.testData]
     }
 }
@@ -36,7 +36,7 @@ final class MockSearchInteractorWithError: SearchInteractorProtocol {
         throw URLError(.notConnectedToInternet)
     }
 
-    func searchMangasByAuthor(_ name: String) async throws -> [Manga] {
+    func searchAuthorsByName(_ name: String) async throws -> [Author] {
         throw URLError(.notConnectedToInternet)
     }
 }

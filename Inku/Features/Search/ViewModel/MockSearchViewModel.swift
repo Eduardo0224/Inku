@@ -22,7 +22,8 @@ final class MockSearchViewModel: SearchViewModelProtocol {
 
     var searchText = ""
     var searchScope: SearchScope = .title
-    var searchResults: [Manga] = []
+    var mangaResults: [Manga] = []
+    var authorResults: [Author] = []
     var isSearching = false
     var isLoadingMore = false
     var errorMessage: String?
@@ -31,17 +32,28 @@ final class MockSearchViewModel: SearchViewModelProtocol {
     // MARK: - Computed Properties
 
     var showsEmptyState: Bool {
-        searchText.isEmpty && searchResults.isEmpty
+        searchText.isEmpty && mangaResults.isEmpty && authorResults.isEmpty
     }
 
     var showsNoResults: Bool {
-        !searchText.isEmpty && searchResults.isEmpty && !isSearching
+        !searchText.isEmpty && mangaResults.isEmpty && authorResults.isEmpty && !isSearching
+    }
+
+    var hasResults: Bool {
+        !mangaResults.isEmpty || !authorResults.isEmpty
     }
 
     // MARK: - Functions
 
     func performSearch() async {
-        searchResults = [.testData]
+        switch searchScope {
+        case .title:
+            mangaResults = [.testData]
+            authorResults = []
+        case .author:
+            mangaResults = []
+            authorResults = [.testData]
+        }
     }
 
     func loadMoreResults() async {
@@ -50,6 +62,7 @@ final class MockSearchViewModel: SearchViewModelProtocol {
 
     func clearSearch() {
         searchText = ""
-        searchResults = []
+        mangaResults = []
+        authorResults = []
     }
 }

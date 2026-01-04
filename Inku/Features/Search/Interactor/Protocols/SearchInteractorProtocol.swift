@@ -25,8 +25,8 @@ protocol SearchInteractorProtocol: Sendable {
     /// - Returns: A response containing matching mangas and metadata
     func searchMangasByTitle(_ text: String, page: Int, per: Int) async throws -> MangaListResponse
 
-    /// Searches for mangas by author name
+    /// Searches for authors by name
     /// - Parameter name: The author name to search for
-    /// - Returns: An array of mangas by the specified author
-    func searchMangasByAuthor(_ name: String) async throws -> [Manga]
+    /// - Returns: An array of authors matching the search term
+    func searchAuthorsByName(_ name: String) async throws -> [Author]
 }

@@ -19,7 +19,7 @@ final class SpySearchInteractor: SearchInteractorProtocol, @unchecked Sendable {
     // MARK: - Properties (Spy Tracking)
 
     private(set) var searchMangasByTitleWasCalled = false
-    private(set) var searchMangasByAuthorWasCalled = false
+    private(set) var searchAuthorsByNameWasCalled = false
 
     private(set) var lastSearchedText: String?
     private(set) var lastSearchedAuthorName: String?
@@ -29,6 +29,7 @@ final class SpySearchInteractor: SearchInteractorProtocol, @unchecked Sendable {
     // MARK: - Properties (Stub Data)
 
     var mangasToReturn: [Manga] = []
+    var authorsToReturn: [Author] = []
     var totalToReturn: Int?
     var shouldThrowError = false
     var errorToThrow: Error = NetworkError.unknown(0)
@@ -37,7 +38,7 @@ final class SpySearchInteractor: SearchInteractorProtocol, @unchecked Sendable {
 
     func reset() {
         searchMangasByTitleWasCalled = false
-        searchMangasByAuthorWasCalled = false
+        searchAuthorsByNameWasCalled = false
 
         lastSearchedText = nil
         lastSearchedAuthorName = nil
@@ -62,14 +63,14 @@ final class SpySearchInteractor: SearchInteractorProtocol, @unchecked Sendable {
         )
     }
 
-    func searchMangasByAuthor(_ name: String) async throws -> [Manga] {
-        searchMangasByAuthorWasCalled = true
+    func searchAuthorsByName(_ name: String) async throws -> [Author] {
+        searchAuthorsByNameWasCalled = true
         lastSearchedAuthorName = name
 
         if shouldThrowError {
             throw errorToThrow
         }
 
-        return mangasToReturn
+        return authorsToReturn
     }
 }

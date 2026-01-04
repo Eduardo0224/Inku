@@ -49,7 +49,7 @@ extension SearchTests {
             await sut.performSearch()
 
             // Then
-            #expect(sut.searchResults == Self.sampleMangas)
+            #expect(sut.mangaResults == Self.sampleMangas)
             #expect(sut.errorMessage == nil)
             #expect(sut.isSearching == false)
             #expect(spyInteractor.searchMangasByTitleWasCalled == true)
@@ -65,7 +65,8 @@ extension SearchTests {
             await sut.performSearch()
 
             // Then
-            #expect(sut.searchResults.isEmpty)
+            #expect(sut.mangaResults.isEmpty)
+            #expect(sut.authorResults.isEmpty)
             #expect(spyInteractor.searchMangasByTitleWasCalled == false)
         }
 
@@ -74,7 +75,7 @@ extension SearchTests {
         @Test("Perform search by author successfully")
         func searchByAuthorSuccess() async {
             // Given
-            spyInteractor.mangasToReturn = Self.sampleMangas
+            spyInteractor.authorsToReturn = Self.sampleAuthors
             sut.searchText = "Eiichiro Oda"
             sut.searchScope = .author
 
@@ -82,10 +83,10 @@ extension SearchTests {
             await sut.performSearch()
 
             // Then
-            #expect(sut.searchResults == Self.sampleMangas)
+            #expect(sut.authorResults == Self.sampleAuthors)
             #expect(sut.errorMessage == nil)
             #expect(sut.isSearching == false)
-            #expect(spyInteractor.searchMangasByAuthorWasCalled == true)
+            #expect(spyInteractor.searchAuthorsByNameWasCalled == true)
             #expect(spyInteractor.lastSearchedAuthorName == "Eiichiro Oda")
         }
 
@@ -109,14 +110,14 @@ extension SearchTests {
             await sut.loadMoreResults()
 
             // Then
-            #expect(sut.searchResults.count == 2)
+            #expect(sut.mangaResults.count == 2)
             #expect(sut.isLoadingMore == false)
         }
 
         @Test("Load more results does not work for author search")
         func loadMoreResultsAuthorScope() async {
             // Given
-            spyInteractor.mangasToReturn = Self.sampleMangas
+            spyInteractor.authorsToReturn = Self.sampleAuthors
             sut.searchText = "Oda"
             sut.searchScope = .author
             await sut.performSearch()
@@ -128,7 +129,7 @@ extension SearchTests {
 
             // Then - should NOT call interactor for author search
             #expect(spyInteractor.searchMangasByTitleWasCalled == false)
-            #expect(spyInteractor.searchMangasByAuthorWasCalled == false)
+            #expect(spyInteractor.searchAuthorsByNameWasCalled == false)
         }
 
         // MARK: - Scope Change Tests
@@ -142,6 +143,7 @@ extension SearchTests {
             await sut.performSearch()
 
             spyInteractor.reset()
+            spyInteractor.authorsToReturn = Self.sampleAuthors
 
             // When - change scope
             sut.searchScope = .author
@@ -150,7 +152,7 @@ extension SearchTests {
             try? await Task.sleep(for: .milliseconds(100))
 
             // Then - should trigger new search
-            #expect(spyInteractor.searchMangasByAuthorWasCalled == true)
+            #expect(spyInteractor.searchAuthorsByNameWasCalled == true)
         }
 
         // MARK: - Clear Search Tests
@@ -167,7 +169,8 @@ extension SearchTests {
 
             // Then
             #expect(sut.searchText.isEmpty)
-            #expect(sut.searchResults.isEmpty)
+            #expect(sut.mangaResults.isEmpty)
+            #expect(sut.authorResults.isEmpty)
             #expect(sut.errorMessage == nil)
         }
 
@@ -177,7 +180,8 @@ extension SearchTests {
         func showsEmptyState() {
             // Given / When
             sut.searchText = ""
-            sut.searchResults = []
+            sut.mangaResults = []
+            sut.authorResults = []
 
             // Then
             #expect(sut.showsEmptyState == true)
@@ -268,6 +272,21 @@ private extension SearchTests.ViewModelTests {
             genres: [.init(id: "1", genre: "Action")],
             demographics: [.init(id: "1", demographic: "Shounen")],
             themes: [.init(id: "2", theme: "Ninja")]
+        )
+    ]
+
+    static let sampleAuthors: [Author] = [
+        .init(
+            id: "1",
+            firstName: "Eiichiro",
+            lastName: "Oda",
+            role: "Story & Art"
+        ),
+        .init(
+            id: "2",
+            firstName: "Kentaro",
+            lastName: "Miura",
+            role: "Story & Art"
         )
     ]
 }
