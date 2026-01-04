@@ -156,21 +156,69 @@ struct SearchView: View {
     }
 
     private var authorResultsView: some View {
-        InkuListContainer(
-            title: authorResultsTitle,
-            subtitle: viewModel.searchText.isEmpty ? nil : L10n.Search.Results.forQuery(viewModel.searchText),
-            scrollDismissesKeyboard: .immediately
-        ) {
-            LazyVStack(spacing: InkuSpacing.spacing12) {
-                ForEach(viewModel.authorResults) { author in
-                    InkuAuthorResultCard(
-                        firstName: author.firstName,
-                        lastName: author.lastName,
-                        role: author.role
-                    )
+        VStack(spacing: 0) {
+            // Header
+            VStack(alignment: .leading, spacing: InkuSpacing.spacing8) {
+                HStack(spacing: InkuSpacing.spacing8) {
+                    Image(systemName: "person.text.rectangle")
+                        .font(.inkuHeadline)
+                        .foregroundStyle(Color.inkuAccent)
+
+                    Text(authorResultsTitle)
+                        .font(.inkuDisplayMedium)
+                        .foregroundStyle(Color.inkuText)
+                }
+
+                if !viewModel.searchText.isEmpty {
+                    Text(L10n.Search.Results.forQuery(viewModel.searchText))
+                        .font(.inkuBodySmall)
+                        .foregroundStyle(Color.inkuTextSecondary)
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, InkuSpacing.spacing16)
+            .padding(.top, InkuSpacing.spacing16)
+            .padding(.bottom, InkuSpacing.spacing12)
+
+            Divider()
+                .background(Color.inkuTextTertiary.opacity(0.2))
+
+            // Sectioned List
+            List {
+                ForEach(viewModel.groupedAuthors, id: \.key) { section in
+                    Section {
+                        ForEach(section.value) { author in
+                            InkuAuthorResultCard(
+                                firstName: author.firstName,
+                                lastName: author.lastName,
+                                role: author.role
+                            )
+                            .listRowInsets(
+                                EdgeInsets(
+                                    top: InkuSpacing.spacing8,
+                                    leading: InkuSpacing.spacing16,
+                                    bottom: InkuSpacing.spacing8,
+                                    trailing: InkuSpacing.spacing16
+                                )
+                            )
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
+                        }
+                    } header: {
+                        Text(section.key)
+                            .font(.inkuHeadline)
+                            .foregroundStyle(Color.inkuAccent)
+                    }
+                    .listSectionSpacing(InkuSpacing.spacing2)
+                    .sectionIndexWith(label: section.key)
+                }
+            }
+            .listStyle(.plain)
+            .scrollDismissesKeyboard(.immediately)
+            .scrollContentBackground(.hidden)
+            .background(Color.inkuSurface)
         }
+        .background(Color.inkuSurface)
     }
 
     private var mangaResultsTitle: String {

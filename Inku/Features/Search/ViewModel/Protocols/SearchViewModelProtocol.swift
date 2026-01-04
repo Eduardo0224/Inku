@@ -30,6 +30,7 @@ protocol SearchViewModelProtocol: Observable {
     var showsEmptyState: Bool { get }
     var showsNoResults: Bool { get }
     var hasResults: Bool { get }
+    var groupedAuthors: [(key: String, value: [Author])] { get }
 
     // MARK: - Functions
 
