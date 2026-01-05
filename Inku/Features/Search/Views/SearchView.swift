@@ -108,129 +108,22 @@ struct SearchView: View {
         Group {
             switch viewModel.searchScope {
             case .title:
-                mangaResultsView
+                MangaResultsView(
+                    mangas: viewModel.mangaResults,
+                    searchText: viewModel.searchText,
+                    isLoadingMore: viewModel.isLoadingMore
+                ) { manga in
+                    Task {
+                        await viewModel.loadMoreResults()
+                    }
+                }
             case .author:
-                authorResultsView
+                AuthorResultsView(
+                    groupedAuthors: viewModel.groupedAuthors,
+                    searchText: viewModel.searchText
+                )
             }
         }
-    }
-
-    private var mangaResultsView: some View {
-        InkuListContainer(
-            title: mangaResultsTitle,
-            subtitle: viewModel.searchText.isEmpty ? nil : L10n.Search.Results.forQuery(viewModel.searchText),
-            scrollDismissesKeyboard: .immediately
-        ) {
-            VStack(spacing: InkuSpacing.spacing16) {
-                LazyVGrid(
-                    columns: Array(repeating: GridItem(.flexible(), spacing: InkuSpacing.spacing16), count: 2),
-                    spacing: InkuSpacing.spacing16
-                ) {
-                    ForEach(viewModel.mangaResults) { manga in
-                        NavigationLink(value: manga) {
-                            InkuSearchResultCard(
-                                imageURL: manga.coverImageURL,
-                                title: manga.displayTitle,
-                                subtitle: manga.titleJapanese,
-                                badge: manga.genres.first?.genre
-                            )
-                        }
-                        .buttonStyle(.plain)
-                        .task {
-                            if manga == viewModel.mangaResults.last {
-                                Task {
-                                    await viewModel.loadMoreResults()
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if viewModel.isLoadingMore {
-                    InkuLoadingView(message: L10n.Common.loading)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, InkuSpacing.spacing16)
-                }
-            }
-        }
-    }
-
-    private var authorResultsView: some View {
-        VStack(spacing: 0) {
-            // Header
-            VStack(alignment: .leading, spacing: InkuSpacing.spacing8) {
-                HStack(spacing: InkuSpacing.spacing8) {
-                    Image(systemName: "person.text.rectangle")
-                        .font(.inkuHeadline)
-                        .foregroundStyle(Color.inkuAccent)
-
-                    Text(authorResultsTitle)
-                        .font(.inkuDisplayMedium)
-                        .foregroundStyle(Color.inkuText)
-                }
-
-                if !viewModel.searchText.isEmpty {
-                    Text(L10n.Search.Results.forQuery(viewModel.searchText))
-                        .font(.inkuBodySmall)
-                        .foregroundStyle(Color.inkuTextSecondary)
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, InkuSpacing.spacing16)
-            .padding(.top, InkuSpacing.spacing16)
-            .padding(.bottom, InkuSpacing.spacing12)
-
-            Divider()
-                .background(Color.inkuTextTertiary.opacity(0.2))
-
-            // Sectioned List
-            List {
-                ForEach(viewModel.groupedAuthors, id: \.key) { section in
-                    Section {
-                        ForEach(section.value) { author in
-                            InkuAuthorResultCard(
-                                firstName: author.firstName,
-                                lastName: author.lastName,
-                                role: author.role
-                            )
-                            .listRowInsets(
-                                EdgeInsets(
-                                    top: InkuSpacing.spacing8,
-                                    leading: InkuSpacing.spacing16,
-                                    bottom: InkuSpacing.spacing8,
-                                    trailing: InkuSpacing.spacing16
-                                )
-                            )
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(.hidden)
-                        }
-                    } header: {
-                        Text(section.key)
-                            .font(.inkuHeadline)
-                            .foregroundStyle(Color.inkuAccent)
-                    }
-                    .listSectionSpacing(InkuSpacing.spacing2)
-                    .sectionIndexWith(label: section.key)
-                }
-            }
-            .listStyle(.plain)
-            .scrollDismissesKeyboard(.immediately)
-            .scrollContentBackground(.hidden)
-            .background(Color.inkuSurface)
-        }
-        .background(Color.inkuSurface)
-    }
-
-    private var mangaResultsTitle: String {
-        let count = viewModel.mangaResults.count
-        let resultWord = count == 1 ? L10n.Search.Results.singular : L10n.Search.Results.plural
-        return "\(count) \(resultWord)"
-    }
-
-    private var authorResultsTitle: String {
-        let count = viewModel.authorResults.count
-        let resultWord = count == 1 ? L10n.Search.Results.singular : L10n.Search.Results.plural
-        return "\(count) \(resultWord)"
     }
 
     private var skeletonView: some View {
