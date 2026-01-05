@@ -225,6 +225,150 @@ extension SearchTests {
             // Then
             #expect(sut.errorMessage?.localizedCaseInsensitiveContains(argument.expectedContains) == true)
         }
+
+        // MARK: - Grouped Authors Tests
+
+        @Test("Authors are grouped by first letter of firstName")
+        func authorsGroupedByFirstLetter() async {
+            // Given
+            spyInteractor.authorsToReturn = Self.sampleAuthorsForGrouping
+            sut.searchText = "author"
+            sut.searchScope = .author
+
+            // When
+            await sut.performSearch()
+            let grouped = sut.groupedAuthors
+
+            // Then
+            #expect(grouped.contains(where: { $0.key == "A" }))
+            #expect(grouped.contains(where: { $0.key == "E" }))
+            #expect(grouped.contains(where: { $0.key == "K" }))
+        }
+
+        @Test("Authors within group are sorted by firstName then lastName")
+        func authorsWithinGroupSorted() async {
+            // Given
+            let authors: [Author] = [
+                .init(id: "1", firstName: "Akira", lastName: "Toriyama", role: "Story"),
+                .init(id: "2", firstName: "Akira", lastName: "Kareno", role: "Art"),
+                .init(id: "3", firstName: "Akiko", lastName: "Higashimura", role: "Story")
+            ]
+            spyInteractor.authorsToReturn = authors
+            sut.searchText = "Aki"
+            sut.searchScope = .author
+
+            // When
+            await sut.performSearch()
+            let groupA = sut.groupedAuthors.first(where: { $0.key == "A" })?.value
+
+            // Then
+            #expect(groupA?.count == 3)
+            #expect(groupA?[0].lastName == "Higashimura") // Akiko < Akira
+            #expect(groupA?[1].lastName == "Kareno")       // Akira Kareno < Akira Toriyama
+            #expect(groupA?[2].lastName == "Toriyama")
+        }
+
+        @Test("Section order is A-Z, then 0-9, then #")
+        func sectionOrderCorrect() async {
+            // Given
+            let authors: [Author] = [
+                .init(id: "1", firstName: "#Special", lastName: "Author", role: "Art"),
+                .init(id: "2", firstName: "Alice", lastName: "Brown", role: "Story"),
+                .init(id: "3", firstName: "5th", lastName: "Dimension", role: "Art"),
+                .init(id: "4", firstName: "Zelda", lastName: "Fitzgerald", role: "Story")
+            ]
+            spyInteractor.authorsToReturn = authors
+            sut.searchText = "author"
+            sut.searchScope = .author
+
+            // When
+            await sut.performSearch()
+            let grouped = sut.groupedAuthors
+
+            // Then - Order should be A, Z, 0-9, #
+            let keys = grouped.map { $0.key }
+            let aIndex = keys.firstIndex(of: "A")
+            let zIndex = keys.firstIndex(of: "Z")
+            let numbersIndex = keys.firstIndex(of: "0-9")
+            let specialIndex = keys.firstIndex(of: "#")
+
+            #expect(aIndex != nil && zIndex != nil && numbersIndex != nil && specialIndex != nil)
+            #expect(aIndex! < zIndex!)
+            #expect(zIndex! < numbersIndex!)
+            #expect(numbersIndex! < specialIndex!)
+        }
+
+        @Test("Authors with empty firstName use lastName for grouping")
+        func emptyFirstNameUsesLastName() async {
+            // Given
+            let authors: [Author] = [
+                .init(id: "1", firstName: "Akira", lastName: "Toriyama", role: "Story"),
+                .init(id: "2", firstName: "", lastName: "Alice", role: "Art"),
+                .init(id: "3", firstName: "", lastName: "Bob", role: "Story")
+            ]
+            spyInteractor.authorsToReturn = authors
+            sut.searchText = "author"
+            sut.searchScope = .author
+
+            // When
+            await sut.performSearch()
+            let grouped = sut.groupedAuthors
+
+            // Then
+            let groupA = grouped.first(where: { $0.key == "A" })?.value
+            let groupB = grouped.first(where: { $0.key == "B" })?.value
+
+            #expect(groupA?.count == 2) // Akira + Alice (empty firstName)
+            #expect(groupB?.count == 1) // Bob (empty firstName)
+            #expect(groupA?.contains(where: { $0.lastName == "Alice" }) == true)
+        }
+
+        @Test(
+            "Special characters and numbers are grouped correctly",
+            arguments: [
+                .init(firstName: "@Author", expectedGroup: "#"),
+                .init(firstName: "\"Quoted\"", expectedGroup: "#"),
+                .init(firstName: "5th", expectedGroup: "0-9"),
+                .init(firstName: "3D", expectedGroup: "0-9"),
+                .init(firstName: "Alice", expectedGroup: "A"),
+                .init(firstName: "alice", expectedGroup: "A") // Case insensitive
+            ] as [GroupingArgument]
+        )
+        private func specialCharactersGrouping(argument: GroupingArgument) async {
+            // Given
+            let author = Author(
+                id: "1",
+                firstName: argument.firstName,
+                lastName: "Test",
+                role: "Story"
+            )
+            spyInteractor.authorsToReturn = [author]
+            sut.searchText = "test"
+            sut.searchScope = .author
+
+            // When
+            await sut.performSearch()
+            let grouped = sut.groupedAuthors
+
+            // Then
+            #expect(grouped.contains(where: { $0.key == argument.expectedGroup }))
+            let group = grouped.first(where: { $0.key == argument.expectedGroup })
+            #expect(group?.value.contains(where: { $0.id == "1" }) == true)
+        }
+
+        @Test("Empty author results returns empty groupedAuthors")
+        func emptyAuthorsReturnsEmptyGroups() async {
+            // Given
+            spyInteractor.authorsToReturn = []
+            sut.searchText = "nonexistent"
+            sut.searchScope = .author
+
+            // When
+            await sut.performSearch()
+
+            // Then
+            #expect(sut.groupedAuthors.isEmpty)
+        }
     }
 }
 
@@ -289,6 +433,13 @@ private extension SearchTests.ViewModelTests {
             role: "Story & Art"
         )
     ]
+
+    static let sampleAuthorsForGrouping: [Author] = [
+        .init(id: "1", firstName: "Akira", lastName: "Toriyama", role: "Story"),
+        .init(id: "2", firstName: "Eiichiro", lastName: "Oda", role: "Story & Art"),
+        .init(id: "3", firstName: "Kentaro", lastName: "Miura", role: "Story & Art"),
+        .init(id: "4", firstName: "Akiko", lastName: "Higashimura", role: "Story")
+    ]
 }
 
 // MARK: - Arguments
@@ -306,6 +457,20 @@ private extension SearchTests.ViewModelTests {
         init(error: Error, expectedContains: String) {
             self.error = error
             self.expectedContains = expectedContains
+        }
+    }
+
+    struct GroupingArgument: CustomTestStringConvertible {
+        let firstName: String
+        let expectedGroup: String
+
+        var testDescription: String {
+            "'\(firstName)' → group '\(expectedGroup)'"
+        }
+
+        init(firstName: String, expectedGroup: String) {
+            self.firstName = firstName
+            self.expectedGroup = expectedGroup
         }
     }
 }
