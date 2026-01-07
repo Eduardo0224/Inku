@@ -17,8 +17,12 @@ final class MockSearchInteractor: SearchInteractorProtocol {
 
     // MARK: - Functions
 
-    func searchMangasByTitle(_ text: String, page: Int, per: Int) async throws -> MangaListResponse {
+    func searchMangasContains(_ text: String, page: Int, per: Int) async throws -> MangaListResponse {
         .testData
+    }
+
+    func searchMangasBeginsWith(_ text: String) async throws -> [Manga] {
+        [.testData]
     }
 
     func searchAuthorsByName(_ name: String) async throws -> [Author] {
@@ -32,7 +36,11 @@ final class MockSearchInteractorWithError: SearchInteractorProtocol {
 
     // MARK: - Functions
 
-    func searchMangasByTitle(_ text: String, page: Int, per: Int) async throws -> MangaListResponse {
+    func searchMangasContains(_ text: String, page: Int, per: Int) async throws -> MangaListResponse {
+        throw URLError(.notConnectedToInternet)
+    }
+
+    func searchMangasBeginsWith(_ text: String) async throws -> [Manga] {
         throw URLError(.notConnectedToInternet)
     }
 

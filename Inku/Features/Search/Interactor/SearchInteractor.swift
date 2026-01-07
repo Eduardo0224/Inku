@@ -27,12 +27,16 @@ final class SearchInteractor: SearchInteractorProtocol {
 
     // MARK: - Functions
 
-    func searchMangasByTitle(_ text: String, page: Int, per: Int) async throws -> MangaListResponse {
+    func searchMangasContains(_ text: String, page: Int, per: Int) async throws -> MangaListResponse {
         let queryItems = makePaginationQueryItems(page: page, per: per)
         return try await networkService.get(
             endpoint: API.Endpoints.searchMangaContains(text),
             queryItems: queryItems
         )
+    }
+
+    func searchMangasBeginsWith(_ text: String) async throws -> [Manga] {
+        try await networkService.get(endpoint: API.Endpoints.searchMangaBeginsWith(text))
     }
 
     func searchAuthorsByName(_ name: String) async throws -> [Author] {

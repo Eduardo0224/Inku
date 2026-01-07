@@ -26,6 +26,17 @@ struct SearchView: View {
         self.viewModel = SearchViewModel(interactor: interactor)
     }
 
+    // MARK: - Computed Properties
+
+    private var searchPlaceholder: String {
+        switch viewModel.searchScope {
+        case .title:
+            L10n.Search.Placeholder.manga
+        case .author:
+            L10n.Search.Placeholder.author
+        }
+    }
+
     // MARK: - Body
 
     var body: some View {
@@ -44,9 +55,10 @@ struct SearchView: View {
             .navigationTitle(L10n.Search.Screen.title)
             .searchable(
                 text: $viewModel.searchText,
-                prompt: L10n.Search.Placeholder.search
+                placement: .toolbar,
+                prompt: searchPlaceholder
             )
-            .searchScopes($viewModel.searchScope) {
+            .searchScopes($viewModel.searchScope, activation: .onTextEntry) {
                 ForEach(SearchScope.allCases) { scope in
                     Text(scope.displayText)
                         .tag(scope)
@@ -81,26 +93,54 @@ struct SearchView: View {
     // MARK: - Private Views
 
     private var emptyStateView: some View {
-        InkuEmptyView(
-            icon: "magnifyingglass",
-            iconSize: .large,
-            title: L10n.Search.EmptyState.title,
-            subtitle: L10n.Search.EmptyState.message,
-            symbolEffect: .pulse,
-            symbolEffectOptions: .repeating
-        )
+        Group {
+            switch viewModel.searchScope {
+            case .title:
+                InkuEmptyView(
+                    icon: "magnifyingglass",
+                    iconSize: .large,
+                    title: L10n.Search.EmptyState.Manga.title,
+                    subtitle: L10n.Search.EmptyState.Manga.message,
+                    symbolEffect: .pulse,
+                    symbolEffectOptions: .repeating
+                )
+            case .author:
+                InkuEmptyView(
+                    icon: "person.text.rectangle",
+                    iconSize: .large,
+                    title: L10n.Search.EmptyState.Author.title,
+                    subtitle: L10n.Search.EmptyState.Author.message,
+                    symbolEffect: .pulse,
+                    symbolEffectOptions: .repeating
+                )
+            }
+        }
         .background(Color.inkuSurface)
     }
 
     private var noResultsView: some View {
-        InkuEmptyView(
-            icon: "doc.text.magnifyingglass",
-            iconSize: .large,
-            title: L10n.Search.NoResults.title,
-            subtitle: L10n.Search.NoResults.message,
-            symbolEffect: .bounce,
-            symbolEffectOptions: .repeat(2)
-        )
+        Group {
+            switch viewModel.searchScope {
+            case .title:
+                InkuEmptyView(
+                    icon: "doc.text.magnifyingglass",
+                    iconSize: .large,
+                    title: L10n.Search.NoResults.Manga.title,
+                    subtitle: L10n.Search.NoResults.Manga.message,
+                    symbolEffect: .bounce,
+                    symbolEffectOptions: .repeat(2)
+                )
+            case .author:
+                InkuEmptyView(
+                    icon: "person.crop.circle.badge.questionmark",
+                    iconSize: .large,
+                    title: L10n.Search.NoResults.Author.title,
+                    subtitle: L10n.Search.NoResults.Author.message,
+                    symbolEffect: .bounce,
+                    symbolEffectOptions: .repeat(2)
+                )
+            }
+        }
         .background(Color.inkuSurface)
     }
 
@@ -111,7 +151,8 @@ struct SearchView: View {
                 MangaResultsView(
                     mangas: viewModel.mangaResults,
                     searchText: viewModel.searchText,
-                    isLoadingMore: viewModel.isLoadingMore
+                    isLoadingMore: viewModel.isLoadingMore,
+                    mangaSearchMode: $viewModel.mangaSearchMode
                 ) { manga in
                     Task {
                         await viewModel.loadMoreResults()

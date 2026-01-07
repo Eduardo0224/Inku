@@ -52,8 +52,8 @@ extension SearchTests {
             #expect(sut.mangaResults == Self.sampleMangas)
             #expect(sut.errorMessage == nil)
             #expect(sut.isSearching == false)
-            #expect(spyInteractor.searchMangasByTitleWasCalled == true)
-            #expect(spyInteractor.lastSearchedText == "One Piece")
+            #expect(spyInteractor.searchMangasContainsWasCalled == true)
+            #expect(spyInteractor.lastSearchedTextContains == "One Piece")
         }
 
         @Test("Perform search by title with empty text clears results")
@@ -67,7 +67,8 @@ extension SearchTests {
             // Then
             #expect(sut.mangaResults.isEmpty)
             #expect(sut.authorResults.isEmpty)
-            #expect(spyInteractor.searchMangasByTitleWasCalled == false)
+            #expect(spyInteractor.searchMangasContainsWasCalled == false)
+            #expect(spyInteractor.searchMangasBeginsWithWasCalled == false)
         }
 
         // MARK: - Search by Author Tests
@@ -88,6 +89,166 @@ extension SearchTests {
             #expect(sut.isSearching == false)
             #expect(spyInteractor.searchAuthorsByNameWasCalled == true)
             #expect(spyInteractor.lastSearchedAuthorName == "Eiichiro Oda")
+        }
+
+        // MARK: - Search Mode Tests
+
+        @Test("Search with beginsWith mode calls correct interactor method")
+        func searchBeginsWithModeSuccess() async {
+            // Given
+            spyInteractor.mangasToReturn = Self.sampleMangas
+            sut.searchText = "One"
+            sut.searchScope = .title
+            sut.mangaSearchMode = .beginsWith
+
+            // When
+            await sut.performSearch()
+
+            // Then
+            #expect(sut.mangaResults == Self.sampleMangas)
+            #expect(sut.errorMessage == nil)
+            #expect(sut.isSearching == false)
+            #expect(spyInteractor.searchMangasBeginsWithWasCalled == true)
+            #expect(spyInteractor.searchMangasContainsWasCalled == false)
+            #expect(spyInteractor.lastSearchedTextBeginsWith == "One")
+            #expect(sut.hasMorePages == false) // beginsWith doesn't support pagination
+        }
+
+        @Test("Search with contains mode calls correct interactor method")
+        func searchContainsModeSuccess() async {
+            // Given
+            spyInteractor.mangasToReturn = Self.sampleMangas
+            sut.searchText = "Piece"
+            sut.searchScope = .title
+            sut.mangaSearchMode = .contains
+
+            // When
+            await sut.performSearch()
+
+            // Then
+            #expect(sut.mangaResults == Self.sampleMangas)
+            #expect(sut.errorMessage == nil)
+            #expect(sut.isSearching == false)
+            #expect(spyInteractor.searchMangasContainsWasCalled == true)
+            #expect(spyInteractor.searchMangasBeginsWithWasCalled == false)
+            #expect(spyInteractor.lastSearchedTextContains == "Piece")
+        }
+
+        @Test("Changing manga search mode triggers new search")
+        func mangaSearchModeChangeTriggersSearch() async {
+            // Given
+            spyInteractor.mangasToReturn = Self.sampleMangas
+            sut.searchText = "manga"
+            sut.searchScope = .title
+            sut.mangaSearchMode = .contains
+            await sut.performSearch()
+
+            spyInteractor.reset()
+
+            // When - change mode
+            sut.mangaSearchMode = .beginsWith
+
+            // Wait for search to complete
+            try? await Task.sleep(for: .milliseconds(100))
+
+            // Then - should trigger new search
+            #expect(spyInteractor.searchMangasBeginsWithWasCalled == true)
+        }
+
+        // MARK: - Sorting Tests
+
+        @Test("Contains mode sorts first page by score descending")
+        func containsModeSortsFirstPage() async {
+            // Given - unsorted mangas from server
+            let unsortedMangas: [Manga] = [
+                Self.mangaWithScore(id: 1, score: 7.5),
+                Self.mangaWithScore(id: 2, score: 9.2),
+                Self.mangaWithScore(id: 3, score: 8.1)
+            ]
+            spyInteractor.mangasToReturn = unsortedMangas
+            sut.searchText = "manga"
+            sut.searchScope = .title
+            sut.mangaSearchMode = .contains
+
+            // When
+            await sut.performSearch()
+
+            // Then - should be sorted by score descending
+            #expect(sut.mangaResults.count == 3)
+            #expect(sut.mangaResults[0].score == 9.2) // Highest
+            #expect(sut.mangaResults[1].score == 8.1)
+            #expect(sut.mangaResults[2].score == 7.5) // Lowest
+        }
+
+        @Test("BeginsWith mode sorts all results by score descending")
+        func beginswWithModeSortsAllResults() async {
+            // Given - unsorted mangas from server
+            let unsortedMangas: [Manga] = [
+                Self.mangaWithScore(id: 1, score: 6.8),
+                Self.mangaWithScore(id: 2, score: 9.5),
+                Self.mangaWithScore(id: 3, score: 7.2),
+                Self.mangaWithScore(id: 4, score: 8.9)
+            ]
+            spyInteractor.mangasToReturn = unsortedMangas
+            sut.searchText = "One"
+            sut.searchScope = .title
+            sut.mangaSearchMode = .beginsWith
+
+            // When
+            await sut.performSearch()
+
+            // Then - should be sorted by score descending
+            #expect(sut.mangaResults.count == 4)
+            #expect(sut.mangaResults[0].score == 9.5) // Highest
+            #expect(sut.mangaResults[1].score == 8.9)
+            #expect(sut.mangaResults[2].score == 7.2)
+            #expect(sut.mangaResults[3].score == 6.8) // Lowest
+        }
+
+        @Test("Load more results sorts new page independently")
+        func loadMoreResultsSortsPageIndependently() async {
+            // Given - First page
+            let firstPageMangas: [Manga] = [
+                Self.mangaWithScore(id: 1, score: 7.5),
+                Self.mangaWithScore(id: 2, score: 9.0),
+                Self.mangaWithScore(id: 3, score: 8.2)
+            ]
+            spyInteractor.mangasToReturn = firstPageMangas
+            spyInteractor.totalToReturn = 100
+            sut.searchText = "manga"
+            sut.searchScope = .title
+            sut.mangaSearchMode = .contains
+            await sut.performSearch()
+
+            // Then - First page sorted
+            #expect(sut.mangaResults[0].score == 9.0)
+            #expect(sut.mangaResults[1].score == 8.2)
+            #expect(sut.mangaResults[2].score == 7.5)
+
+            // Given - Second page (unsorted)
+            let secondPageMangas: [Manga] = [
+                Self.mangaWithScore(id: 4, score: 6.8),
+                Self.mangaWithScore(id: 5, score: 9.5), // Better than all in page 1
+                Self.mangaWithScore(id: 6, score: 7.9)
+            ]
+            spyInteractor.mangasToReturn = secondPageMangas
+            spyInteractor.totalToReturn = 100
+
+            // When - Load more
+            await sut.loadMoreResults()
+
+            // Then - Pages are NOT mixed, each page sorted independently
+            #expect(sut.mangaResults.count == 6)
+
+            // Page 1 (positions 0-2) - sorted within itself
+            #expect(sut.mangaResults[0].score == 9.0)
+            #expect(sut.mangaResults[1].score == 8.2)
+            #expect(sut.mangaResults[2].score == 7.5)
+
+            // Page 2 (positions 3-5) - sorted within itself
+            #expect(sut.mangaResults[3].score == 9.5) // Highest overall, but in position 3
+            #expect(sut.mangaResults[4].score == 7.9)
+            #expect(sut.mangaResults[5].score == 6.8)
         }
 
         // MARK: - Pagination Tests
@@ -128,8 +289,28 @@ extension SearchTests {
             await sut.loadMoreResults()
 
             // Then - should NOT call interactor for author search
-            #expect(spyInteractor.searchMangasByTitleWasCalled == false)
+            #expect(spyInteractor.searchMangasContainsWasCalled == false)
+            #expect(spyInteractor.searchMangasBeginsWithWasCalled == false)
             #expect(spyInteractor.searchAuthorsByNameWasCalled == false)
+        }
+
+        @Test("Load more results does not work for beginsWith mode")
+        func loadMoreResultsBeginsWithMode() async {
+            // Given
+            spyInteractor.mangasToReturn = Self.sampleMangas
+            sut.searchText = "One"
+            sut.searchScope = .title
+            sut.mangaSearchMode = .beginsWith
+            await sut.performSearch()
+
+            spyInteractor.reset()
+
+            // When
+            await sut.loadMoreResults()
+
+            // Then - should NOT call interactor for beginsWith mode
+            #expect(spyInteractor.searchMangasContainsWasCalled == false)
+            #expect(spyInteractor.searchMangasBeginsWithWasCalled == false)
         }
 
         // MARK: - Scope Change Tests
@@ -162,6 +343,7 @@ extension SearchTests {
             // Given
             spyInteractor.mangasToReturn = Self.sampleMangas
             sut.searchText = "manga"
+            sut.mangaSearchMode = .beginsWith
             await sut.performSearch()
 
             // When
@@ -172,6 +354,25 @@ extension SearchTests {
             #expect(sut.mangaResults.isEmpty)
             #expect(sut.authorResults.isEmpty)
             #expect(sut.errorMessage == nil)
+            #expect(sut.mangaSearchMode == .contains) // Should reset to .contains
+        }
+
+        @Test("Clearing search text resets manga search mode to contains")
+        func clearingSearchTextResetsMangaSearchMode() async {
+            // Given
+            spyInteractor.mangasToReturn = Self.sampleMangas
+            sut.searchText = "One"
+            sut.searchScope = .title
+            sut.mangaSearchMode = .beginsWith
+            await sut.performSearch()
+
+            #expect(sut.mangaSearchMode == .beginsWith)
+
+            // When - simulate pressing X button on search bar
+            sut.searchText = ""
+
+            // Then - mode should reset to .contains for faster next search
+            #expect(sut.mangaSearchMode == .contains)
         }
 
         // MARK: - Empty State Tests
@@ -440,6 +641,29 @@ private extension SearchTests.ViewModelTests {
         .init(id: "3", firstName: "Kentaro", lastName: "Miura", role: "Story & Art"),
         .init(id: "4", firstName: "Akiko", lastName: "Higashimura", role: "Story")
     ]
+
+    static func mangaWithScore(id: Int, score: Double) -> Manga {
+        .init(
+            id: id,
+            title: "Test Manga \(id)",
+            titleEnglish: "Test Manga \(id)",
+            titleJapanese: nil,
+            sypnosis: "Test synopsis",
+            background: nil,
+            mainPicture: nil,
+            url: nil,
+            volumes: nil,
+            chapters: nil,
+            status: "Publishing",
+            score: score,
+            startDate: nil,
+            endDate: nil,
+            authors: [],
+            genres: [],
+            demographics: [],
+            themes: []
+        )
+    }
 }
 
 // MARK: - Arguments

@@ -38,8 +38,8 @@ extension SearchTests {
 
         // MARK: - Search by Title Tests
 
-        @Test("Search by title makes correct API call")
-        func searchByTitleSuccess() async throws {
+        @Test("Search mangas contains makes correct API call")
+        func searchMangasContainsSuccess() async throws {
             // Given
             let searchText = "One Piece"
             let page = 1
@@ -47,7 +47,7 @@ extension SearchTests {
             spyNetworkService.dataToReturn = Self.sampleMangaListResponse
 
             // When
-            let response = try await sut.searchMangasByTitle(searchText, page: page, per: per)
+            let response = try await sut.searchMangasContains(searchText, page: page, per: per)
 
             // Then
             #expect(response.items.count == Self.sampleMangaListResponse.items.count)
@@ -57,15 +57,43 @@ extension SearchTests {
             #expect(spyNetworkService.lastQueryItems?.contains(where: { $0.name == "per" }) == true)
         }
 
-        @Test("Search by title network failure throws error")
-        func searchByTitleFailure() async throws {
+        @Test("Search mangas contains network failure throws error")
+        func searchMangasContainsFailure() async throws {
             // Given
             spyNetworkService.shouldThrowError = true
             spyNetworkService.errorToThrow = NetworkError.serverError(500)
 
             // When/Then
             await #expect(throws: NetworkError.self) {
-                _ = try await sut.searchMangasByTitle("One Piece", page: 1, per: 20)
+                _ = try await sut.searchMangasContains("One Piece", page: 1, per: 20)
+            }
+        }
+
+        @Test("Search mangas begins with makes correct API call")
+        func searchMangasBeginsWithSuccess() async throws {
+            // Given
+            let searchText = "One"
+            spyNetworkService.dataToReturn = Self.sampleMangas
+
+            // When
+            let mangas = try await sut.searchMangasBeginsWith(searchText)
+
+            // Then
+            #expect(mangas.count == Self.sampleMangas.count)
+            #expect(spyNetworkService.getWasCalled == true)
+            #expect(spyNetworkService.lastEndpoint == API.Endpoints.searchMangaBeginsWith(searchText))
+            #expect(spyNetworkService.lastQueryItems == []) // No pagination
+        }
+
+        @Test("Search mangas begins with network failure throws error")
+        func searchMangasBeginsWithFailure() async throws {
+            // Given
+            spyNetworkService.shouldThrowError = true
+            spyNetworkService.errorToThrow = NetworkError.serverError(500)
+
+            // When/Then
+            await #expect(throws: NetworkError.self) {
+                _ = try await sut.searchMangasBeginsWith("One")
             }
         }
 
@@ -101,7 +129,7 @@ extension SearchTests {
         // MARK: - Pagination Tests
 
         @Test(
-            "Search by title with pagination parameters",
+            "Search mangas contains with pagination parameters",
             arguments: [
                 .init(page: 1, per: 20),
                 .init(page: 2, per: 20),
@@ -109,12 +137,12 @@ extension SearchTests {
                 .init(page: 3, per: 10)
             ] as [PaginationArgument]
         )
-        private func searchByTitleWithPagination(argument: PaginationArgument) async throws {
+        private func searchMangasContainsWithPagination(argument: PaginationArgument) async throws {
             // Given
             spyNetworkService.dataToReturn = Self.sampleMangaListResponse
 
             // When
-            _ = try await sut.searchMangasByTitle("manga", page: argument.page, per: argument.per)
+            _ = try await sut.searchMangasContains("manga", page: argument.page, per: argument.per)
 
             // Then
             let pageQuery = spyNetworkService.lastQueryItems?.first(where: { $0.name == "page" })
@@ -134,6 +162,10 @@ private extension SearchTests.InteractorTests {
         items: [.testData],
         metadata: .testData
     )
+
+    static let sampleMangas: [Manga] = [
+        .testData
+    ]
 
     static let sampleAuthors: [Author] = [
         .testData

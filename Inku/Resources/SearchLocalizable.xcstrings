@@ -145,6 +145,42 @@
         }
       }
     },
+    "PLACEHOLDER_MANGA" : {
+      "comment" : "Placeholder text for manga search field.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search mangas..."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar mangas..."
+          }
+        }
+      }
+    },
+    "PLACEHOLDER_AUTHOR" : {
+      "comment" : "Placeholder text for author search field.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search authors..."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar autores..."
+          }
+        }
+      }
+    },
     "RESULT_SINGULAR" : {
       "comment" : "Singular form for result count.",
       "extractionState" : "manual",
@@ -213,6 +249,186 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Buscando..."
+          }
+        }
+      }
+    },
+    "EMPTY_STATE_MANGA_TITLE" : {
+      "comment" : "Title shown when no search has been performed yet in manga search.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search for Manga"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar Manga"
+          }
+        }
+      }
+    },
+    "EMPTY_STATE_MANGA_MESSAGE" : {
+      "comment" : "Message shown when no search has been performed yet in manga search.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search for your favorite manga"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Busca tus mangas favoritos"
+          }
+        }
+      }
+    },
+    "EMPTY_STATE_AUTHOR_TITLE" : {
+      "comment" : "Title shown when no search has been performed yet in author search.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search for Authors"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar Autores"
+          }
+        }
+      }
+    },
+    "EMPTY_STATE_AUTHOR_MESSAGE" : {
+      "comment" : "Message shown when no search has been performed yet in author search.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search for your favorite authors"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Busca tus autores favoritos"
+          }
+        }
+      }
+    },
+    "NO_RESULTS_MANGA_TITLE" : {
+      "comment" : "Title shown when no manga match the search query.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Manga Found"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontraron mangas"
+          }
+        }
+      }
+    },
+    "NO_RESULTS_MANGA_MESSAGE" : {
+      "comment" : "Message shown when no manga match the search query.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try searching with a different title"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intenta buscar con un título diferente"
+          }
+        }
+      }
+    },
+    "NO_RESULTS_AUTHOR_TITLE" : {
+      "comment" : "Title shown when no authors match the search query.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Authors Found"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontraron autores"
+          }
+        }
+      }
+    },
+    "NO_RESULTS_AUTHOR_MESSAGE" : {
+      "comment" : "Message shown when no authors match the search query.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try searching with a different name"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intenta buscar con un nombre diferente"
+          }
+        }
+      }
+    },
+    "MODE_CONTAINS" : {
+      "comment" : "Search mode option to search titles that contain the search text.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contains"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contiene"
+          }
+        }
+      }
+    },
+    "MODE_BEGINS_WITH" : {
+      "comment" : "Search mode option to search titles that begin with the search text.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Begins With"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empieza con"
           }
         }
       }

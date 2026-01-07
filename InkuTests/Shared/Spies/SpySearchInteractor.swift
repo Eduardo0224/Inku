@@ -18,10 +18,12 @@ final class SpySearchInteractor: SearchInteractorProtocol, @unchecked Sendable {
 
     // MARK: - Properties (Spy Tracking)
 
-    private(set) var searchMangasByTitleWasCalled = false
+    private(set) var searchMangasContainsWasCalled = false
+    private(set) var searchMangasBeginsWithWasCalled = false
     private(set) var searchAuthorsByNameWasCalled = false
 
-    private(set) var lastSearchedText: String?
+    private(set) var lastSearchedTextContains: String?
+    private(set) var lastSearchedTextBeginsWith: String?
     private(set) var lastSearchedAuthorName: String?
     private(set) var lastPage: Int?
     private(set) var lastPer: Int?
@@ -37,18 +39,20 @@ final class SpySearchInteractor: SearchInteractorProtocol, @unchecked Sendable {
     // MARK: - Functions
 
     func reset() {
-        searchMangasByTitleWasCalled = false
+        searchMangasContainsWasCalled = false
+        searchMangasBeginsWithWasCalled = false
         searchAuthorsByNameWasCalled = false
 
-        lastSearchedText = nil
+        lastSearchedTextContains = nil
+        lastSearchedTextBeginsWith = nil
         lastSearchedAuthorName = nil
         lastPage = nil
         lastPer = nil
     }
 
-    func searchMangasByTitle(_ text: String, page: Int, per: Int) async throws -> MangaListResponse {
-        searchMangasByTitleWasCalled = true
-        lastSearchedText = text
+    func searchMangasContains(_ text: String, page: Int, per: Int) async throws -> MangaListResponse {
+        searchMangasContainsWasCalled = true
+        lastSearchedTextContains = text
         lastPage = page
         lastPer = per
 
@@ -61,6 +65,17 @@ final class SpySearchInteractor: SearchInteractorProtocol, @unchecked Sendable {
             items: mangasToReturn,
             metadata: .init(total: total, page: page, per: per)
         )
+    }
+
+    func searchMangasBeginsWith(_ text: String) async throws -> [Manga] {
+        searchMangasBeginsWithWasCalled = true
+        lastSearchedTextBeginsWith = text
+
+        if shouldThrowError {
+            throw errorToThrow
+        }
+
+        return mangasToReturn
     }
 
     func searchAuthorsByName(_ name: String) async throws -> [Author] {

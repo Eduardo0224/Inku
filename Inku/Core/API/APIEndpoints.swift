@@ -50,6 +50,10 @@ enum API {
             "/search/mangasContains/\(text)"
         }
 
+        static func searchMangaBeginsWith(_ text: String) -> String {
+            "/search/mangasBeginsWith/\(text)"
+        }
+
         static func searchAuthor(_ name: String) -> String {
             "/search/author/\(name)"
         }

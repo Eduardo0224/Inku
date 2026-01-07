@@ -132,15 +132,37 @@ enum L10n {
         enum EmptyState {
             static let title = String(localized: .SearchLocalizable.emptyStateTitle)
             static let message = String(localized: .SearchLocalizable.emptyStateMessage)
+
+            enum Manga {
+                static let title = String(localized: .SearchLocalizable.emptyStateMangaTitle)
+                static let message = String(localized: .SearchLocalizable.emptyStateMangaMessage)
+            }
+
+            enum Author {
+                static let title = String(localized: .SearchLocalizable.emptyStateAuthorTitle)
+                static let message = String(localized: .SearchLocalizable.emptyStateAuthorMessage)
+            }
         }
 
         enum NoResults {
             static let title = String(localized: .SearchLocalizable.noResultsTitle)
             static let message = String(localized: .SearchLocalizable.noResultsMessage)
+
+            enum Manga {
+                static let title = String(localized: .SearchLocalizable.noResultsMangaTitle)
+                static let message = String(localized: .SearchLocalizable.noResultsMangaMessage)
+            }
+
+            enum Author {
+                static let title = String(localized: .SearchLocalizable.noResultsAuthorTitle)
+                static let message = String(localized: .SearchLocalizable.noResultsAuthorMessage)
+            }
         }
 
         enum Placeholder {
             static let search = String(localized: .SearchLocalizable.placeholder)
+            static let manga = String(localized: .SearchLocalizable.placeholderManga)
+            static let author = String(localized: .SearchLocalizable.placeholderAuthor)
         }
 
         enum Results {
@@ -150,6 +172,11 @@ enum L10n {
                 String(localized: .SearchLocalizable.forQuery(query))
             }
             static let searching = String(localized: .SearchLocalizable.searching)
+        }
+
+        enum Mode {
+            static let contains = String(localized: .SearchLocalizable.modeContains)
+            static let beginsWith = String(localized: .SearchLocalizable.modeBeginsWith)
         }
     }
 }

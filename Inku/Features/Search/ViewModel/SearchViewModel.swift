@@ -37,6 +37,10 @@ final class SearchViewModel: SearchViewModelProtocol {
     var searchText = "" {
         didSet {
             guard searchText != oldValue else { return }
+            // Reset manga search mode when clearing search
+            if searchText.isEmpty && !oldValue.isEmpty {
+                mangaSearchMode = .contains
+            }
             scheduleSearch()
         }
     }
@@ -44,6 +48,18 @@ final class SearchViewModel: SearchViewModelProtocol {
     var searchScope: SearchScope = .title {
         didSet {
             guard searchScope != oldValue else { return }
+            // Reset manga search mode when switching to author scope
+            if searchScope == .author {
+                mangaSearchMode = .contains
+            }
+            performSearchIfNeeded()
+        }
+    }
+
+    var mangaSearchMode: MangaSearchMode = .contains {
+        didSet {
+            guard mangaSearchMode != oldValue else { return }
+            guard searchScope == .title else { return }
             performSearchIfNeeded()
         }
     }
@@ -140,13 +156,23 @@ final class SearchViewModel: SearchViewModelProtocol {
         do {
             switch searchScope {
             case .title:
-                let response = try await interactor.searchMangasByTitle(
-                    searchText,
-                    page: currentPage,
-                    per: itemsPerPage
-                )
-                mangaResults = response.items
-                hasMorePages = response.metadata.hasMorePages
+                switch mangaSearchMode {
+                case .contains:
+                    let response = try await interactor.searchMangasContains(
+                        searchText,
+                        page: currentPage,
+                        per: itemsPerPage
+                    )
+                    // Sort only this page by score (descending)
+                    mangaResults = response.items.sorted { $0.sortableScore > $1.sortableScore }
+                    hasMorePages = response.metadata.hasMorePages
+
+                case .beginsWith:
+                    let mangas = try await interactor.searchMangasBeginsWith(searchText)
+                    // Sort all results by score (descending)
+                    mangaResults = mangas.sorted { $0.sortableScore > $1.sortableScore }
+                    hasMorePages = false
+                }
 
             case .author:
                 let authors = try await interactor.searchAuthorsByName(searchText)
@@ -161,6 +187,7 @@ final class SearchViewModel: SearchViewModelProtocol {
     func loadMoreResults() async {
         guard !isLoadingMore, !isSearching, hasMorePages else { return }
         guard searchScope == .title else { return } // Only title search supports pagination
+        guard mangaSearchMode == .contains else { return } // Only 'contains' mode supports pagination
 
         isLoadingMore = true
         defer { isLoadingMore = false }
@@ -168,12 +195,14 @@ final class SearchViewModel: SearchViewModelProtocol {
         let nextPage = currentPage + 1
 
         do {
-            let response = try await interactor.searchMangasByTitle(
+            let response = try await interactor.searchMangasContains(
                 searchText,
                 page: nextPage,
                 per: itemsPerPage
             )
-            mangaResults.append(contentsOf: response.items)
+            // Sort only this page by score (descending) before appending
+            let sortedNewPage = response.items.sorted { $0.sortableScore > $1.sortableScore }
+            mangaResults.append(contentsOf: sortedNewPage)
             currentPage = nextPage
             hasMorePages = response.metadata.hasMorePages
         } catch {
