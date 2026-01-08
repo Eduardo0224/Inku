@@ -1,0 +1,438 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "SCREEN_TITLE" : {
+      "comment" : "Title of the search screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar"
+          }
+        }
+      }
+    },
+    "SCOPE_TITLE" : {
+      "comment" : "Search scope option for searching by manga title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Title"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Título"
+          }
+        }
+      }
+    },
+    "SCOPE_AUTHOR" : {
+      "comment" : "Search scope option for searching by author name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Author"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autor"
+          }
+        }
+      }
+    },
+    "EMPTY_STATE_TITLE" : {
+      "comment" : "Title shown when search is empty.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search for Manga"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar Manga"
+          }
+        }
+      }
+    },
+    "EMPTY_STATE_MESSAGE" : {
+      "comment" : "Message shown when search is empty.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a title or author name to start searching"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingresa un título o nombre de autor para comenzar la búsqueda"
+          }
+        }
+      }
+    },
+    "NO_RESULTS_TITLE" : {
+      "comment" : "Title shown when search has no results.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Results"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin Resultados"
+          }
+        }
+      }
+    },
+    "NO_RESULTS_MESSAGE" : {
+      "comment" : "Message shown when search has no results.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try different keywords or search criteria"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intenta con diferentes palabras clave o criterios de búsqueda"
+          }
+        }
+      }
+    },
+    "PLACEHOLDER" : {
+      "comment" : "Placeholder text for search field.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search mangas..."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar mangas..."
+          }
+        }
+      }
+    },
+    "PLACEHOLDER_MANGA" : {
+      "comment" : "Placeholder text for manga search field.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search mangas..."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar mangas..."
+          }
+        }
+      }
+    },
+    "PLACEHOLDER_AUTHOR" : {
+      "comment" : "Placeholder text for author search field.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search authors..."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar autores..."
+          }
+        }
+      }
+    },
+    "RESULT_SINGULAR" : {
+      "comment" : "Singular form for result count.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "result"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "resultado"
+          }
+        }
+      }
+    },
+    "RESULT_PLURAL" : {
+      "comment" : "Plural form for result count.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "results"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "resultados"
+          }
+        }
+      }
+    },
+    "FOR_QUERY" : {
+      "comment" : "Prefix for search query display (e.g., 'for One Piece').",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "for '%@'"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "para '%@'"
+          }
+        }
+      }
+    },
+    "SEARCHING" : {
+      "comment" : "Loading state message while searching.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Searching..."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscando..."
+          }
+        }
+      }
+    },
+    "EMPTY_STATE_MANGA_TITLE" : {
+      "comment" : "Title shown when no search has been performed yet in manga search.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search for Manga"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar Manga"
+          }
+        }
+      }
+    },
+    "EMPTY_STATE_MANGA_MESSAGE" : {
+      "comment" : "Message shown when no search has been performed yet in manga search.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search for your favorite manga"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Busca tus mangas favoritos"
+          }
+        }
+      }
+    },
+    "EMPTY_STATE_AUTHOR_TITLE" : {
+      "comment" : "Title shown when no search has been performed yet in author search.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search for Authors"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar Autores"
+          }
+        }
+      }
+    },
+    "EMPTY_STATE_AUTHOR_MESSAGE" : {
+      "comment" : "Message shown when no search has been performed yet in author search.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search for your favorite authors"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Busca tus autores favoritos"
+          }
+        }
+      }
+    },
+    "NO_RESULTS_MANGA_TITLE" : {
+      "comment" : "Title shown when no manga match the search query.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Manga Found"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontraron mangas"
+          }
+        }
+      }
+    },
+    "NO_RESULTS_MANGA_MESSAGE" : {
+      "comment" : "Message shown when no manga match the search query.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try searching with a different title"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intenta buscar con un título diferente"
+          }
+        }
+      }
+    },
+    "NO_RESULTS_AUTHOR_TITLE" : {
+      "comment" : "Title shown when no authors match the search query.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Authors Found"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontraron autores"
+          }
+        }
+      }
+    },
+    "NO_RESULTS_AUTHOR_MESSAGE" : {
+      "comment" : "Message shown when no authors match the search query.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try searching with a different name"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intenta buscar con un nombre diferente"
+          }
+        }
+      }
+    },
+    "MODE_CONTAINS" : {
+      "comment" : "Search mode option to search titles that contain the search text.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contains"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contiene"
+          }
+        }
+      }
+    },
+    "MODE_BEGINS_WITH" : {
+      "comment" : "Search mode option to search titles that begin with the search text.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Begins With"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empieza con"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.1"
+}

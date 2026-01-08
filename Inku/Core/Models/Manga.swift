@@ -61,6 +61,10 @@ struct Manga: Identifiable, Codable, Hashable, Sendable {
         return score.formatted(.number.precision(.fractionLength(2)))
     }
 
+    var sortableScore: Double {
+        score ?? 0.0
+    }
+
     var statusText: String {
         status?.capitalized ?? "Unknown"
     }
