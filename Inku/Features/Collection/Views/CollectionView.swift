@@ -131,7 +131,7 @@ private struct MangaDetailViewWrapper: View {
     traits: .previewContainer(.empty)
 ) {
     CollectionView()
-        .environment(\.collectionViewModel, CollectionViewModel())
+        .environment(\.collectionViewModel, MockCollectionViewModel.empty)
 }
 
 #Preview(
@@ -139,5 +139,5 @@ private struct MangaDetailViewWrapper: View {
     traits: .previewContainer(.withData)
 ) {
     CollectionView()
-        .environment(\.collectionViewModel, CollectionViewModel())
+        .environment(\.collectionViewModel, MockCollectionViewModel.withData)
 }

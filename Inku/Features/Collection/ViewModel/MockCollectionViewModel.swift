@@ -73,6 +73,10 @@ final class MockCollectionViewModel: CollectionViewModelProtocol {
     func getTotalVolumesOwned() -> Int {
         totalVolumes > 0 ? totalVolumes : mangas.reduce(0) { $0 + $1.volumesOwnedCount }
     }
+
+    // MARK: - Functions
+
+    func setModelContext(_ modelContext: ModelContext) { }
 }
 
 // MARK: - Preview Helpers
