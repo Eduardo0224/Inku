@@ -6,10 +6,18 @@
 //
 
 import SwiftUI
+import SwiftData
 import InkuUI
 
 @main
 struct InkuApp: App {
+
+    // MARK: - States
+
+    @State private var collectionViewModel = CollectionViewModel()
+
+    // MARK: - Body
+
     var body: some Scene {
         WindowGroup {
             TabView {
@@ -20,8 +28,14 @@ struct InkuApp: App {
                 Tab(L10n.Search.Screen.title, systemImage: "magnifyingglass", role: .search) {
                     SearchView()
                 }
+
+                Tab(L10n.Tabs.collection, systemImage: "bookmark.fill") {
+                    CollectionView()
+                }
             }
+            .environment(\.collectionViewModel, collectionViewModel)
             .inkuTabStyle()
         }
+        .modelContainer(for: CollectionManga.self)
     }
 }

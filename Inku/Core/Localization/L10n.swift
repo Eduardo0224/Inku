@@ -19,6 +19,7 @@ enum L10n {
 
     enum Tabs {
         static let browse = String(localized: .tabBrowse)
+        static let collection = String(localized: .tabCollection)
     }
 
     // MARK: - Common (Localizable.xcstrings)
@@ -177,6 +178,97 @@ enum L10n {
         enum Mode {
             static let contains = String(localized: .SearchLocalizable.modeContains)
             static let beginsWith = String(localized: .SearchLocalizable.modeBeginsWith)
+        }
+    }
+
+    // MARK: - Collection (CollectionLocalizable.xcstrings)
+
+    enum Collection {
+
+        enum Screen {
+            static let title = String(localized: .CollectionLocalizable.screenTitle)
+        }
+
+        enum Filter {
+            static let title = String(localized: .CollectionLocalizable.filterTitle)
+            static let all = String(localized: .CollectionLocalizable.filterAll)
+            static let reading = String(localized: .CollectionLocalizable.filterReading)
+            static let complete = String(localized: .CollectionLocalizable.filterComplete)
+            static let incomplete = String(localized: .CollectionLocalizable.filterIncomplete)
+        }
+
+        enum Sort {
+            static let dateAdded = String(localized: .CollectionLocalizable.sortDateAdded)
+            static let progress = String(localized: .CollectionLocalizable.sortProgress)
+            static let title = String(localized: .CollectionLocalizable.sortTitle)
+        }
+
+        enum Actions {
+            static let add = String(localized: .CollectionLocalizable.actionsAdd)
+            static let manage = String(localized: .CollectionLocalizable.actionsManage)
+        }
+
+        enum Search {
+            static let placeholder = String(localized: .CollectionLocalizable.searchPlaceholder)
+        }
+
+        enum Empty {
+            static let allTitle = String(localized: .CollectionLocalizable.emptyAllTitle)
+            static let allMessage = String(localized: .CollectionLocalizable.emptyAllMessage)
+            static let readingTitle = String(localized: .CollectionLocalizable.emptyReadingTitle)
+            static let readingMessage = String(localized: .CollectionLocalizable.emptyReadingMessage)
+            static let completeTitle = String(localized: .CollectionLocalizable.emptyCompleteTitle)
+            static let completeMessage = String(localized: .CollectionLocalizable.emptyCompleteMessage)
+            static let incompleteTitle = String(localized: .CollectionLocalizable.emptyIncompleteTitle)
+            static let incompleteMessage = String(localized: .CollectionLocalizable.emptyIncompleteMessage)
+        }
+
+        enum Card {
+            static let complete = String(localized: .CollectionLocalizable.cardComplete)
+            static let volumeSingular = String(localized: .CollectionLocalizable.cardVolumeSingular)
+            static let volumePlural = String(localized: .CollectionLocalizable.cardVolumePlural)
+            static let progress = String(localized: .CollectionLocalizable.cardProgress)
+            static let edit = String(localized: .CollectionLocalizable.cardEdit)
+            static let delete = String(localized: .CollectionLocalizable.cardDelete)
+            static func reading(_ volume: Int) -> String {
+                String(localized: .CollectionLocalizable.cardReading(volume))
+            }
+        }
+
+        enum Stats {
+            static let title = String(localized: .CollectionLocalizable.statsTitle)
+            static let totalMangas = String(localized: .CollectionLocalizable.statsTotalMangas)
+            static let totalVolumes = String(localized: .CollectionLocalizable.statsTotalVolumes)
+        }
+
+        enum Edit {
+            static let title = String(localized: .CollectionLocalizable.editTitle)
+            static let sectionTitle = String(localized: .CollectionLocalizable.editSectionTitle)
+            static let currentVolume = String(localized: .CollectionLocalizable.editCurrentVolume)
+            static let volumePlaceholder = String(localized: .CollectionLocalizable.editVolumePlaceholder)
+            static let completeCollection = String(localized: .CollectionLocalizable.editCompleteCollection)
+            static func volumesOwned(_ count: Int) -> String {
+                String(localized: .CollectionLocalizable.editVolumesOwned(count))
+            }
+            static func totalVolumes(_ count: Int) -> String {
+                String(localized: .CollectionLocalizable.editTotalVolumes(count))
+            }
+        }
+
+        enum Delete {
+            static let title = String(localized: .CollectionLocalizable.deleteTitle)
+            static let confirm = String(localized: .CollectionLocalizable.deleteConfirm)
+            static func message(_ title: String) -> String {
+                String(localized: .CollectionLocalizable.deleteMessage(title))
+            }
+        }
+
+        enum Error {
+            static let alreadyExists = String(localized: .CollectionLocalizable.errorAlreadyExists)
+            static let notFound = String(localized: .CollectionLocalizable.errorNotFound)
+            static let saveFailed = String(localized: .CollectionLocalizable.errorSaveFailed)
+            static let updateFailed = String(localized: .CollectionLocalizable.errorUpdateFailed)
+            static let deleteFailed = String(localized: .CollectionLocalizable.errorDeleteFailed)
         }
     }
 }
