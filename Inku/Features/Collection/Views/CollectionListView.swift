@@ -24,7 +24,7 @@ struct CollectionListView: View {
     // MARK: - Environment
 
     @Environment(\.modelContext) private var modelContext
-    @Environment(CollectionViewModel.self) var viewModel
+    @Environment(\.collectionViewModel) private var viewModel
 
     // MARK: - States
 
