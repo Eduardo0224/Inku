@@ -116,6 +116,17 @@ struct CollectionListView: View {
         } message: { manga in
             Text(L10n.Collection.Delete.message(manga.title))
         }
+        .alert(
+            L10n.Error.title,
+            isPresented: .constant(viewModel.errorMessage != nil),
+            presenting: viewModel.errorMessage
+        ) { _ in
+            Button(L10n.Common.ok, role: .cancel) {
+                viewModel.clearError()
+            }
+        } message: { errorMessage in
+            Text(errorMessage)
+        }
     }
 
     // MARK: - Private Views
@@ -216,7 +227,9 @@ struct CollectionListView: View {
             try viewModel.removeFromCollection(manga)
             mangaToDelete = nil
         } catch {
-            print("[CollectionListView] Error deleting manga: \(error)")
+            // Error message is already set by viewModel.handleError()
+            // Alert will be displayed automatically via errorMessage binding
+            mangaToDelete = nil
         }
     }
 }

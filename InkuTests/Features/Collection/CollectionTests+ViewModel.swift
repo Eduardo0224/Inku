@@ -28,13 +28,14 @@ extension CollectionTests {
 
         // MARK: - Properties
 
+        let container: ModelContainer
         let modelContext: ModelContext
 
         // MARK: - Initializers
 
         init() throws {
             let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
-            let container = try ModelContainer(
+            container = try ModelContainer(
                 for: CollectionManga.self,
                 configurations: configuration
             )
@@ -111,7 +112,7 @@ extension CollectionTests {
             let originalModifiedDate = collectionManga.lastModified
 
             // Small delay to ensure date changes
-            try? Thread.sleep(forTimeInterval: 0.01)
+            Thread.sleep(forTimeInterval: 0.01)
 
             // Modify the manga
             collectionManga.volumesOwnedCount = 5
@@ -126,7 +127,8 @@ extension CollectionTests {
             #expect(updatedManga?.volumesOwnedCount == 5)
             #expect(updatedManga?.currentReadingVolume == 3)
             #expect(updatedManga?.hasCompleteCollection == false)
-            #expect(updatedManga?.lastModified > originalModifiedDate)
+            let lastModified = try #require(updatedManga?.lastModified)
+            #expect(lastModified > originalModifiedDate)
             #expect(sut.errorMessage == nil)
         }
 
@@ -333,6 +335,207 @@ extension CollectionTests {
             // Then
             #expect(total == argument.expectedTotal)
         }
+
+        // MARK: - Error Handling Tests
+
+        @Test("Add to collection with nil context throws contextNotAvailable error")
+        func addToCollectionFailureWithNilContext() throws {
+            // Given
+            let viewModel = CollectionViewModel()
+            // No setModelContext called - context is nil
+            let manga = Self.sampleManga
+
+            // When
+            var thrownError: Error?
+            do {
+                try viewModel.addToCollection(manga)
+                Issue.record("Expected error to be thrown")
+            } catch {
+                thrownError = error
+            }
+
+            // Then
+            #expect(thrownError != nil)
+            if let collectionError = thrownError as? CollectionError,
+               case .contextNotAvailable = collectionError {
+                // Success - correct error type
+            } else {
+                Issue.record("Expected CollectionError.contextNotAvailable but got \(String(describing: thrownError))")
+            }
+            #expect(viewModel.errorMessage != nil)
+            #expect(viewModel.errorMessage?.localizedCaseInsensitiveContains("context") == true)
+        }
+
+        @Test("Update collection with nil context throws contextNotAvailable error")
+        func updateCollectionFailureWithNilContext() throws {
+            // Given
+            let manga = Self.sampleManga
+            try sut.addToCollection(manga)
+
+            guard let collectionManga = sut.getCollectionManga(mangaId: manga.id) else {
+                Issue.record("Collection manga should exist")
+                return
+            }
+
+            // Create new ViewModel without context
+            let viewModel = CollectionViewModel()
+
+            // When
+            var thrownError: Error?
+            do {
+                try viewModel.updateCollection(collectionManga)
+                Issue.record("Expected error to be thrown")
+            } catch {
+                thrownError = error
+            }
+
+            // Then
+            #expect(thrownError != nil)
+            if let collectionError = thrownError as? CollectionError,
+               case .contextNotAvailable = collectionError {
+                // Success - correct error type
+            } else {
+                Issue.record("Expected CollectionError.contextNotAvailable but got \(String(describing: thrownError))")
+            }
+            #expect(viewModel.errorMessage != nil)
+            #expect(viewModel.errorMessage?.localizedCaseInsensitiveContains("context") == true)
+        }
+
+        @Test("Remove from collection with nil context throws contextNotAvailable error")
+        func removeFromCollectionFailureWithNilContext() throws {
+            // Given
+            let manga = Self.sampleManga
+            try sut.addToCollection(manga)
+
+            guard let collectionManga = sut.getCollectionManga(mangaId: manga.id) else {
+                Issue.record("Collection manga should exist")
+                return
+            }
+
+            // Create new ViewModel without context
+            let viewModel = CollectionViewModel()
+
+            // When
+            var thrownError: Error?
+            do {
+                try viewModel.removeFromCollection(collectionManga)
+                Issue.record("Expected error to be thrown")
+            } catch {
+                thrownError = error
+            }
+
+            // Then
+            #expect(thrownError != nil)
+            if let collectionError = thrownError as? CollectionError,
+               case .contextNotAvailable = collectionError {
+                // Success - correct error type
+            } else {
+                Issue.record("Expected CollectionError.contextNotAvailable but got \(String(describing: thrownError))")
+            }
+            #expect(viewModel.errorMessage != nil)
+            #expect(viewModel.errorMessage?.localizedCaseInsensitiveContains("context") == true)
+        }
+
+        @Test("Add duplicate manga throws alreadyExists error and sets error message")
+        func addDuplicateMangaThrowsError() throws {
+            // Given
+            let manga = Self.sampleManga
+            try sut.addToCollection(manga)
+            #expect(sut.isInCollection(mangaId: manga.id) == true)
+            #expect(sut.errorMessage == nil) // Should be nil after successful add
+
+            // When
+            var thrownError: Error?
+            do {
+                try sut.addToCollection(manga) // Try to add duplicate
+                Issue.record("Expected error to be thrown")
+            } catch {
+                thrownError = error
+            }
+
+            // Then
+            #expect(thrownError != nil)
+            if let collectionError = thrownError as? CollectionError,
+               case .alreadyExists = collectionError {
+                // Success - correct error type
+            } else {
+                Issue.record("Expected CollectionError.alreadyExists but got \(String(describing: thrownError))")
+            }
+            #expect(sut.errorMessage != nil)
+            #expect(sut.errorMessage?.localizedCaseInsensitiveContains("already") == true)
+        }
+
+        @Test(
+            "Error messages are set correctly for different error types",
+            arguments: [
+                .init(error: CollectionError.contextNotAvailable, containsText: "context"),
+                .init(error: CollectionError.alreadyExists, containsText: "already"),
+                .init(error: CollectionError.notFound, containsText: "not found")
+            ] as [ErrorMessageArgument]
+        )
+        private func errorMessagesSetCorrectly(argument: ErrorMessageArgument) {
+            // Given
+            let viewModel = CollectionViewModel()
+
+            // When
+            if let errorDescription = argument.error.errorDescription {
+                viewModel.errorMessage = errorDescription
+            }
+
+            // Then
+            #expect(viewModel.errorMessage != nil)
+            if let errorMessage = viewModel.errorMessage {
+                #expect(errorMessage.localizedCaseInsensitiveContains(argument.containsText))
+            }
+        }
+
+        @Test("Error message is cleared after successful operations")
+        func errorMessageClearedAfterSuccess() throws {
+            // Given
+            let manga = Self.sampleManga
+
+            // When - trigger an error by not setting context
+            do {
+                try sut.addToCollection(manga)
+                try sut.addToCollection(manga) // Try to add duplicate
+            } catch {
+                // Expected error - duplicate manga
+            }
+
+            // Then - error message should be set
+            #expect(sut.errorMessage != nil)
+
+            // When - perform successful operation on different manga
+            let manga2 = Self.sampleManga2
+            try sut.addToCollection(manga2)
+
+            // Then - error message should be cleared after success
+            #expect(sut.errorMessage == nil)
+        }
+
+        @Test("clearError clears the error message")
+        func clearErrorClearsMessage() throws {
+            // Given
+            let manga = Self.sampleManga
+
+            // When - trigger an error
+            do {
+                try sut.addToCollection(manga)
+                try sut.addToCollection(manga) // Try to add duplicate
+            } catch {
+                // Expected error
+            }
+
+            // Then - error message should be set
+            let errorBeforeClear = sut.errorMessage
+            #expect(errorBeforeClear != nil)
+
+            // When - call clearError
+            sut.clearError()
+
+            // Then - error message should be nil
+            #expect(sut.errorMessage == nil)
+        }
     }
 }
 
@@ -416,6 +619,20 @@ private extension CollectionTests.ViewModelTests {
             self.manga1Volumes = manga1Volumes
             self.manga2Volumes = manga2Volumes
             self.expectedTotal = expectedTotal
+        }
+    }
+
+    struct ErrorMessageArgument: CustomTestStringConvertible {
+        let error: CollectionError
+        let containsText: String
+
+        var testDescription: String {
+            "\(error) → expects message containing '\(containsText)'"
+        }
+
+        init(error: CollectionError, containsText: String) {
+            self.error = error
+            self.containsText = containsText
         }
     }
 }

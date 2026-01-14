@@ -29,41 +29,72 @@ final class CollectionViewModel: CollectionViewModelProtocol {
     // MARK: - CRUD Operations
 
     func addToCollection(_ manga: Manga) throws {
-        // Verificar si ya existe
+        guard let modelContext else {
+            let error = CollectionError.contextNotAvailable
+            handleError(error)
+            throw error
+        }
+
         guard !isInCollection(mangaId: manga.id) else {
-            throw CollectionError.alreadyExists
+            let error = CollectionError.alreadyExists
+            handleError(error)
+            throw error
         }
 
         let collectionManga = CollectionManga(from: manga)
-        modelContext?.insert(collectionManga)
+        modelContext.insert(collectionManga)
 
         do {
-            try modelContext?.save()
+            if modelContext.hasChanges {
+                try modelContext.save()
+                errorMessage = nil // Clear error on success
+            }
         } catch {
-            errorMessage = L10n.Collection.Error.saveFailed
-            throw CollectionError.saveFailed(error)
+            let collectionError = CollectionError.saveFailed(error)
+            handleError(collectionError)
+            throw collectionError
         }
     }
 
     func updateCollection(_ collectionManga: CollectionManga) throws {
+        guard let modelContext else {
+            let error = CollectionError.contextNotAvailable
+            handleError(error)
+            throw error
+        }
+
         collectionManga.updateModifiedDate()
 
         do {
-            try modelContext?.save()
+            if modelContext.hasChanges {
+                try modelContext.save()
+                errorMessage = nil // Clear error on success
+            }
         } catch {
-            errorMessage = L10n.Collection.Error.updateFailed
-            throw CollectionError.updateFailed(error)
+            let collectionError = CollectionError.updateFailed(error)
+            handleError(collectionError)
+            throw collectionError
         }
     }
 
     func removeFromCollection(_ collectionManga: CollectionManga) throws {
-        modelContext?.delete(collectionManga)
+        guard let modelContext else {
+            let error = CollectionError.contextNotAvailable
+            handleError(error)
+            throw error
+        }
+
+        modelContext.delete(collectionManga)
 
         do {
-            try modelContext?.save()
+            if modelContext.hasChanges {
+                try modelContext.save()
+                errorMessage = nil // Clear error on success
+            }
         } catch {
-            errorMessage = L10n.Collection.Error.deleteFailed
-            throw CollectionError.deleteFailed(error)
+            let collectionError = CollectionError.deleteFailed(error)
+            handleError(collectionError)
+            throw collectionError
         }
     }
 
@@ -102,6 +133,10 @@ final class CollectionViewModel: CollectionViewModelProtocol {
         self.modelContext = modelContext
     }
 
+    func clearError() {
+        errorMessage = nil
+    }
+
     // MARK: - Private Functions
 
     private func handleError(_ error: Error) {
@@ -115,7 +150,8 @@ final class CollectionViewModel: CollectionViewModelProtocol {
 
 // MARK: - CollectionError
 
-enum CollectionError: LocalizedError {
+enum CollectionError: LocalizedError, Equatable {
+    case contextNotAvailable
     case alreadyExists
     case notFound
     case saveFailed(Error)
@@ -124,6 +160,8 @@ enum CollectionError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
+        case .contextNotAvailable:
+            return L10n.Collection.Error.contextNotAvailable
         case .alreadyExists:
             return L10n.Collection.Error.alreadyExists
         case .notFound:
@@ -134,6 +172,25 @@ enum CollectionError: LocalizedError {
             return "\(L10n.Collection.Error.updateFailed): \(error.localizedDescription)"
         case .deleteFailed(let error):
             return "\(L10n.Collection.Error.deleteFailed): \(error.localizedDescription)"
+        }
+    }
+
+    static func ==(lhs: CollectionError, rhs: CollectionError) -> Bool {
+        switch (lhs, rhs) {
+        case (.contextNotAvailable, .contextNotAvailable):
+            return true
+        case (.alreadyExists, .alreadyExists):
+            return true
+        case (.notFound, .notFound):
+            return true
+        case (.saveFailed(_), .saveFailed(_)):
+            return true
+        case (.updateFailed(_), .updateFailed(_)):
+            return true
+        case (.deleteFailed(_), .deleteFailed(_)):
+            return true
+        default:
+            return false
         }
     }
 }

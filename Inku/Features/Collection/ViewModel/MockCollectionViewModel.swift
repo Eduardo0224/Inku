@@ -77,6 +77,10 @@ final class MockCollectionViewModel: CollectionViewModelProtocol {
     // MARK: - Functions
 
     func setModelContext(_ modelContext: ModelContext) { }
+
+    func clearError() {
+        errorMessage = nil
+    }
 }
 
 // MARK: - Preview Helpers

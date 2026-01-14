@@ -131,11 +131,6 @@ struct MangaDetailView: View {
         .toolbar {
             toolbarContent
         }
-        .overlay(alignment: .bottomTrailing) {
-            if !isInCollection {
-                addToCollectionButton
-            }
-        }
         .sheet(item: $mangaToEdit) { manga in
             EditCollectionSheet(collectionManga: manga)
         }
@@ -188,6 +183,10 @@ struct MangaDetailView: View {
                         .symbolRenderingMode(.multicolor)
                 }
             }
+        } else {
+            ToolbarItem(placement: .secondaryAction) {
+                addToCollectionButton
+            }
         }
     }
 
@@ -196,15 +195,7 @@ struct MangaDetailView: View {
             addToCollection()
         } label: {
             Label(L10n.Collection.Actions.add, systemImage: "bookmark.fill")
-                .font(.inkuHeadline)
-                .foregroundStyle(Color.inkuTextOnAccent)
-                .padding(.horizontal, InkuSpacing.spacing20)
-                .padding(.vertical, InkuSpacing.spacing16)
-                .background(Color.inkuAccent)
-                .clipShape(Capsule())
-                .shadow(color: .black.opacity(0.2), radius: 8, y: 4)
         }
-        .padding(InkuSpacing.spacing24)
     }
 
     // MARK: - Private Functions

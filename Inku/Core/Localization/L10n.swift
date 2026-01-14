@@ -264,6 +264,7 @@ enum L10n {
         }
 
         enum Error {
+            static let contextNotAvailable = String(localized: .CollectionLocalizable.errorContextNotAvailable)
             static let alreadyExists = String(localized: .CollectionLocalizable.errorAlreadyExists)
             static let notFound = String(localized: .CollectionLocalizable.errorNotFound)
             static let saveFailed = String(localized: .CollectionLocalizable.errorSaveFailed)

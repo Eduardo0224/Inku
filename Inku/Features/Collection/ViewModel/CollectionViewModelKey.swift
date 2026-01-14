@@ -53,6 +53,10 @@ private final class EmptyCollectionViewModel: CollectionViewModelProtocol {
     func setModelContext(_ modelContext: ModelContext) {
         fatalError("CollectionViewModel not provided in environment")
     }
+
+    func clearError() {
+        fatalError("CollectionViewModel not provided in environment")
+    }
 }
 
 // MARK: - CollectionViewModelKey

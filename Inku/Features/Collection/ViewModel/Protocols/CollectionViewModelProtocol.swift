@@ -16,6 +16,8 @@ import SwiftData
 @MainActor
 protocol CollectionViewModelProtocol {
 
+    var errorMessage: String? { get }
+
     // MARK: - CRUD Operations
 
     func addToCollection(_ manga: Manga) throws
@@ -31,6 +33,10 @@ protocol CollectionViewModelProtocol {
 
     func getTotalMangas() -> Int
     func getTotalVolumesOwned() -> Int
+
+    // MARK: - Error Handling
+
+    func clearError()
 
     func setModelContext(_ modelContext: ModelContext)
 }

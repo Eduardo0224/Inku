@@ -56,6 +56,17 @@ struct EditCollectionSheet: View {
             .toolbar {
                 toolbarContent
             }
+            .alert(
+                L10n.Error.title,
+                isPresented: .constant(viewModel.errorMessage != nil),
+                presenting: viewModel.errorMessage
+            ) { _ in
+                Button(L10n.Common.ok, role: .cancel) {
+                    viewModel.clearError()
+                }
+            } message: { errorMessage in
+                Text(errorMessage)
+            }
         }
     }
 
@@ -158,7 +169,9 @@ struct EditCollectionSheet: View {
             try viewModel.updateCollection(collectionManga)
             dismiss()
         } catch {
-            print("[EditCollectionSheet] Error saving changes: \(error)")
+            // Error message is already set by viewModel.handleError()
+            // Alert will be displayed automatically via errorMessage binding
+            // Don't dismiss the sheet so user can see the error and retry
         }
     }
 }

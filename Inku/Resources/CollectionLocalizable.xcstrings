@@ -477,6 +477,23 @@
         }
       }
     },
+    "ERROR_CONTEXT_NOT_AVAILABLE" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Database context is not available"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El contexto de la base de datos no está disponible"
+          }
+        }
+      }
+    },
     "ERROR_DELETE_FAILED" : {
       "extractionState" : "manual",
       "localizations" : {
