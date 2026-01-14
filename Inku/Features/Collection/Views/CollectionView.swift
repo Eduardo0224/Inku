@@ -44,10 +44,6 @@ struct CollectionView: View {
             .sheet(isPresented: $showingStats) {
                 CollectionStatsView()
             }
-            .navigationDestination(for: Int.self) { mangaId in
-                // Navigate to MangaDetailView based on mangaId
-                MangaDetailViewWrapper(mangaId: mangaId)
-            }
         }
         .task {
             viewModel.setModelContext(modelContext)
@@ -109,18 +105,6 @@ struct CollectionView: View {
         } label: {
             Label(L10n.Collection.Sort.title, systemImage: "arrow.up.arrow.down")
         }
-    }
-}
-
-// MARK: - MangaDetailViewWrapper
-
-private struct MangaDetailViewWrapper: View {
-    let mangaId: Int
-
-    // TODO: Fetch manga from API or cache
-    var body: some View {
-        Text("Manga Detail for ID: \(mangaId)")
-            .navigationTitle("Detail")
     }
 }
 
