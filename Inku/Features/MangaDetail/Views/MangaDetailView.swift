@@ -12,13 +12,31 @@
 //
 
 import SwiftUI
+import SwiftData
 import InkuUI
 
 struct MangaDetailView: View {
 
+    // MARK: - Environment
+
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.collectionViewModel) private var collectionViewModel
+
+    // MARK: - States
+
+    @State private var collectionManga: CollectionManga?
+    @State private var mangaToEdit: CollectionManga?
+    @State private var mangaToDelete: CollectionManga?
+
     // MARK: - Properties
 
     let manga: Manga
+
+    // MARK: - Computed Properties
+
+    private var isInCollection: Bool {
+        collectionManga != nil
+    }
 
     // MARK: - Body
 
@@ -110,6 +128,99 @@ struct MangaDetailView: View {
         .background(Color.inkuSurface)
         .navigationTitle(L10n.MangaDetail.Screen.title)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            toolbarContent
+        }
+        .sheet(item: $mangaToEdit) { manga in
+            EditCollectionSheet(collectionManga: manga)
+        }
+        .onChange(of: mangaToEdit) { _, _ in
+            if mangaToEdit == nil {
+                // Sheet closed, refresh collection status
+                checkIfInCollection()
+            }
+        }
+        .alert(
+            L10n.Collection.Delete.title,
+            isPresented: .constant(mangaToDelete != nil),
+            presenting: mangaToDelete
+        ) { manga in
+            Button(L10n.Common.cancel, role: .cancel) {
+                mangaToDelete = nil
+            }
+            Button(L10n.Collection.Delete.confirm, role: .destructive) {
+                removeFromCollection(manga)
+            }
+        } message: { manga in
+            Text(L10n.Collection.Delete.message(manga.title))
+        }
+        .task {
+            collectionViewModel.setModelContext(modelContext)
+            checkIfInCollection()
+        }
+    }
+
+    // MARK: - Private Views
+
+    @ToolbarContentBuilder
+    private var toolbarContent: some ToolbarContent {
+        if isInCollection {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Button {
+                        mangaToEdit = collectionManga
+                    } label: {
+                        Label(L10n.Collection.Card.edit, systemImage: "pencil")
+                    }
+
+                    Button(role: .destructive) {
+                        mangaToDelete = collectionManga
+                    } label: {
+                        Label(L10n.Collection.Card.delete, systemImage: "trash")
+                    }
+                } label: {
+                    Label(L10n.Collection.Actions.manage, systemImage: "bookmark.fill")
+                        .symbolRenderingMode(.multicolor)
+                }
+            }
+        } else {
+            ToolbarItem(placement: .secondaryAction) {
+                addToCollectionButton
+            }
+        }
+    }
+
+    private var addToCollectionButton: some View {
+        Button {
+            addToCollection()
+        } label: {
+            Label(L10n.Collection.Actions.add, systemImage: "bookmark.fill")
+        }
+    }
+
+    // MARK: - Private Functions
+
+    private func checkIfInCollection() {
+        collectionManga = collectionViewModel.getCollectionManga(mangaId: manga.id)
+    }
+
+    private func addToCollection() {
+        do {
+            try collectionViewModel.addToCollection(manga)
+            checkIfInCollection()
+        } catch {
+            print("[MangaDetailView] Error adding to collection: \(error)")
+        }
+    }
+
+    private func removeFromCollection(_ manga: CollectionManga) {
+        do {
+            try collectionViewModel.removeFromCollection(manga)
+            collectionManga = nil
+            mangaToDelete = nil
+        } catch {
+            print("[MangaDetailView] Error removing from collection: \(error)")
+        }
     }
 }
 
@@ -118,11 +229,13 @@ struct MangaDetailView: View {
 #Preview("Manga Detail - Full Data") {
     NavigationStack {
         MangaDetailView(manga: .testData)
+            .environment(\.collectionViewModel, MockCollectionViewModel.empty)
     }
 }
 
 #Preview("Manga Detail - Minimal Data") {
     NavigationStack {
         MangaDetailView(manga: .emptyData)
+            .environment(\.collectionViewModel, MockCollectionViewModel.empty)
     }
 }
