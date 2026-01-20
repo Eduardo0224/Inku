@@ -1,5 +1,5 @@
 //
-//  CollectionViewModelKey.swift
+//  EmptyCollectionViewModel.swift
 //  Inku
 //
 //  Created by Eduardo Andrade on 13/01/26.
@@ -11,14 +11,11 @@
 //  Copyright © 2026 Eduardo Andrade. All rights reserved.
 //
 
-import SwiftUI
 import SwiftData
-
-// MARK: - EmptyCollectionViewModel
 
 /// Default empty implementation for EnvironmentKey
 /// This is a non-isolated placeholder that should never be used in production
-private final class EmptyCollectionViewModel: CollectionViewModelProtocol {
+final class EmptyCollectionViewModel: CollectionViewModelProtocol {
 
     var errorMessage: String?
 
@@ -34,21 +31,27 @@ private final class EmptyCollectionViewModel: CollectionViewModelProtocol {
         fatalError("CollectionViewModel not provided in environment")
     }
 
-    func isInCollection(mangaId: Int) -> Bool {
-        return false
-    }
+    func isInCollection(mangaId: Int) -> Bool { false }
 
-    func getCollectionManga(mangaId: Int) -> CollectionManga? {
-        return nil
-    }
+    func getCollectionManga(mangaId: Int) -> CollectionManga? { nil }
 
-    func getTotalMangas() -> Int {
-        return 0
-    }
+    var totalMangas: Int { 0 }
 
-    func getTotalVolumesOwned() -> Int {
-        return 0
-    }
+    var totalVolumesOwned: Int { 0 }
+
+    var completedCount: Int { 0 }
+
+    var readingCount: Int { 0 }
+
+    var averageProgress: Double { 0.0 }
+
+    var completionPercentage: Double { 0.0 }
+
+    func getTopSeriesByVolumes(limit: Int) -> [CollectionManga] { [] }
+
+    func getMostRecentlyAdded(limit: Int) -> [CollectionManga] { [] }
+
+    func getMostRecentlyModified(limit: Int) -> [CollectionManga] { [] }
 
     func setModelContext(_ modelContext: ModelContext) {
         fatalError("CollectionViewModel not provided in environment")
@@ -56,20 +59,5 @@ private final class EmptyCollectionViewModel: CollectionViewModelProtocol {
 
     func clearError() {
         fatalError("CollectionViewModel not provided in environment")
-    }
-}
-
-// MARK: - CollectionViewModelKey
-
-private struct CollectionViewModelKey: EnvironmentKey {
-    nonisolated(unsafe) static let defaultValue: any CollectionViewModelProtocol = EmptyCollectionViewModel()
-}
-
-// MARK: - EnvironmentValues Extension
-
-extension EnvironmentValues {
-    var collectionViewModel: any CollectionViewModelProtocol {
-        get { self[CollectionViewModelKey.self] }
-        set { self[CollectionViewModelKey.self] = newValue }
     }
 }

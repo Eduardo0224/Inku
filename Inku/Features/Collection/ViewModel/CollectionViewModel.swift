@@ -13,7 +13,6 @@
 
 import Foundation
 import SwiftData
-import Observation
 
 @Observable
 @MainActor
@@ -47,7 +46,7 @@ final class CollectionViewModel: CollectionViewModelProtocol {
         do {
             if modelContext.hasChanges {
                 try modelContext.save()
-                errorMessage = nil // Clear error on success
+                errorMessage = nil
             }
         } catch {
             let collectionError = CollectionError.saveFailed(error)
@@ -68,7 +67,7 @@ final class CollectionViewModel: CollectionViewModelProtocol {
         do {
             if modelContext.hasChanges {
                 try modelContext.save()
-                errorMessage = nil // Clear error on success
+                errorMessage = nil
             }
         } catch {
             let collectionError = CollectionError.updateFailed(error)
@@ -89,7 +88,7 @@ final class CollectionViewModel: CollectionViewModelProtocol {
         do {
             if modelContext.hasChanges {
                 try modelContext.save()
-                errorMessage = nil // Clear error on success
+                errorMessage = nil
             }
         } catch {
             let collectionError = CollectionError.deleteFailed(error)
@@ -116,15 +115,68 @@ final class CollectionViewModel: CollectionViewModelProtocol {
 
     // MARK: - Statistics
 
-    func getTotalMangas() -> Int {
+    var totalMangas: Int {
         let descriptor = FetchDescriptor<CollectionManga>()
         return (try? modelContext?.fetchCount(descriptor)) ?? 0
     }
 
-    func getTotalVolumesOwned() -> Int {
+    var totalVolumesOwned: Int {
         let descriptor = FetchDescriptor<CollectionManga>()
         let mangas = (try? modelContext?.fetch(descriptor)) ?? []
         return mangas.reduce(0) { $0 + $1.volumesOwnedCount }
+    }
+
+    var completedCount: Int {
+        let descriptor = FetchDescriptor<CollectionManga>()
+        let mangas = (try? modelContext?.fetch(descriptor)) ?? []
+        return mangas.filter { $0.isComplete }.count
+    }
+
+    var readingCount: Int {
+        let descriptor = FetchDescriptor<CollectionManga>()
+        let mangas = (try? modelContext?.fetch(descriptor)) ?? []
+        return mangas.filter { $0.isCurrentlyReading }.count
+    }
+
+    var averageProgress: Double {
+        let descriptor = FetchDescriptor<CollectionManga>()
+        let mangas = (try? modelContext?.fetch(descriptor)) ?? []
+        let validProgresses = mangas.compactMap { $0.readingProgress }
+
+        guard !validProgresses.isEmpty else { return 0.0 }
+        return validProgresses.reduce(0.0, +) / Double(validProgresses.count)
+    }
+
+    var completionPercentage: Double {
+        let total = totalMangas
+        guard total > 0 else { return 0.0 }
+
+        let completed = completedCount
+        return Double(completed) / Double(total)
+    }
+
+    func getTopSeriesByVolumes(limit: Int) -> [CollectionManga] {
+        let descriptor = FetchDescriptor<CollectionManga>(
+            sortBy: [SortDescriptor(\.volumesOwnedCount, order: .reverse)]
+        )
+        let mangas = (try? modelContext?.fetch(descriptor)) ?? []
+        return Array(mangas.prefix(limit))
+    }
+
+    func getMostRecentlyAdded(limit: Int) -> [CollectionManga] {
+        let descriptor = FetchDescriptor<CollectionManga>(
+            sortBy: [SortDescriptor(\.dateAdded, order: .reverse)]
+        )
+        let mangas = (try? modelContext?.fetch(descriptor)) ?? []
+        return Array(mangas.prefix(limit))
+    }
+
+    func getMostRecentlyModified(limit: Int) -> [CollectionManga] {
+        let descriptor = FetchDescriptor<CollectionManga>(
+            sortBy: [SortDescriptor(\.lastModified, order: .reverse)]
+        )
+        let mangas = (try? modelContext?.fetch(descriptor)) ?? []
+        return Array(mangas.prefix(limit))
     }
 
     // MARK: - Functions

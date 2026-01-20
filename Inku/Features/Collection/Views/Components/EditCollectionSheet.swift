@@ -75,7 +75,6 @@ struct EditCollectionSheet: View {
     private var mangaInfoSection: some View {
         Section {
             HStack(spacing: InkuSpacing.spacing12) {
-                // Cover
                 if let url = collectionManga.coverURL {
                     InkuCoverImage(url: url, cornerRadius: InkuRadius.radius8)
                         .frame(width: 60, height: 90)
@@ -86,7 +85,6 @@ struct EditCollectionSheet: View {
                         .clipShape(RoundedRectangle(cornerRadius: InkuRadius.radius8))
                 }
 
-                // Title
                 VStack(alignment: .leading, spacing: InkuSpacing.spacing4) {
                     Text(collectionManga.title)
                         .font(.inkuHeadline)
@@ -105,7 +103,6 @@ struct EditCollectionSheet: View {
 
     private var collectionDataSection: some View {
         Section {
-            // Volumes Owned
             Stepper(
                 L10n.Collection.Edit.volumesOwned(volumesOwnedCount),
                 value: $volumesOwnedCount,
@@ -113,7 +110,6 @@ struct EditCollectionSheet: View {
             )
             .listRowBackground(Color.inkuSurfaceElevated)
 
-            // Current Reading Volume
             HStack {
                 Text(L10n.Collection.Edit.currentVolume)
                     .foregroundStyle(Color.inkuText)
@@ -130,7 +126,6 @@ struct EditCollectionSheet: View {
             }
             .listRowBackground(Color.inkuSurfaceElevated)
 
-            // Complete Collection Toggle
             Toggle(
                 L10n.Collection.Edit.completeCollection,
                 isOn: $hasCompleteCollection
@@ -159,20 +154,12 @@ struct EditCollectionSheet: View {
     // MARK: - Private Functions
 
     private func saveChanges() {
-        // Update manga properties
         collectionManga.volumesOwnedCount = volumesOwnedCount
         collectionManga.currentReadingVolume = Int(currentReadingVolume)
         collectionManga.hasCompleteCollection = hasCompleteCollection
 
-        // Persist changes through viewModel
-        do {
-            try viewModel.updateCollection(collectionManga)
-            dismiss()
-        } catch {
-            // Error message is already set by viewModel.handleError()
-            // Alert will be displayed automatically via errorMessage binding
-            // Don't dismiss the sheet so user can see the error and retry
-        }
+        try? viewModel.updateCollection(collectionManga)
+        dismiss()
     }
 }
 

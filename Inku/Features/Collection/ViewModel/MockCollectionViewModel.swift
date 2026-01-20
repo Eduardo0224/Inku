@@ -66,12 +66,51 @@ final class MockCollectionViewModel: CollectionViewModelProtocol {
 
     // MARK: - Statistics
 
-    func getTotalMangas() -> Int {
+    var totalMangas: Int {
         mangas.count
     }
 
-    func getTotalVolumesOwned() -> Int {
+    var totalVolumesOwned: Int {
         totalVolumes > 0 ? totalVolumes : mangas.reduce(0) { $0 + $1.volumesOwnedCount }
+    }
+
+    var completedCount: Int {
+        mangas.filter { $0.isComplete }.count
+    }
+
+    var readingCount: Int {
+        mangas.filter { $0.isCurrentlyReading }.count
+    }
+
+    var averageProgress: Double {
+        let validProgresses = mangas.compactMap { $0.readingProgress }
+        guard !validProgresses.isEmpty else {
+            return 0.0
+        }
+
+        return validProgresses.reduce(0.0, +) / Double(validProgresses.count)
+    }
+
+    var completionPercentage: Double {
+        let total = totalMangas
+        guard total > 0 else {
+            return 0.0
+        }
+
+        let completed = completedCount
+        return Double(completed) / Double(total)
+    }
+
+    func getTopSeriesByVolumes(limit: Int) -> [CollectionManga] {
+        Array(mangas.sorted { $0.volumesOwnedCount > $1.volumesOwnedCount }.prefix(limit))
+    }
+
+    func getMostRecentlyAdded(limit: Int) -> [CollectionManga] {
+        Array(mangas.sorted { $0.dateAdded > $1.dateAdded }.prefix(limit))
+    }
+
+    func getMostRecentlyModified(limit: Int) -> [CollectionManga] {
+        Array(mangas.sorted { $0.lastModified > $1.lastModified }.prefix(limit))
     }
 
     // MARK: - Functions

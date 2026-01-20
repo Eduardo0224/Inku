@@ -24,27 +24,22 @@ struct CollectionItemCard: View {
 
     // MARK: - States
 
-    @State private var coverURLCache: URL?
+    @State private var imageKey: UUID = UUID()
 
     // MARK: - Body
 
     var body: some View {
-        HStack(spacing: InkuSpacing.spacing12) {
-            // Cover Image
+        HStack(alignment: .top, spacing: InkuSpacing.spacing12) {
             coverImage
 
-            // Info
             VStack(alignment: .leading, spacing: InkuSpacing.spacing8) {
-                // Title
                 Text(collectionManga.title)
                     .font(.inkuHeadline)
                     .foregroundStyle(Color.inkuText)
                     .lineLimit(2)
 
-                // Collection Info
                 collectionInfo
 
-                // Progress Bar
                 if let progress = collectionManga.readingProgress {
                     InkuProgressBar(
                         progress: progress,
@@ -55,16 +50,12 @@ struct CollectionItemCard: View {
 
             Spacer()
 
-            // Actions
             actionsMenu
         }
         .padding(InkuSpacing.spacing12)
         .inkuCard()
-        .task(id: collectionManga.mangaId) {
-            // Force SwiftData to load coverImageURL by accessing it
-            // This ensures the @Transient computed property has data available
-            _ = collectionManga.coverImageURL
-            coverURLCache = collectionManga.coverURL
+        .onAppear {
+            imageKey = UUID()
         }
     }
 
@@ -72,9 +63,10 @@ struct CollectionItemCard: View {
 
     @ViewBuilder
     private var coverImage: some View {
-        if let url = coverURLCache {
+        if let url = collectionManga.coverURL {
             InkuCoverImage(url: url, cornerRadius: InkuRadius.radius8)
                 .frame(width: 60, height: 90)
+                .id(imageKey)
         } else {
             Rectangle()
                 .fill(Color.inkuSurfaceSecondary)
@@ -89,18 +81,17 @@ struct CollectionItemCard: View {
 
     private var collectionInfo: some View {
         VStack(alignment: .leading, spacing: InkuSpacing.spacing4) {
-            // Volumes Owned
             Label {
                 Text("\(collectionManga.volumesOwnedCount) \(volumesLabel)")
                     .font(.inkuCaption)
                     .foregroundStyle(Color.inkuTextSecondary)
             } icon: {
-                Image(systemName: "books.vertical.fill")
+                Image(systemName: "books.vertical")
+                    .symbolVariant(.fill)
                     .font(.inkuCaptionSmall)
                     .foregroundStyle(Color.inkuAccent)
             }
 
-            // Currently Reading
             if let currentVolume = collectionManga.currentReadingVolume {
                 Label {
                     Text(L10n.Collection.Card.reading(currentVolume))
@@ -113,7 +104,6 @@ struct CollectionItemCard: View {
                 }
             }
 
-            // Complete Badge
             if collectionManga.hasCompleteCollection {
                 InkuBadge(
                     text: L10n.Collection.Card.complete,
@@ -137,9 +127,10 @@ struct CollectionItemCard: View {
                 Label(L10n.Collection.Card.delete, systemImage: "trash")
             }
         } label: {
-            Image(systemName: "ellipsis.circle")
-                .font(.title3)
-                .foregroundStyle(Color.inkuTextSecondary)
+            Image(systemName: "ellipsis")
+                .symbolVariant(.circle)
+                .font(.title2)
+                .foregroundStyle(Color.inkuAccent)
         }
     }
 

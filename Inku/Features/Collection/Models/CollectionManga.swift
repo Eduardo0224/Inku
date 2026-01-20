@@ -28,15 +28,10 @@ final class CollectionManga: Identifiable {
     var coverImageURL: String?
     var totalVolumes: Int?
 
-    // MARK: - Collection Data (MVP Requirements)
+    // MARK: - Collection Data
 
-    /// Número de tomos comprados
     var volumesOwnedCount: Int
-
-    /// Tomo por el que va leyendo
     var currentReadingVolume: Int?
-
-    /// Si tiene o no la colección completa
     var hasCompleteCollection: Bool
 
     // MARK: - Metadata
@@ -52,12 +47,18 @@ final class CollectionManga: Identifiable {
     }
 
     var coverURL: URL? {
-        guard let cleanURL = cleanCoverImageURL else { return nil }
+        guard let cleanURL = cleanCoverImageURL else {
+            return nil
+        }
+
         return URL(string: cleanURL)
     }
 
     var readingProgress: Double? {
-        guard let total = totalVolumes, total > 0 else { return nil }
+        guard let total = totalVolumes, total > 0 else {
+            return nil
+        }
+
         return Double(volumesOwnedCount) / Double(total)
     }
 
@@ -66,7 +67,10 @@ final class CollectionManga: Identifiable {
     }
 
     var isComplete: Bool {
-        guard let total = totalVolumes else { return hasCompleteCollection }
+        guard let total = totalVolumes else {
+            return hasCompleteCollection
+        }
+
         return hasCompleteCollection || volumesOwnedCount >= total
     }
 
@@ -105,7 +109,7 @@ final class CollectionManga: Identifiable {
 // MARK: - Extensions
 
 extension CollectionManga {
-    /// Helper para crear desde Manga
+
     convenience init(from manga: Manga) {
         self.init(
             mangaId: manga.id,
@@ -115,7 +119,6 @@ extension CollectionManga {
         )
     }
 
-    /// Update lastModified
     func updateModifiedDate() {
         self.lastModified = Date()
     }

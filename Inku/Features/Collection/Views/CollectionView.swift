@@ -68,7 +68,8 @@ struct CollectionView: View {
                 Divider()
                 sortMenu
             } label: {
-                Label(L10n.Collection.Filter.title, systemImage: "line.3.horizontal.decrease.circle")
+                Label(L10n.Collection.Filter.title, systemImage: "line.3.horizontal.decrease")
+                    .symbolVariant(.circle)
             }
         }
     }

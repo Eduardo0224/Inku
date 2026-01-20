@@ -46,7 +46,6 @@ struct CollectionListView: View {
         self.filter = filter
         self.sortOption = sortOption
 
-        // Dynamic @Query with #Predicate
         let predicate: Predicate<CollectionManga>? = {
             switch filter {
             case .all:
@@ -66,7 +65,6 @@ struct CollectionListView: View {
             }
         }()
 
-        // Sort descriptor
         let sortDescriptors: [SortDescriptor<CollectionManga>] = {
             switch sortOption {
             case .dateAdded:
@@ -89,7 +87,11 @@ struct CollectionListView: View {
     var body: some View {
         Group {
             if filteredMangas.isEmpty {
-                emptyStateView
+                if searchText.isEmpty {
+                    emptyStateView
+                } else {
+                    emptySearchResultsView
+                }
             } else {
                 collectionList
             }
@@ -135,15 +137,12 @@ struct CollectionListView: View {
         ScrollView {
             LazyVStack(spacing: InkuSpacing.spacing16) {
                 ForEach(filteredMangas) { manga in
-                    NavigationLink(value: manga.mangaId) {
-                        CollectionItemCard(
-                            collectionManga: manga,
-                            onEdit: { editManga(manga) },
-                            onDelete: { deleteManga(manga) }
-                        )
-                    }
+                    CollectionItemCard(
+                        collectionManga: manga,
+                        onEdit: { editManga(manga) },
+                        onDelete: { deleteManga(manga) }
+                    )
                     .buttonStyle(.plain)
-                    .id("\(manga.mangaId)-\(manga.coverImageURL ?? "")")
                 }
             }
             .padding(InkuSpacing.spacing16)
@@ -163,10 +162,24 @@ struct CollectionListView: View {
         .background(Color.inkuSurface)
     }
 
+    private var emptySearchResultsView: some View {
+        InkuEmptyView(
+            icon: "magnifyingglass",
+            iconSize: .large,
+            title: L10n.Collection.Search.emptyTitle,
+            subtitle: L10n.Collection.Search.emptyMessage(searchText),
+            symbolEffect: .pulse,
+            symbolEffectOptions: .repeating
+        )
+        .background(Color.inkuSurface)
+    }
+
     // MARK: - Computed Properties
 
     private var filteredMangas: [CollectionManga] {
-        guard !searchText.isEmpty else { return collectionMangas }
+        guard !searchText.isEmpty else {
+            return collectionMangas
+        }
 
         return collectionMangas.filter { manga in
             manga.title.localizedCaseInsensitiveContains(searchText)
@@ -223,14 +236,8 @@ struct CollectionListView: View {
     }
 
     private func confirmDelete(_ manga: CollectionManga) {
-        do {
-            try viewModel.removeFromCollection(manga)
-            mangaToDelete = nil
-        } catch {
-            // Error message is already set by viewModel.handleError()
-            // Alert will be displayed automatically via errorMessage binding
-            mangaToDelete = nil
-        }
+        try? viewModel.removeFromCollection(manga)
+        mangaToDelete = nil
     }
 }
 

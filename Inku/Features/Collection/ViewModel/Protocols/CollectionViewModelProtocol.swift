@@ -31,12 +31,22 @@ protocol CollectionViewModelProtocol {
 
     // MARK: - Statistics
 
-    func getTotalMangas() -> Int
-    func getTotalVolumesOwned() -> Int
+    var totalMangas: Int { get }
+    var totalVolumesOwned: Int { get }
+    var completedCount: Int { get }
+    var readingCount: Int { get }
+    var averageProgress: Double { get }
+    var completionPercentage: Double { get }
+
+    func getTopSeriesByVolumes(limit: Int) -> [CollectionManga]
+    func getMostRecentlyAdded(limit: Int) -> [CollectionManga]
+    func getMostRecentlyModified(limit: Int) -> [CollectionManga]
 
     // MARK: - Error Handling
 
     func clearError()
+
+    // MARK: - Model Context
 
     func setModelContext(_ modelContext: ModelContext)
 }

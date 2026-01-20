@@ -57,7 +57,7 @@ extension CollectionTests {
 
             // Then
             #expect(sut.isInCollection(mangaId: manga.id) == true)
-            #expect(sut.getTotalMangas() == 1)
+            #expect(sut.totalMangas == 1)
 
             let collectionManga = sut.getCollectionManga(mangaId: manga.id)
             #expect(collectionManga != nil)
@@ -91,7 +91,7 @@ extension CollectionTests {
             try sut.addToCollection(manga2)
 
             // Then
-            #expect(sut.getTotalMangas() == 2)
+            #expect(sut.totalMangas == 2)
             #expect(sut.isInCollection(mangaId: manga1.id) == true)
             #expect(sut.isInCollection(mangaId: manga2.id) == true)
         }
@@ -184,7 +184,7 @@ extension CollectionTests {
 
             // Then
             #expect(sut.isInCollection(mangaId: manga.id) == false)
-            #expect(sut.getTotalMangas() == 0)
+            #expect(sut.totalMangas == 0)
             #expect(sut.errorMessage == nil)
         }
 
@@ -195,7 +195,7 @@ extension CollectionTests {
             let manga2 = Self.sampleManga2
             try sut.addToCollection(manga1)
             try sut.addToCollection(manga2)
-            #expect(sut.getTotalMangas() == 2)
+            #expect(sut.totalMangas == 2)
 
             guard let collectionManga1 = sut.getCollectionManga(mangaId: manga1.id),
                   let collectionManga2 = sut.getCollectionManga(mangaId: manga2.id) else {
@@ -207,7 +207,7 @@ extension CollectionTests {
             try sut.removeFromCollection(collectionManga1)
 
             // Then
-            #expect(sut.getTotalMangas() == 1)
+            #expect(sut.totalMangas == 1)
             #expect(sut.isInCollection(mangaId: manga1.id) == false)
             #expect(sut.isInCollection(mangaId: manga2.id) == true)
 
@@ -215,7 +215,7 @@ extension CollectionTests {
             try sut.removeFromCollection(collectionManga2)
 
             // Then
-            #expect(sut.getTotalMangas() == 0)
+            #expect(sut.totalMangas == 0)
             #expect(sut.isInCollection(mangaId: manga2.id) == false)
         }
 
@@ -263,30 +263,30 @@ extension CollectionTests {
 
         // MARK: - Statistics Tests
 
-        @Test("getTotalMangas returns correct count")
-        func getTotalMangasReturnsCorrectCount() throws {
+        @Test("totalMangas returns correct count")
+        func totalMangasReturnsCorrectCount() throws {
             // Given/When - empty collection
-            #expect(sut.getTotalMangas() == 0)
+            #expect(sut.totalMangas == 0)
 
             // When - add one manga
             try sut.addToCollection(Self.sampleManga)
-            #expect(sut.getTotalMangas() == 1)
+            #expect(sut.totalMangas == 1)
 
             // When - add another manga
             try sut.addToCollection(Self.sampleManga2)
-            #expect(sut.getTotalMangas() == 2)
+            #expect(sut.totalMangas == 2)
 
             // When - remove one manga
             if let manga = sut.getCollectionManga(mangaId: Self.sampleManga.id) {
                 try sut.removeFromCollection(manga)
             }
-            #expect(sut.getTotalMangas() == 1)
+            #expect(sut.totalMangas == 1)
         }
 
-        @Test("getTotalVolumesOwned returns correct sum")
-        func getTotalVolumesOwnedReturnsCorrectSum() throws {
+        @Test("totalVolumesOwned returns correct sum")
+        func totalVolumesOwnedReturnsCorrectSum() throws {
             // Given/When - empty collection
-            #expect(sut.getTotalVolumesOwned() == 0)
+            #expect(sut.totalVolumesOwned == 0)
 
             // When - add manga with volumes
             try sut.addToCollection(Self.sampleManga)
@@ -294,7 +294,7 @@ extension CollectionTests {
                 manga.volumesOwnedCount = 10
                 try sut.updateCollection(manga)
             }
-            #expect(sut.getTotalVolumesOwned() == 10)
+            #expect(sut.totalVolumesOwned == 10)
 
             // When - add another manga with volumes
             try sut.addToCollection(Self.sampleManga2)
@@ -302,11 +302,11 @@ extension CollectionTests {
                 manga.volumesOwnedCount = 25
                 try sut.updateCollection(manga)
             }
-            #expect(sut.getTotalVolumesOwned() == 35)
+            #expect(sut.totalVolumesOwned == 35)
         }
 
         @Test(
-            "getTotalVolumesOwned with different volume counts",
+            "totalVolumesOwned with different volume counts",
             arguments: [
                 .init(manga1Volumes: 0, manga2Volumes: 0, expectedTotal: 0),
                 .init(manga1Volumes: 10, manga2Volumes: 20, expectedTotal: 30),
@@ -314,7 +314,7 @@ extension CollectionTests {
                 .init(manga1Volumes: 100, manga2Volumes: 50, expectedTotal: 150)
             ] as [VolumeCountArgument]
         )
-        private func getTotalVolumesOwnedWithDifferentCounts(argument: VolumeCountArgument) throws {
+        private func totalVolumesOwnedWithDifferentCounts(argument: VolumeCountArgument) throws {
             // Given
             try sut.addToCollection(Self.sampleManga)
             try sut.addToCollection(Self.sampleManga2)
@@ -330,10 +330,335 @@ extension CollectionTests {
             }
 
             // When
-            let total = sut.getTotalVolumesOwned()
+            let total = sut.totalVolumesOwned
 
             // Then
             #expect(total == argument.expectedTotal)
+        }
+
+        @Test("completedCount returns correct count")
+        func completedCountReturnsCorrectCount() throws {
+            // Given/When - empty collection
+            #expect(sut.completedCount == 0)
+
+            // When - add manga that is not complete
+            try sut.addToCollection(Self.sampleManga)
+            if let manga = sut.getCollectionManga(mangaId: Self.sampleManga.id) {
+                manga.volumesOwnedCount = 10
+                manga.hasCompleteCollection = false
+                try sut.updateCollection(manga)
+            }
+            #expect(sut.completedCount == 0)
+
+            // When - mark as complete
+            if let manga = sut.getCollectionManga(mangaId: Self.sampleManga.id) {
+                manga.hasCompleteCollection = true
+                try sut.updateCollection(manga)
+            }
+            #expect(sut.completedCount == 1)
+
+            // When - add another complete manga
+            try sut.addToCollection(Self.sampleManga2)
+            if let manga = sut.getCollectionManga(mangaId: Self.sampleManga2.id) {
+                manga.volumesOwnedCount = 72
+                manga.hasCompleteCollection = true
+                try sut.updateCollection(manga)
+            }
+            #expect(sut.completedCount == 2)
+        }
+
+        @Test("readingCount returns correct count")
+        func readingCountReturnsCorrectCount() throws {
+            // Given/When - empty collection
+            #expect(sut.readingCount == 0)
+
+            // When - add manga without current reading volume
+            try sut.addToCollection(Self.sampleManga)
+            #expect(sut.readingCount == 0)
+
+            // When - set current reading volume
+            if let manga = sut.getCollectionManga(mangaId: Self.sampleManga.id) {
+                manga.currentReadingVolume = 25
+                try sut.updateCollection(manga)
+            }
+            #expect(sut.readingCount == 1)
+
+            // When - add another manga that is being read
+            try sut.addToCollection(Self.sampleManga2)
+            if let manga = sut.getCollectionManga(mangaId: Self.sampleManga2.id) {
+                manga.currentReadingVolume = 50
+                try sut.updateCollection(manga)
+            }
+            #expect(sut.readingCount == 2)
+
+            // When - remove reading status from one manga
+            if let manga = sut.getCollectionManga(mangaId: Self.sampleManga.id) {
+                manga.currentReadingVolume = nil
+                try sut.updateCollection(manga)
+            }
+            #expect(sut.readingCount == 1)
+        }
+
+        @Test("averageProgress returns correct value")
+        func averageProgressReturnsCorrectValue() throws {
+            // Given/When - empty collection
+            #expect(sut.averageProgress == 0.0)
+
+            // When - add manga with no total volumes (progress is nil)
+            try sut.addToCollection(Self.sampleManga)
+            if let manga = sut.getCollectionManga(mangaId: Self.sampleManga.id) {
+                manga.totalVolumes = nil
+                manga.volumesOwnedCount = 10
+                try sut.updateCollection(manga)
+            }
+            #expect(sut.averageProgress == 0.0)
+
+            // When - set total volumes (now has progress)
+            if let manga = sut.getCollectionManga(mangaId: Self.sampleManga.id) {
+                manga.totalVolumes = 100
+                manga.volumesOwnedCount = 50
+                try sut.updateCollection(manga)
+            }
+            #expect(sut.averageProgress == 0.5) // 50/100 = 0.5
+
+            // When - add another manga with different progress
+            try sut.addToCollection(Self.sampleManga2)
+            if let manga = sut.getCollectionManga(mangaId: Self.sampleManga2.id) {
+                manga.totalVolumes = 72
+                manga.volumesOwnedCount = 72
+                try sut.updateCollection(manga)
+            }
+            // Average: (0.5 + 1.0) / 2 = 0.75
+            #expect(sut.averageProgress == 0.75)
+        }
+
+        @Test(
+            "averageProgress with different values",
+            arguments: [
+                .init(manga1Progress: (owned: 25, total: 100), manga2Progress: (owned: 50, total: 100), expectedAverage: 0.375),
+                .init(manga1Progress: (owned: 10, total: 20), manga2Progress: (owned: 30, total: 60), expectedAverage: 0.5),
+                .init(manga1Progress: (owned: 100, total: 100), manga2Progress: (owned: 100, total: 100), expectedAverage: 1.0),
+                .init(manga1Progress: (owned: 0, total: 50), manga2Progress: (owned: 25, total: 50), expectedAverage: 0.25)
+            ] as [AverageProgressArgument]
+        )
+        private func averageProgressWithDifferentValues(argument: AverageProgressArgument) throws {
+            // Given
+            try sut.addToCollection(Self.sampleManga)
+            try sut.addToCollection(Self.sampleManga2)
+
+            if let manga1 = sut.getCollectionManga(mangaId: Self.sampleManga.id) {
+                manga1.totalVolumes = argument.manga1Progress.total
+                manga1.volumesOwnedCount = argument.manga1Progress.owned
+                try sut.updateCollection(manga1)
+            }
+
+            if let manga2 = sut.getCollectionManga(mangaId: Self.sampleManga2.id) {
+                manga2.totalVolumes = argument.manga2Progress.total
+                manga2.volumesOwnedCount = argument.manga2Progress.owned
+                try sut.updateCollection(manga2)
+            }
+
+            // When
+            let average = sut.averageProgress
+
+            // Then
+            #expect(abs(average - argument.expectedAverage) < 0.001)
+        }
+
+        @Test("completionPercentage returns correct value")
+        func completionPercentageReturnsCorrectValue() throws {
+            // Given/When - empty collection
+            #expect(sut.completionPercentage == 0.0)
+
+            // When - add one manga (not complete)
+            try sut.addToCollection(Self.sampleManga)
+            #expect(sut.completionPercentage == 0.0) // 0/1 = 0.0
+
+            // When - mark as complete
+            if let manga = sut.getCollectionManga(mangaId: Self.sampleManga.id) {
+                manga.hasCompleteCollection = true
+                try sut.updateCollection(manga)
+            }
+            #expect(sut.completionPercentage == 1.0) // 1/1 = 1.0
+
+            // When - add another manga (not complete)
+            try sut.addToCollection(Self.sampleManga2)
+            #expect(sut.completionPercentage == 0.5) // 1/2 = 0.5
+
+            // When - mark second manga as complete
+            if let manga = sut.getCollectionManga(mangaId: Self.sampleManga2.id) {
+                manga.hasCompleteCollection = true
+                try sut.updateCollection(manga)
+            }
+            #expect(sut.completionPercentage == 1.0) // 2/2 = 1.0
+        }
+
+        @Test("getTopSeriesByVolumes returns correct mangas in order")
+        func getTopSeriesByVolumesReturnsCorrectOrder() throws {
+            // Given - add multiple mangas with different volume counts
+            let manga1 = Self.sampleManga
+            let manga2 = Self.sampleManga2
+            let manga3 = Manga(
+                id: 3,
+                title: "Attack on Titan",
+                titleEnglish: "Attack on Titan",
+                titleJapanese: "進撃の巨人",
+                sypnosis: "Humanity fights against titans.",
+                background: nil,
+                mainPicture: "https://cdn.myanimelist.net/images/manga/2/37846.jpg",
+                url: nil,
+                volumes: 34,
+                chapters: nil,
+                status: "Finished",
+                score: 8.54,
+                startDate: nil,
+                endDate: nil,
+                authors: [],
+                genres: [],
+                demographics: [],
+                themes: []
+            )
+
+            try sut.addToCollection(manga1)
+            try sut.addToCollection(manga2)
+            try sut.addToCollection(manga3)
+
+            // Set different volume counts
+            if let m1 = sut.getCollectionManga(mangaId: manga1.id) {
+                m1.volumesOwnedCount = 50
+                try sut.updateCollection(m1)
+            }
+            if let m2 = sut.getCollectionManga(mangaId: manga2.id) {
+                m2.volumesOwnedCount = 72
+                try sut.updateCollection(m2)
+            }
+            if let m3 = sut.getCollectionManga(mangaId: manga3.id) {
+                m3.volumesOwnedCount = 34
+                try sut.updateCollection(m3)
+            }
+
+            // When
+            let topSeries = sut.getTopSeriesByVolumes(limit: 3)
+
+            // Then
+            #expect(topSeries.count == 3)
+            #expect(topSeries[0].mangaId == manga2.id) // 72 volumes
+            #expect(topSeries[1].mangaId == manga1.id) // 50 volumes
+            #expect(topSeries[2].mangaId == manga3.id) // 34 volumes
+        }
+
+        @Test("getTopSeriesByVolumes respects limit")
+        func getTopSeriesByVolumesRespectsLimit() throws {
+            // Given - add 3 mangas
+            try sut.addToCollection(Self.sampleManga)
+            try sut.addToCollection(Self.sampleManga2)
+
+            // When - request only 1
+            let topSeries = sut.getTopSeriesByVolumes(limit: 1)
+
+            // Then
+            #expect(topSeries.count == 1)
+        }
+
+        @Test("getMostRecentlyAdded returns correct mangas in order")
+        func getMostRecentlyAddedReturnsCorrectOrder() throws {
+            // Given - add mangas with delays to ensure different dateAdded
+            try sut.addToCollection(Self.sampleManga)
+            Thread.sleep(forTimeInterval: 0.01)
+
+            try sut.addToCollection(Self.sampleManga2)
+            Thread.sleep(forTimeInterval: 0.01)
+
+            let manga3 = Manga(
+                id: 3,
+                title: "Death Note",
+                titleEnglish: "Death Note",
+                titleJapanese: "デスノート",
+                sypnosis: "A notebook that kills.",
+                background: nil,
+                mainPicture: "https://cdn.myanimelist.net/images/manga/2/253119.jpg",
+                url: nil,
+                volumes: 12,
+                chapters: nil,
+                status: "Finished",
+                score: 8.71,
+                startDate: nil,
+                endDate: nil,
+                authors: [],
+                genres: [],
+                demographics: [],
+                themes: []
+            )
+            try sut.addToCollection(manga3)
+
+            // When
+            let recentlyAdded = sut.getMostRecentlyAdded(limit: 3)
+
+            // Then
+            #expect(recentlyAdded.count == 3)
+            #expect(recentlyAdded[0].mangaId == manga3.id) // Most recent
+            #expect(recentlyAdded[1].mangaId == Self.sampleManga2.id)
+            #expect(recentlyAdded[2].mangaId == Self.sampleManga.id) // Oldest
+        }
+
+        @Test("getMostRecentlyAdded respects limit")
+        func getMostRecentlyAddedRespectsLimit() throws {
+            // Given
+            try sut.addToCollection(Self.sampleManga)
+            try sut.addToCollection(Self.sampleManga2)
+
+            // When
+            let recentlyAdded = sut.getMostRecentlyAdded(limit: 1)
+
+            // Then
+            #expect(recentlyAdded.count == 1)
+            #expect(recentlyAdded[0].mangaId == Self.sampleManga2.id) // Most recent
+        }
+
+        @Test("getMostRecentlyModified returns correct mangas in order")
+        func getMostRecentlyModifiedReturnsCorrectOrder() throws {
+            // Given - add mangas
+            try sut.addToCollection(Self.sampleManga)
+            try sut.addToCollection(Self.sampleManga2)
+
+            // When - modify first manga
+            Thread.sleep(forTimeInterval: 0.01)
+            if let manga1 = sut.getCollectionManga(mangaId: Self.sampleManga.id) {
+                manga1.volumesOwnedCount = 10
+                try sut.updateCollection(manga1)
+            }
+
+            Thread.sleep(forTimeInterval: 0.01)
+            if let manga2 = sut.getCollectionManga(mangaId: Self.sampleManga2.id) {
+                manga2.volumesOwnedCount = 20
+                try sut.updateCollection(manga2)
+            }
+
+            // When
+            let recentlyModified = sut.getMostRecentlyModified(limit: 2)
+
+            // Then
+            #expect(recentlyModified.count == 2)
+            #expect(recentlyModified[0].mangaId == Self.sampleManga2.id) // Most recently modified
+            #expect(recentlyModified[1].mangaId == Self.sampleManga.id)
+        }
+
+        @Test("getMostRecentlyModified respects limit")
+        func getMostRecentlyModifiedRespectsLimit() throws {
+            // Given
+            try sut.addToCollection(Self.sampleManga)
+            try sut.addToCollection(Self.sampleManga2)
+
+            if let manga = sut.getCollectionManga(mangaId: Self.sampleManga.id) {
+                manga.volumesOwnedCount = 10
+                try sut.updateCollection(manga)
+            }
+
+            // When
+            let recentlyModified = sut.getMostRecentlyModified(limit: 1)
+
+            // Then
+            #expect(recentlyModified.count == 1)
         }
 
         // MARK: - Error Handling Tests
@@ -363,7 +688,7 @@ extension CollectionTests {
                 Issue.record("Expected CollectionError.contextNotAvailable but got \(String(describing: thrownError))")
             }
             #expect(viewModel.errorMessage != nil)
-            #expect(viewModel.errorMessage?.localizedCaseInsensitiveContains("context") == true)
+            #expect(viewModel.errorMessage == CollectionError.contextNotAvailable.errorDescription)
         }
 
         @Test("Update collection with nil context throws contextNotAvailable error")
@@ -398,7 +723,7 @@ extension CollectionTests {
                 Issue.record("Expected CollectionError.contextNotAvailable but got \(String(describing: thrownError))")
             }
             #expect(viewModel.errorMessage != nil)
-            #expect(viewModel.errorMessage?.localizedCaseInsensitiveContains("context") == true)
+            #expect(viewModel.errorMessage == CollectionError.contextNotAvailable.errorDescription)
         }
 
         @Test("Remove from collection with nil context throws contextNotAvailable error")
@@ -433,7 +758,7 @@ extension CollectionTests {
                 Issue.record("Expected CollectionError.contextNotAvailable but got \(String(describing: thrownError))")
             }
             #expect(viewModel.errorMessage != nil)
-            #expect(viewModel.errorMessage?.localizedCaseInsensitiveContains("context") == true)
+            #expect(viewModel.errorMessage == CollectionError.contextNotAvailable.errorDescription)
         }
 
         @Test("Add duplicate manga throws alreadyExists error and sets error message")
@@ -462,31 +787,30 @@ extension CollectionTests {
                 Issue.record("Expected CollectionError.alreadyExists but got \(String(describing: thrownError))")
             }
             #expect(sut.errorMessage != nil)
-            #expect(sut.errorMessage?.localizedCaseInsensitiveContains("already") == true)
+            // Verify error message matches the expected localized error description
+            #expect(sut.errorMessage == CollectionError.alreadyExists.errorDescription)
         }
 
         @Test(
             "Error messages are set correctly for different error types",
             arguments: [
-                .init(error: CollectionError.contextNotAvailable, containsText: "context"),
-                .init(error: CollectionError.alreadyExists, containsText: "already"),
-                .init(error: CollectionError.notFound, containsText: "not found")
-            ] as [ErrorMessageArgument]
+                CollectionError.contextNotAvailable,
+                CollectionError.alreadyExists,
+                CollectionError.notFound
+            ]
         )
-        private func errorMessagesSetCorrectly(argument: ErrorMessageArgument) {
+        private func errorMessagesSetCorrectly(error: CollectionError) {
             // Given
             let viewModel = CollectionViewModel()
 
             // When
-            if let errorDescription = argument.error.errorDescription {
+            if let errorDescription = error.errorDescription {
                 viewModel.errorMessage = errorDescription
             }
 
             // Then
             #expect(viewModel.errorMessage != nil)
-            if let errorMessage = viewModel.errorMessage {
-                #expect(errorMessage.localizedCaseInsensitiveContains(argument.containsText))
-            }
+            #expect(viewModel.errorMessage == error.errorDescription)
         }
 
         @Test("Error message is cleared after successful operations")
@@ -622,17 +946,20 @@ private extension CollectionTests.ViewModelTests {
         }
     }
 
-    struct ErrorMessageArgument: CustomTestStringConvertible {
-        let error: CollectionError
-        let containsText: String
+    struct AverageProgressArgument: CustomTestStringConvertible {
+        let manga1Progress: (owned: Int, total: Int)
+        let manga2Progress: (owned: Int, total: Int)
+        let expectedAverage: Double
 
         var testDescription: String {
-            "\(error) → expects message containing '\(containsText)'"
+            "manga1: \(manga1Progress.owned)/\(manga1Progress.total), manga2: \(manga2Progress.owned)/\(manga2Progress.total) → avg: \(expectedAverage)"
         }
 
-        init(error: CollectionError, containsText: String) {
-            self.error = error
-            self.containsText = containsText
+        init(manga1Progress: (owned: Int, total: Int), manga2Progress: (owned: Int, total: Int), expectedAverage: Double) {
+            self.manga1Progress = manga1Progress
+            self.manga2Progress = manga2Progress
+            self.expectedAverage = expectedAverage
         }
     }
+
 }

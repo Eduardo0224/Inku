@@ -210,6 +210,10 @@ enum L10n {
 
         enum Search {
             static let placeholder = String(localized: .CollectionLocalizable.searchPlaceholder)
+            static let emptyTitle = String(localized: .CollectionLocalizable.searchEmptyTitle)
+            static func emptyMessage(_ searchText: String) -> String {
+                String(localized: .CollectionLocalizable.searchEmptyMessage(searchText))
+            }
         }
 
         enum Empty {
@@ -239,6 +243,15 @@ enum L10n {
             static let title = String(localized: .CollectionLocalizable.statsTitle)
             static let totalMangas = String(localized: .CollectionLocalizable.statsTotalMangas)
             static let totalVolumes = String(localized: .CollectionLocalizable.statsTotalVolumes)
+            static let completed = String(localized: .CollectionLocalizable.statsCompleted)
+            static let reading = String(localized: .CollectionLocalizable.statsReading)
+            static let averageProgress = String(localized: .CollectionLocalizable.statsAverageProgress)
+            static let completionRate = String(localized: .CollectionLocalizable.statsCompletionRate)
+            static let topSeries = String(localized: .CollectionLocalizable.statsTopSeries)
+            static let recentlyAdded = String(localized: .CollectionLocalizable.statsRecentlyAdded)
+            static let recentlyUpdated = String(localized: .CollectionLocalizable.statsRecentlyUpdated)
+            static let overview = String(localized: .CollectionLocalizable.statsOverview)
+            static let details = String(localized: .CollectionLocalizable.statsDetails)
         }
 
         enum Edit {
