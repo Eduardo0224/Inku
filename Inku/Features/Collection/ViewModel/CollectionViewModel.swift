@@ -23,7 +23,18 @@ final class CollectionViewModel: CollectionViewModelProtocol {
     @ObservationIgnored
     private var modelContext: ModelContext?
 
+    @ObservationIgnored
+    private let interactor: CollectionInteractorProtocol
+
     var errorMessage: String?
+    var isLoadingManga: Bool = false
+    var loadedManga: Manga?
+
+    // MARK: - Initializers
+
+    init(interactor: CollectionInteractorProtocol = CollectionInteractor()) {
+        self.interactor = interactor
+    }
 
     // MARK: - CRUD Operations
 
@@ -177,6 +188,23 @@ final class CollectionViewModel: CollectionViewModelProtocol {
         )
         let mangas = (try? modelContext?.fetch(descriptor)) ?? []
         return Array(mangas.prefix(limit))
+    }
+
+    // MARK: - Manga Loading
+
+    func loadMangaById(_ id: Int) async {
+        isLoadingManga = true
+        loadedManga = nil
+        errorMessage = nil
+
+        do {
+            let manga = try await interactor.getMangaById(id)
+            loadedManga = manga
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+
+        isLoadingManga = false
     }
 
     // MARK: - Functions

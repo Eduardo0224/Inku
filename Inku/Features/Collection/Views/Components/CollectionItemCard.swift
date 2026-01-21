@@ -21,6 +21,7 @@ struct CollectionItemCard: View {
     let collectionManga: CollectionManga
     let onEdit: () -> Void
     let onDelete: () -> Void
+    let onTap: () -> Void
 
     // MARK: - States
 
@@ -29,6 +30,15 @@ struct CollectionItemCard: View {
     // MARK: - Body
 
     var body: some View {
+        cardContent
+            .onTapGesture {
+                onTap()
+            }
+    }
+
+    // MARK: - Private Views
+
+    private var cardContent: some View {
         HStack(alignment: .top, spacing: InkuSpacing.spacing12) {
             coverImage
 
@@ -58,8 +68,6 @@ struct CollectionItemCard: View {
             imageKey = UUID()
         }
     }
-
-    // MARK: - Private Views
 
     @ViewBuilder
     private var coverImage: some View {
@@ -157,7 +165,8 @@ struct CollectionItemCard: View {
             hasCompleteCollection: false
         ),
         onEdit: { print("Edit") },
-        onDelete: { print("Delete") }
+        onDelete: { print("Delete") },
+        onTap: { print("Tap") }
     )
     .padding()
     .background(Color.inkuSurface)
@@ -175,7 +184,8 @@ struct CollectionItemCard: View {
             hasCompleteCollection: true
         ),
         onEdit: { print("Edit") },
-        onDelete: { print("Delete") }
+        onDelete: { print("Delete") },
+        onTap: { print("Tap") }
     )
     .padding()
     .background(Color.inkuSurface)
@@ -193,7 +203,8 @@ struct CollectionItemCard: View {
             hasCompleteCollection: false
         ),
         onEdit: { print("Edit") },
-        onDelete: { print("Delete") }
+        onDelete: { print("Delete") },
+        onTap: { print("Tap") }
     )
     .padding()
     .background(Color.inkuSurface)
@@ -211,7 +222,8 @@ struct CollectionItemCard: View {
             hasCompleteCollection: false
         ),
         onEdit: { print("Edit") },
-        onDelete: { print("Delete") }
+        onDelete: { print("Delete") },
+        onTap: { print("Tap") }
     )
     .padding()
     .background(Color.inkuSurface)

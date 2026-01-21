@@ -27,6 +27,8 @@ struct MangaDetailView: View {
     @State private var collectionManga: CollectionManga?
     @State private var mangaToEdit: CollectionManga?
     @State private var mangaToDelete: CollectionManga?
+    @State private var errorMessage: String?
+    @State private var showErrorAlert: Bool = false
 
     // MARK: - Properties
 
@@ -154,6 +156,19 @@ struct MangaDetailView: View {
         } message: { manga in
             Text(L10n.Collection.Delete.message(manga.title))
         }
+        .alert(
+            L10n.Error.title,
+            isPresented: $showErrorAlert
+        ) {
+            Button(L10n.Common.ok, role: .cancel) {
+                showErrorAlert = false
+                errorMessage = nil
+            }
+        } message: {
+            if let errorMessage = errorMessage {
+                Text(errorMessage)
+            }
+        }
         .task {
             collectionViewModel.setModelContext(modelContext)
             checkIfInCollection()
@@ -209,7 +224,8 @@ struct MangaDetailView: View {
             try collectionViewModel.addToCollection(manga)
             checkIfInCollection()
         } catch {
-            print("[MangaDetailView] Error adding to collection: \(error)")
+            errorMessage = error.localizedDescription
+            showErrorAlert = true
         }
     }
 
@@ -219,7 +235,8 @@ struct MangaDetailView: View {
             collectionManga = nil
             mangaToDelete = nil
         } catch {
-            print("[MangaDetailView] Error removing from collection: \(error)")
+            errorMessage = error.localizedDescription
+            showErrorAlert = true
         }
     }
 }

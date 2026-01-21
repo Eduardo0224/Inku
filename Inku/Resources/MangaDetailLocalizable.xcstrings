@@ -342,6 +342,96 @@
           }
         }
       }
+    },
+    "STATUS_PUBLISHING" : {
+      "comment" : "Status value when manga is currently publishing.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Publishing"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Publicándose"
+          }
+        }
+      }
+    },
+    "STATUS_COMPLETED" : {
+      "comment" : "Status value when manga is completed.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Completed"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Completado"
+          }
+        }
+      }
+    },
+    "STATUS_HIATUS" : {
+      "comment" : "Status value when manga is on hiatus.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiatus"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En Pausa"
+          }
+        }
+      }
+    },
+    "STATUS_DISCONTINUED" : {
+      "comment" : "Status value when manga is discontinued.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discontinued"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descontinuado"
+          }
+        }
+      }
+    },
+    "VALUE_NOT_AVAILABLE" : {
+      "comment" : "Label shown when a value is not available.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "N/A"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "N/D"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

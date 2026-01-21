@@ -115,6 +115,17 @@ enum L10n {
             static let title = String(localized: .MangaDetailLocalizable.backgroundTitle)
             static let button = String(localized: .MangaDetailLocalizable.backgroundButton)
         }
+
+        enum Status {
+            static let publishing = String(localized: .MangaDetailLocalizable.statusPublishing)
+            static let completed = String(localized: .MangaDetailLocalizable.statusCompleted)
+            static let hiatus = String(localized: .MangaDetailLocalizable.statusHiatus)
+            static let discontinued = String(localized: .MangaDetailLocalizable.statusDiscontinued)
+        }
+
+        enum Value {
+            static let notAvailable = String(localized: .MangaDetailLocalizable.valueNotAvailable)
+        }
     }
 
     // MARK: - Search (SearchLocalizable.xcstrings)

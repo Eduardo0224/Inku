@@ -18,6 +18,8 @@ import SwiftData
 final class EmptyCollectionViewModel: CollectionViewModelProtocol {
 
     var errorMessage: String?
+    var isLoadingManga: Bool = false
+    var loadedManga: Manga?
 
     func addToCollection(_ manga: Manga) throws {
         fatalError("CollectionViewModel not provided in environment")
@@ -58,6 +60,10 @@ final class EmptyCollectionViewModel: CollectionViewModelProtocol {
     }
 
     func clearError() {
+        fatalError("CollectionViewModel not provided in environment")
+    }
+
+    func loadMangaById(_ id: Int) async {
         fatalError("CollectionViewModel not provided in environment")
     }
 }

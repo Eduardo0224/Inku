@@ -27,26 +27,63 @@ struct CollectionView: View {
     @State private var selectedFilter: CollectionFilter = .all
     @State private var selectedSortOption: CollectionSortOption = .dateAdded
     @State private var showingStats = false
+    @State private var navigationPath = NavigationPath()
 
     // MARK: - Body
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             CollectionListView(
                 filter: selectedFilter,
                 sortOption: selectedSortOption
             )
             .id("\(selectedFilter)-\(selectedSortOption.rawValue)")
             .navigationTitle(L10n.Collection.Screen.title)
+            .navigationDestination(for: Manga.self) { manga in
+                MangaDetailView(manga: manga)
+            }
             .toolbar {
-                toolbarContent
+                if !viewModel.isLoadingManga {
+                    toolbarContent
+                }
             }
             .sheet(isPresented: $showingStats) {
                 CollectionStatsView()
             }
         }
+        .overlay {
+            if viewModel.isLoadingManga {
+                loadingOverlay
+            }
+        }
+        .toolbar(
+            viewModel.isLoadingManga ? .hidden : .visible,
+            for: .tabBar
+        )
         .task {
             viewModel.setModelContext(modelContext)
+        }
+        .onChange(of: viewModel.loadedManga) { _, loadedManga in
+            if let manga = loadedManga {
+                navigationPath.append(manga)
+            }
+        }
+    }
+
+    // MARK: - Private Views
+
+    private var loadingOverlay: some View {
+        ZStack {
+            Color.black.opacity(0.4)
+                .ignoresSafeArea()
+
+            InkuLoadingView(message: L10n.Common.loading)
+                .padding(InkuSpacing.spacing32)
+                .background {
+                    RoundedRectangle(cornerRadius: InkuRadius.radius16)
+                        .fill(.regularMaterial)
+                }
+                .frame(width: 150, height: 150)
         }
     }
 

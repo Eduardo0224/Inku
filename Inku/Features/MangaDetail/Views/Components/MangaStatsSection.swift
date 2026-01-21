@@ -25,17 +25,17 @@ struct MangaStatsSection: View {
     // MARK: - Computed Properties
 
     private var volumesValue: String {
-        guard let volumes else { return "Unknown" }
+        guard let volumes else { return L10n.MangaDetail.Publication.unknown }
         return "\(volumes)"
     }
 
     private var chaptersValue: String {
-        guard let chapters else { return "Unknown" }
+        guard let chapters else { return L10n.MangaDetail.Publication.unknown }
         return "\(chapters)"
     }
 
     private var statusValue: String {
-        guard let status else { return "Unknown" }
+        guard let status else { return L10n.MangaDetail.Publication.unknown }
         return Status(rawValue: status).displayText
     }
 
@@ -100,11 +100,11 @@ extension MangaStatsSection {
 
         var displayText: String {
             switch self {
-            case .publishing: return "Publishing"
-            case .completed: return "Completed"
-            case .hiatus: return "Hiatus"
-            case .discontinued: return "Discontinued"
-            case .unknown: return "Unknown"
+            case .publishing: return L10n.MangaDetail.Status.publishing
+            case .completed: return L10n.MangaDetail.Status.completed
+            case .hiatus: return L10n.MangaDetail.Status.hiatus
+            case .discontinued: return L10n.MangaDetail.Status.discontinued
+            case .unknown: return L10n.MangaDetail.Publication.unknown
             }
         }
 
