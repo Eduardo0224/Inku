@@ -28,6 +28,6 @@ final class CollectionInteractor: CollectionInteractorProtocol {
     // MARK: - Functions
 
     func getMangaById(_ id: Int) async throws -> Manga {
-        try await networkService.get(endpoint: "/search/manga/\(id)")
+        try await networkService.get(endpoint: API.Endpoints.searchManga(id: id))
     }
 }
