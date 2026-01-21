@@ -140,7 +140,12 @@ struct CollectionListView: View {
                     CollectionItemCard(
                         collectionManga: manga,
                         onEdit: { editManga(manga) },
-                        onDelete: { deleteManga(manga) }
+                        onDelete: { deleteManga(manga) },
+                        onTap: {
+                            Task {
+                                await viewModel.loadMangaById(manga.mangaId)
+                            }
+                        }
                     )
                     .buttonStyle(.plain)
                 }

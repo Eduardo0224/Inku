@@ -22,6 +22,8 @@ final class MockCollectionViewModel: CollectionViewModelProtocol {
     // MARK: - Properties
 
     var errorMessage: String?
+    var isLoadingManga: Bool = false
+    var loadedManga: Manga?
 
     // MARK: - Mock Data
 
@@ -111,6 +113,14 @@ final class MockCollectionViewModel: CollectionViewModelProtocol {
 
     func getMostRecentlyModified(limit: Int) -> [CollectionManga] {
         Array(mangas.sorted { $0.lastModified > $1.lastModified }.prefix(limit))
+    }
+
+    // MARK: - Manga Loading
+
+    func loadMangaById(_ id: Int) async {
+        isLoadingManga = true
+        loadedManga = .testData
+        isLoadingManga = false
     }
 
     // MARK: - Functions

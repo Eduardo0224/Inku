@@ -26,7 +26,7 @@ struct MangaHeaderSection: View {
     // MARK: - Computed Properties
 
     private var scoreValue: String {
-        guard let score else { return "N/A" }
+        guard let score else { return L10n.MangaDetail.Value.notAvailable }
         return score.formatted(.number.precision(.fractionLength(1)))
     }
 

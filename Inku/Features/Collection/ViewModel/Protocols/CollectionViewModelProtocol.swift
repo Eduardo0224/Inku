@@ -17,6 +17,8 @@ import SwiftData
 protocol CollectionViewModelProtocol {
 
     var errorMessage: String? { get }
+    var isLoadingManga: Bool { get }
+    var loadedManga: Manga? { get }
 
     // MARK: - CRUD Operations
 
@@ -28,6 +30,10 @@ protocol CollectionViewModelProtocol {
 
     func isInCollection(mangaId: Int) -> Bool
     func getCollectionManga(mangaId: Int) -> CollectionManga?
+
+    // MARK: - Manga Loading
+
+    func loadMangaById(_ id: Int) async
 
     // MARK: - Statistics
 
