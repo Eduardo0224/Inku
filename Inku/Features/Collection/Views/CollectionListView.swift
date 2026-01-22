@@ -99,6 +99,7 @@ struct CollectionListView: View {
         }
         .searchable(
             text: $searchText,
+            placement: .navigationBarDrawer(displayMode: .always),
             prompt: L10n.Collection.Search.placeholder
         )
         .scrollDismissesKeyboard(.interactively)

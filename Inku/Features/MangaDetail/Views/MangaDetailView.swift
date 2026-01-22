@@ -50,36 +50,35 @@ struct MangaDetailView: View {
     var body: some View {
         ZStack(alignment: .top) {
             // Background Image with Glass Effect
-            GeometryReader { geometry in
-                AsyncImage(url: manga.coverImageURL) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: geometry.size.width, height: 350)
-                        .blur(radius: 30)
-                        .clipped()
-                } placeholder: {
-                    Color.inkuSurface
-                        .frame(width: geometry.size.width, height: 350)
-                }
-                .overlay {
-                    Rectangle()
-                        .fill(.thinMaterial)
-                        .frame(width: geometry.size.width, height: 350)
-                }
-                .overlay(alignment: .bottom) {
-                    LinearGradient(
-                        gradient: Gradient(
-                            colors: [.clear, Color.inkuSurface]
-                        ),
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                    .frame(height: 100)
-                }
-                .ignoresSafeArea()
+            AsyncImage(url: manga.coverImageURL) { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(maxWidth: .infinity, maxHeight: 350)
+                    .blur(radius: 30)
+                    .clipped()
+            } placeholder: {
+                Color.inkuSurface
+                    .frame(maxWidth: .infinity, maxHeight: 350)
+            }
+            .overlay {
+                Rectangle()
+                    .fill(.thinMaterial)
+                    .frame(maxWidth: .infinity, maxHeight: 350)
+            }
+            .overlay(alignment: .bottom) {
+                LinearGradient(
+                    gradient: Gradient(
+                        colors: [.clear, Color.inkuSurface]
+                    ),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .frame(height: 100)
             }
             .frame(height: 350)
+            .ignoresSafeArea(edges: .horizontal)
+            .liquidGlassBackground()
 
             // Content
             GeometryReader { geometry in
