@@ -16,6 +16,10 @@ import InkuUI
 
 struct MangaResultsView: View {
 
+    // MARK: - Environment
+
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
     // MARK: - Properties
 
     let mangas: [Manga]
@@ -25,6 +29,13 @@ struct MangaResultsView: View {
     let onMangaAppear: (Manga) -> Void
 
     // MARK: - Computed Properties
+
+    private func columnCount(for width: CGFloat) -> Int {
+        if horizontalSizeClass == .regular {
+            return width > 1000 ? 5 : 4
+        }
+        return 2
+    }
 
     private var title: String {
         let count = mangas.count
@@ -39,88 +50,90 @@ struct MangaResultsView: View {
     // MARK: - Body
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                // Header
-                VStack(alignment: .leading, spacing: InkuSpacing.spacing4) {
-                    HStack(alignment: .center, spacing: InkuSpacing.spacing8) {
-                        Text(title)
-                            .font(.inkuDisplayMedium)
-                            .foregroundStyle(Color.inkuText)
+        GeometryReader { geometry in
+            ScrollView {
+                VStack(spacing: 0) {
+                    // Header
+                    VStack(alignment: .leading, spacing: InkuSpacing.spacing4) {
+                        HStack(alignment: .center, spacing: InkuSpacing.spacing8) {
+                            Text(title)
+                                .font(.inkuDisplayMedium)
+                                .foregroundStyle(Color.inkuText)
 
-                        Menu {
-                            ForEach(MangaSearchMode.allCases) { mode in
-                                Button {
-                                    mangaSearchMode = mode
-                                } label: {
-                                    if mode == mangaSearchMode {
-                                        Label(mode.displayText, systemImage: "checkmark")
-                                    } else {
-                                        Text(mode.displayText)
+                            Menu {
+                                ForEach(MangaSearchMode.allCases) { mode in
+                                    Button {
+                                        mangaSearchMode = mode
+                                    } label: {
+                                        if mode == mangaSearchMode {
+                                            Label(mode.displayText, systemImage: "checkmark")
+                                        } else {
+                                            Text(mode.displayText)
+                                        }
                                     }
                                 }
+                            } label: {
+                                Image(systemName: "chevron.down")
+                                    .symbolVariant(.circle.fill)
+                                    .font(.inkuHeadline)
+                                    .foregroundStyle(Color.inkuTextSecondary)
+                                    .inkuGlass()
                             }
-                        } label: {
-                            Image(systemName: "chevron.down")
-                                .symbolVariant(.circle.fill)
-                                .font(.inkuHeadline)
+
+                            Spacer()
+                        }
+
+                        if let subtitle {
+                            Text(subtitle)
+                                .font(.inkuBodySmall)
                                 .foregroundStyle(Color.inkuTextSecondary)
-                                .inkuGlass()
                         }
-
-                        Spacer()
                     }
+                    .padding(.horizontal, InkuSpacing.spacing16)
+                    .padding(.top, InkuSpacing.spacing20)
+                    .padding(.bottom, InkuSpacing.spacing12)
 
-                    if let subtitle {
-                        Text(subtitle)
-                            .font(.inkuBodySmall)
-                            .foregroundStyle(Color.inkuTextSecondary)
-                    }
-                }
-                .padding(.horizontal, InkuSpacing.spacing16)
-                .padding(.top, InkuSpacing.spacing20)
-                .padding(.bottom, InkuSpacing.spacing12)
+                    Divider()
+                        .background(Color.inkuTextTertiary.opacity(0.2))
+                        .padding(.bottom, InkuSpacing.spacing16)
 
-                Divider()
-                    .background(Color.inkuTextTertiary.opacity(0.2))
-                    .padding(.bottom, InkuSpacing.spacing16)
-
-                // Grid
-                LazyVGrid(
-                    columns: Array(
-                        repeating: GridItem(.flexible(), spacing: InkuSpacing.spacing16),
-                        count: 2
-                    ),
-                    spacing: InkuSpacing.spacing16
-                ) {
-                    ForEach(mangas) { manga in
-                        NavigationLink(value: manga) {
-                            InkuSearchResultCard(
-                                imageURL: manga.coverImageURL,
-                                title: manga.displayTitle,
-                                subtitle: manga.titleJapanese,
-                                badge: manga.genres.first?.genre
-                            )
-                        }
-                        .buttonStyle(.plain)
-                        .task {
-                            if manga == mangas.last {
-                                onMangaAppear(manga)
+                    // Grid
+                    LazyVGrid(
+                        columns: Array(
+                            repeating: GridItem(.flexible(), spacing: InkuSpacing.spacing16),
+                            count: columnCount(for: geometry.size.width)
+                        ),
+                        spacing: InkuSpacing.spacing16
+                    ) {
+                        ForEach(mangas) { manga in
+                            NavigationLink(value: manga) {
+                                InkuSearchResultCard(
+                                    imageURL: manga.coverImageURL,
+                                    title: manga.displayTitle,
+                                    subtitle: manga.titleJapanese,
+                                    badge: manga.genres.first?.genre
+                                )
+                            }
+                            .buttonStyle(.plain)
+                            .task {
+                                if manga == mangas.last {
+                                    onMangaAppear(manga)
+                                }
                             }
                         }
                     }
-                }
-                .padding(.horizontal, InkuSpacing.spacing16)
+                    .padding(.horizontal, InkuSpacing.spacing16)
 
-                // Loading indicator
-                if isLoadingMore {
-                    InkuLoadingView(message: L10n.Common.loading)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, InkuSpacing.spacing16)
+                    // Loading indicator
+                    if isLoadingMore {
+                        InkuLoadingView(message: L10n.Common.loading)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, InkuSpacing.spacing16)
+                    }
                 }
             }
+            .scrollDismissesKeyboard(.immediately)
         }
-        .scrollDismissesKeyboard(.immediately)
         .background(Color.inkuSurface)
     }
 }

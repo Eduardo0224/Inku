@@ -25,6 +25,7 @@ struct CollectionListView: View {
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.collectionViewModel) private var viewModel
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     // MARK: - States
 
@@ -134,25 +135,52 @@ struct CollectionListView: View {
     // MARK: - Private Views
 
     private var collectionList: some View {
-        ScrollView {
-            LazyVStack(spacing: InkuSpacing.spacing16) {
-                ForEach(filteredMangas) { manga in
-                    CollectionItemCard(
-                        collectionManga: manga,
-                        onEdit: { editManga(manga) },
-                        onDelete: { deleteManga(manga) },
-                        onTap: {
-                            Task {
-                                await viewModel.loadMangaById(manga.mangaId)
-                            }
+        GeometryReader { geometry in
+            ScrollView {
+                if horizontalSizeClass == .regular {
+                    LazyVGrid(
+                        columns: Array(
+                            repeating: GridItem(.flexible(), spacing: InkuSpacing.spacing16),
+                            count: columnCount(for: geometry.size.width)
+                        ),
+                        spacing: InkuSpacing.spacing16
+                    ) {
+                        ForEach(filteredMangas) { manga in
+                            CollectionItemCard(
+                                collectionManga: manga,
+                                onEdit: { editManga(manga) },
+                                onDelete: { deleteManga(manga) },
+                                onTap: {
+                                    Task {
+                                        await viewModel.loadMangaById(manga.mangaId)
+                                    }
+                                }
+                            )
+                            .buttonStyle(.plain)
                         }
-                    )
-                    .buttonStyle(.plain)
+                    }
+                    .padding(InkuSpacing.spacing16)
+                } else {
+                    LazyVStack(spacing: InkuSpacing.spacing16) {
+                        ForEach(filteredMangas) { manga in
+                            CollectionItemCard(
+                                collectionManga: manga,
+                                onEdit: { editManga(manga) },
+                                onDelete: { deleteManga(manga) },
+                                onTap: {
+                                    Task {
+                                        await viewModel.loadMangaById(manga.mangaId)
+                                    }
+                                }
+                            )
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    .padding(InkuSpacing.spacing16)
                 }
             }
-            .padding(InkuSpacing.spacing16)
+            .background(Color.inkuSurface)
         }
-        .background(Color.inkuSurface)
     }
 
     private var emptyStateView: some View {
@@ -180,6 +208,10 @@ struct CollectionListView: View {
     }
 
     // MARK: - Computed Properties
+
+    private func columnCount(for width: CGFloat) -> Int {
+        return width > 1000 ? 2 : 1
+    }
 
     private var filteredMangas: [CollectionManga] {
         guard !searchText.isEmpty else {

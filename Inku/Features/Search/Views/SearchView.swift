@@ -16,6 +16,10 @@ import InkuUI
 
 struct SearchView: View {
 
+    // MARK: - Environment
+
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
     // MARK: - States
 
     @State private var viewModel: SearchViewModel
@@ -27,6 +31,13 @@ struct SearchView: View {
     }
 
     // MARK: - Computed Properties
+
+    private func columnCount(for width: CGFloat) -> Int {
+        if horizontalSizeClass == .regular {
+            return width > 1000 ? 5 : 4
+        }
+        return 2
+    }
 
     private var searchPlaceholder: String {
         switch viewModel.searchScope {
@@ -55,7 +66,7 @@ struct SearchView: View {
             .navigationTitle(L10n.Search.Screen.title)
             .searchable(
                 text: $viewModel.searchText,
-                placement: .toolbar,
+                placement: .navigationBarDrawer(displayMode: .always),
                 prompt: searchPlaceholder
             )
             .searchScopes($viewModel.searchScope, activation: .onTextEntry) {
@@ -179,24 +190,26 @@ struct SearchView: View {
     }
 
     private var mangaSkeletonView: some View {
-        InkuListContainer(
-            title: L10n.Search.Results.searching,
-            subtitle: viewModel.searchText.isEmpty ? nil : L10n.Search.Results.forQuery(viewModel.searchText),
-            showsDivider: true,
-            scrollDisabled: true
-        ) {
-            LazyVGrid(
-                columns: Array(repeating: GridItem(.flexible(), spacing: InkuSpacing.spacing16), count: 2),
-                spacing: InkuSpacing.spacing16
+        GeometryReader { geometry in
+            InkuListContainer(
+                title: L10n.Search.Results.searching,
+                subtitle: viewModel.searchText.isEmpty ? nil : L10n.Search.Results.forQuery(viewModel.searchText),
+                showsDivider: true,
+                scrollDisabled: true
             ) {
-                ForEach(0..<8, id: \.self) { _ in
-                    InkuSearchResultCard(
-                        imageURL: nil,
-                        title: "Loading Title",
-                        subtitle: "Loading Subtitle",
-                        badge: "Genre",
-                        isLoading: true
-                    )
+                LazyVGrid(
+                    columns: Array(repeating: GridItem(.flexible(), spacing: InkuSpacing.spacing16), count: columnCount(for: geometry.size.width)),
+                    spacing: InkuSpacing.spacing16
+                ) {
+                    ForEach(0..<25, id: \.self) { _ in
+                        InkuSearchResultCard(
+                            imageURL: nil,
+                            title: "Loading Title",
+                            subtitle: "Loading Subtitle",
+                            badge: "Genre",
+                            isLoading: true
+                        )
+                    }
                 }
             }
         }
