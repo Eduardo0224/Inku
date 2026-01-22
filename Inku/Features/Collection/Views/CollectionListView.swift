@@ -146,41 +146,33 @@ struct CollectionListView: View {
                         ),
                         spacing: InkuSpacing.spacing16
                     ) {
-                        ForEach(filteredMangas) { manga in
-                            CollectionItemCard(
-                                collectionManga: manga,
-                                onEdit: { editManga(manga) },
-                                onDelete: { deleteManga(manga) },
-                                onTap: {
-                                    Task {
-                                        await viewModel.loadMangaById(manga.mangaId)
-                                    }
-                                }
-                            )
-                            .buttonStyle(.plain)
-                        }
+                        mangaCards
                     }
                     .padding(InkuSpacing.spacing16)
                 } else {
                     LazyVStack(spacing: InkuSpacing.spacing16) {
-                        ForEach(filteredMangas) { manga in
-                            CollectionItemCard(
-                                collectionManga: manga,
-                                onEdit: { editManga(manga) },
-                                onDelete: { deleteManga(manga) },
-                                onTap: {
-                                    Task {
-                                        await viewModel.loadMangaById(manga.mangaId)
-                                    }
-                                }
-                            )
-                            .buttonStyle(.plain)
-                        }
+                        mangaCards
                     }
                     .padding(InkuSpacing.spacing16)
                 }
             }
             .background(Color.inkuSurface)
+        }
+    }
+
+    private var mangaCards: some View {
+        ForEach(filteredMangas) { manga in
+            CollectionItemCard(
+                collectionManga: manga,
+                onEdit: { editManga(manga) },
+                onDelete: { deleteManga(manga) },
+                onTap: {
+                    Task {
+                        await viewModel.loadMangaById(manga.mangaId)
+                    }
+                }
+            )
+            .buttonStyle(.plain)
         }
     }
 

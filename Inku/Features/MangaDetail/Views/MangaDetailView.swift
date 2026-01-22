@@ -84,104 +84,9 @@ struct MangaDetailView: View {
             GeometryReader { geometry in
                 ScrollView {
                     if usesTwoColumnLayout(for: geometry.size.width) {
-                        HStack(alignment: .top, spacing: InkuSpacing.spacing24) {
-                            // Left Column
-                            VStack(spacing: InkuSpacing.spacing24) {
-                                MangaHeaderSection(
-                                    coverURL: manga.coverImageURL,
-                                    title: manga.displayTitle,
-                                    japaneseTitle: manga.titleJapanese,
-                                    score: manga.score
-                                )
-
-                                MangaStatsSection(
-                                    volumes: manga.volumes,
-                                    chapters: manga.chapters,
-                                    status: manga.status
-                                )
-
-                                if manga.startDate != nil {
-                                    MangaPublicationSection(
-                                        startDate: manga.startDate,
-                                        endDate: manga.endDate,
-                                        status: manga.status
-                                    )
-                                }
-                            }
-                            .frame(maxWidth: .infinity)
-
-                            // Right Column
-                            VStack(spacing: InkuSpacing.spacing24) {
-                                MangaSynopsisSection(
-                                    synopsis: manga.sypnosis,
-                                    background: manga.background,
-                                    title: manga.displayTitle
-                                )
-
-                                if !manga.authors.isEmpty {
-                                    MangaAuthorsSection(authors: manga.authors)
-                                }
-
-                                if !manga.genres.isEmpty || !manga.demographics.isEmpty || !manga.themes.isEmpty {
-                                    MangaTagsSection(
-                                        genres: manga.genres,
-                                        demographics: manga.demographics,
-                                        themes: manga.themes
-                                    )
-                                }
-                            }
-                            .frame(maxWidth: .infinity)
-                        }
-                        .padding(.horizontal, InkuSpacing.spacing16)
-                        .padding(.bottom, InkuSpacing.spacing24)
+                        twoColumnLayout
                     } else {
-                        VStack(spacing: InkuSpacing.spacing24) {
-                            MangaHeaderSection(
-                                coverURL: manga.coverImageURL,
-                                title: manga.displayTitle,
-                                japaneseTitle: manga.titleJapanese,
-                                score: manga.score
-                            )
-                            .padding(.horizontal, InkuSpacing.spacing16)
-
-                            MangaStatsSection(
-                                volumes: manga.volumes,
-                                chapters: manga.chapters,
-                                status: manga.status
-                            )
-                            .padding(.horizontal, InkuSpacing.spacing16)
-
-                            if manga.startDate != nil {
-                                MangaPublicationSection(
-                                    startDate: manga.startDate,
-                                    endDate: manga.endDate,
-                                    status: manga.status
-                                )
-                                .padding(.horizontal, InkuSpacing.spacing16)
-                            }
-
-                            MangaSynopsisSection(
-                                synopsis: manga.sypnosis,
-                                background: manga.background,
-                                title: manga.displayTitle
-                            )
-                            .padding(.horizontal, InkuSpacing.spacing16)
-
-                            if !manga.authors.isEmpty {
-                                MangaAuthorsSection(authors: manga.authors)
-                                    .padding(.horizontal, InkuSpacing.spacing16)
-                            }
-
-                            if !manga.genres.isEmpty || !manga.demographics.isEmpty || !manga.themes.isEmpty {
-                                MangaTagsSection(
-                                    genres: manga.genres,
-                                    demographics: manga.demographics,
-                                    themes: manga.themes
-                                )
-                                .padding(.horizontal, InkuSpacing.spacing16)
-                            }
-                        }
-                        .padding(.bottom, InkuSpacing.spacing24)
+                        singleColumnLayout
                     }
                 }
             }
@@ -269,6 +174,118 @@ struct MangaDetailView: View {
             addToCollection()
         } label: {
             Label(L10n.Collection.Actions.add, systemImage: "bookmark.fill")
+        }
+    }
+
+    private var twoColumnLayout: some View {
+        HStack(alignment: .top, spacing: InkuSpacing.spacing24) {
+            // Left Column
+            VStack(spacing: InkuSpacing.spacing24) {
+                headerSection(isTwoColumn: true)
+                statsSection
+                publicationSection
+                authorsSection
+                tagsSection
+            }
+            .frame(maxWidth: .infinity)
+
+            // Right Column
+            VStack(spacing: InkuSpacing.spacing24) {
+                synopsisSection(showsFullText: true)
+                backgroundSection
+            }
+            .frame(maxWidth: .infinity)
+        }
+        .padding(.horizontal, InkuSpacing.spacing16)
+        .padding(.bottom, InkuSpacing.spacing24)
+    }
+
+    private var singleColumnLayout: some View {
+        VStack(spacing: InkuSpacing.spacing24) {
+            headerSection(isTwoColumn: false)
+                .padding(.horizontal, InkuSpacing.spacing16)
+
+            statsSection
+                .padding(.horizontal, InkuSpacing.spacing16)
+
+            publicationSection
+                .padding(.horizontal, InkuSpacing.spacing16)
+
+            synopsisSection(showsFullText: false)
+                .padding(.horizontal, InkuSpacing.spacing16)
+
+            authorsSection
+                .padding(.horizontal, InkuSpacing.spacing16)
+
+            tagsSection
+                .padding(.horizontal, InkuSpacing.spacing16)
+        }
+        .padding(.bottom, InkuSpacing.spacing24)
+    }
+
+    // MARK: - Section Helpers
+
+    private func headerSection(isTwoColumn: Bool) -> some View {
+        MangaHeaderSection(
+            coverURL: manga.coverImageURL,
+            title: manga.displayTitle,
+            japaneseTitle: manga.titleJapanese,
+            score: manga.score,
+            isRegularSizeClass: isTwoColumn
+        )
+    }
+
+    private var statsSection: some View {
+        MangaStatsSection(
+            volumes: manga.volumes,
+            chapters: manga.chapters,
+            status: manga.status
+        )
+    }
+
+    @ViewBuilder
+    private var publicationSection: some View {
+        if manga.startDate != nil {
+            MangaPublicationSection(
+                startDate: manga.startDate,
+                endDate: manga.endDate,
+                status: manga.status
+            )
+        }
+    }
+
+    private func synopsisSection(showsFullText: Bool) -> some View {
+        MangaSynopsisSection(
+            synopsis: manga.sypnosis,
+            background: manga.background,
+            title: manga.displayTitle,
+            showsFullText: showsFullText,
+            showsBackgroundButton: !showsFullText
+        )
+    }
+
+    @ViewBuilder
+    private var backgroundSection: some View {
+        if let background = manga.background, !background.isEmpty {
+            MangaBackgroundSection(background: background)
+        }
+    }
+
+    @ViewBuilder
+    private var authorsSection: some View {
+        if !manga.authors.isEmpty {
+            MangaAuthorsSection(authors: manga.authors)
+        }
+    }
+
+    @ViewBuilder
+    private var tagsSection: some View {
+        if !manga.genres.isEmpty || !manga.demographics.isEmpty || !manga.themes.isEmpty {
+            MangaTagsSection(
+                genres: manga.genres,
+                demographics: manga.demographics,
+                themes: manga.themes
+            )
         }
     }
 

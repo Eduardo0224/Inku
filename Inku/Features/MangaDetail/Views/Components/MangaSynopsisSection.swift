@@ -21,6 +21,24 @@ struct MangaSynopsisSection: View {
     let synopsis: String?
     let background: String?
     let title: String
+    let showsFullText: Bool
+    let showsBackgroundButton: Bool
+
+    // MARK: - Initializers
+
+    init(
+        synopsis: String?,
+        background: String?,
+        title: String,
+        showsFullText: Bool = false,
+        showsBackgroundButton: Bool = true
+    ) {
+        self.synopsis = synopsis
+        self.background = background
+        self.title = title
+        self.showsFullText = showsFullText
+        self.showsBackgroundButton = showsBackgroundButton
+    }
 
     // MARK: - States
 
@@ -39,29 +57,31 @@ struct MangaSynopsisSection: View {
                 Text(synopsis)
                     .font(.inkuBody)
                     .foregroundStyle(Color.inkuTextSecondary)
-                    .lineLimit(isExpanded ? nil : 4)
+                    .lineLimit(showsFullText ? nil : (isExpanded ? nil : 4))
                     .animation(.easeInOut, value: isExpanded)
 
-                HStack(spacing: InkuSpacing.spacing12) {
-                    Button {
-                        isExpanded.toggle()
-                    } label: {
-                        Text(isExpanded ? L10n.MangaDetail.Synopsis.readLess : L10n.MangaDetail.Synopsis.readMore)
-                            .font(.inkuBodySmall)
-                            .foregroundStyle(Color.inkuAccent)
-                    }
-
-                    if let background, !background.isEmpty {
-                        Text("•")
-                            .font(.inkuBodySmall)
-                            .foregroundStyle(Color.inkuTextSecondary)
-
+                if !showsFullText {
+                    HStack(spacing: InkuSpacing.spacing12) {
                         Button {
-                            showingBackground = true
+                            isExpanded.toggle()
                         } label: {
-                            Text(L10n.MangaDetail.Background.button)
+                            Text(isExpanded ? L10n.MangaDetail.Synopsis.readLess : L10n.MangaDetail.Synopsis.readMore)
                                 .font(.inkuBodySmall)
                                 .foregroundStyle(Color.inkuAccent)
+                        }
+
+                        if showsBackgroundButton, let background, !background.isEmpty {
+                            Text("•")
+                                .font(.inkuBodySmall)
+                                .foregroundStyle(Color.inkuTextSecondary)
+
+                            Button {
+                                showingBackground = true
+                            } label: {
+                                Text(L10n.MangaDetail.Background.button)
+                                    .font(.inkuBodySmall)
+                                    .foregroundStyle(Color.inkuAccent)
+                            }
                         }
                     }
                 }
