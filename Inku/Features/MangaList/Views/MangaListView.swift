@@ -234,12 +234,15 @@ struct MangaListView: View {
 
 #Preview("Default") {
     MangaListView()
+        .environment(\.collectionViewModel, MockCollectionViewModel.empty)
 }
 
 #Preview("With Mock Data") {
     MangaListView(interactor: MockMangaListInteractor())
+        .environment(\.collectionViewModel, MockCollectionViewModel.withData)
 }
 
 #Preview("With Error") {
     MangaListView(interactor: MockMangaListInteractorWithError())
+        .environment(\.collectionViewModel, MockCollectionViewModel.withData)
 }

@@ -238,14 +238,12 @@ struct SearchView: View {
 
 // MARK: - Previews
 
-#Preview("Search - Empty") {
-    SearchView(interactor: MockSearchInteractor())
-}
-
 #Preview("Search - With Results") {
     SearchView(interactor: MockSearchInteractor())
+        .environment(\.collectionViewModel, MockCollectionViewModel.withData)
 }
 
 #Preview("Search - Error") {
     SearchView(interactor: MockSearchInteractorWithError())
+        .environment(\.collectionViewModel, MockCollectionViewModel.withData)
 }
