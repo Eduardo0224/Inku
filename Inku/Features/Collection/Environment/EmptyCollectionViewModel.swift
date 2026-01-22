@@ -56,14 +56,15 @@ final class EmptyCollectionViewModel: CollectionViewModelProtocol {
     func getMostRecentlyModified(limit: Int) -> [CollectionManga] { [] }
 
     func setModelContext(_ modelContext: ModelContext) {
-        fatalError("CollectionViewModel not provided in environment")
+        // No-op: EmptyCollectionViewModel is a placeholder
+        // This prevents crashes in previews when CollectionViewModel is not provided
     }
 
     func clearError() {
-        fatalError("CollectionViewModel not provided in environment")
+        // No-op: EmptyCollectionViewModel is a placeholder
     }
 
     func loadMangaById(_ id: Int) async {
-        fatalError("CollectionViewModel not provided in environment")
+        // No-op: EmptyCollectionViewModel is a placeholder
     }
 }
