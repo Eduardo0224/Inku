@@ -22,6 +22,7 @@ struct MangaDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.collectionViewModel) private var collectionViewModel
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.tabBarPlacement) private var tabBarPlacement
 
     // MARK: - States
 
@@ -92,7 +93,7 @@ struct MangaDetailView: View {
             }
         }
         .background(Color.inkuSurface)
-        .navigationTitle(L10n.MangaDetail.Screen.title)
+        .navigationTitle(tabBarPlacement == .topBar ? "" : L10n.MangaDetail.Screen.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             toolbarContent

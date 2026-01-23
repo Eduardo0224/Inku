@@ -212,6 +212,24 @@
           }
         }
       }
+    },
+    "TAB_SEARCH" : {
+      "comment" : "Title of the Search tab in the main tab view.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

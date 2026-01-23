@@ -20,6 +20,7 @@ enum L10n {
     enum Tabs {
         static let browse = String(localized: .tabBrowse)
         static let collection = String(localized: .tabCollection)
+        static let search = String(localized: .tabSearch)
     }
 
     // MARK: - Common (Localizable.xcstrings)

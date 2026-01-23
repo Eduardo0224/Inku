@@ -49,24 +49,8 @@ struct Manga: Identifiable, Codable, Hashable, Sendable {
         return URL(string: cleanURL)
     }
 
-    var mangaURL: URL? {
-        guard let url = url else { return nil }
-        // Remove quotes if present in the JSON
-        let cleanURL = url.replacingOccurrences(of: "\"", with: "")
-        return URL(string: cleanURL)
-    }
-
-    var formattedScore: String {
-        guard let score = score else { return "N/A" }
-        return score.formatted(.number.precision(.fractionLength(2)))
-    }
-
     var sortableScore: Double {
         score ?? 0.0
-    }
-
-    var statusText: String {
-        status?.capitalized ?? "Unknown"
     }
 }
 
