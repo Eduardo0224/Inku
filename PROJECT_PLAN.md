@@ -362,70 +362,79 @@ https://mymanga-acacademy-5607149ebe3d.herokuapp.com
 
 ## Development Roadmap
 
-### 🎯 Phase 1: Basic Version (v1.0.0) - MVP
+### 🎯 Phase 1: Basic Version (v1.0.0) - MVP ✅ COMPLETED
 
-#### Sprint 1: Foundation (Week 1)
+#### Sprint 1: Foundation (Week 1) ✅
 - [x] Project setup and architecture
 - [x] Git workflow and documentation
-- [ ] Create `develop` branch
-- [ ] Core models (Manga, Author, Genre, etc.)
-- [ ] NetworkService implementation
-- [ ] Basic error handling
+- [x] Create `develop` branch
+- [x] Core models (Manga, Author, Genre, etc.)
+- [x] NetworkService implementation
+- [x] Basic error handling
 
-#### Sprint 2: MangaList Feature (Week 1-2)
-- [ ] MangaList models and DTOs
-- [ ] MangaList interactor
-- [ ] MangaList ViewModel
-- [ ] MangaList views
-- [ ] Pagination logic
-- [ ] Basic filters (genre/demographic/theme)
-- [ ] Unit tests
+#### Sprint 2: MangaList Feature (Week 1-2) ✅
+- [x] MangaList models and DTOs
+- [x] MangaList interactor
+- [x] MangaList ViewModel
+- [x] MangaList views
+- [x] Pagination logic
+- [x] Basic filters (genre/demographic/theme)
+- [x] Unit tests (ViewModel + Interactor)
+- [x] **PR #2**: feat(MangaList): Implement manga list feature
 
-#### Sprint 3: MangaDetail Feature (Week 2)
-- [ ] MangaDetail interactor
-- [ ] MangaDetail ViewModel
-- [ ] MangaDetail views
-- [ ] Navigation integration
-- [ ] Unit tests
+#### Sprint 3: MangaDetail Feature (Week 2) ✅
+- [x] MangaDetail interactor (via CollectionInteractor)
+- [x] MangaDetail ViewModel (stateless, uses environment)
+- [x] MangaDetail views (Header, Stats, Synopsis, Authors, Tags)
+- [x] Navigation integration
+- [x] Add to collection functionality
+- [x] **PR #6**: feat(Integration): Add Collection to MangaDetail navigation
 
-#### Sprint 4: Search Feature (Week 2-3)
-- [ ] Search models
-- [ ] Search interactor
-- [ ] Search ViewModel
-- [ ] Search views
-- [ ] Debouncing for search input
-- [ ] Unit tests
+#### Sprint 4: Search Feature (Week 2-3) ✅
+- [x] Search models
+- [x] Search interactor
+- [x] Search ViewModel
+- [x] Search views (manga and author scopes)
+- [x] Debouncing for search input
+- [x] Unit tests (ViewModel)
+- [x] **PR #3**: feat(Search): Implement search feature
 
-#### Sprint 5: Collection Feature (Week 3)
-- [ ] Local storage setup (SwiftData/JSON)
-- [ ] Collection models
-- [ ] Collection interactor
-- [ ] Collection ViewModel
-- [ ] Collection views
-- [ ] Add/Edit/Delete operations
-- [ ] Unit tests
+#### Sprint 5: Collection Feature (Week 3) ✅
+- [x] Local storage setup (SwiftData)
+- [x] Collection models (CollectionManga)
+- [x] Collection interactor with protocol
+- [x] Collection ViewModel with environment key
+- [x] Collection views (List, Stats, Edit sheet)
+- [x] Add/Edit/Delete operations
+- [x] Unit tests (ViewModel + Interactor)
+- [x] **PR #5**: feat(Collection): Add collection management
 
-#### Sprint 6: InkuUI Design System (Week 4)
-- [ ] Create InkuUI package
-- [ ] Design tokens (colors, spacing, radius)
-- [ ] Reusable components
-- [ ] Component tests
+#### Sprint 6: InkuUI Design System (Week 4) ✅
+- [x] Create InkuUI package
+- [x] Design tokens (colors, spacing, radius, typography)
+- [x] Reusable components (10+ components)
+- [x] Component tests and previews
+- [x] **Package v1.9.1**: Published as Swift Package
 
-#### Sprint 7: Integration & Polish (Week 4)
-- [ ] Navigation flow
-- [ ] Loading states
-- [ ] Error handling
-- [ ] Empty states
-- [ ] iPad layout optimization
-- [ ] String localization
-- [ ] Integration tests
+#### Sprint 7: Integration & Polish (Week 4) ✅
+- [x] Navigation flow (all features connected)
+- [x] Loading states (skeleton, pagination)
+- [x] Error handling (alerts, retry actions)
+- [x] Empty states (context-aware)
+- [x] iPad layout optimization (adaptive layouts)
+- [x] String localization (Spanish/English)
+- [x] Integration tests
+- [x] **PR #6**: feat(Integration): Complete MVP polish
+- [x] **PR #7**: feat(iPad): Add comprehensive adaptive layouts
 
-#### Sprint 8: Testing & Release v1.0.0 (Week 5)
-- [ ] Full app testing
-- [ ] Bug fixes
-- [ ] Performance optimization
-- [ ] Documentation
-- [ ] Release v1.0.0 🎉
+#### Sprint 8: Testing & Release v1.0.0 (Week 5) ✅
+- [x] Full app testing
+- [x] Bug fixes (preview crashes, navigation)
+- [x] Performance optimization
+- [x] Documentation (CHANGELOG.md, CLAUDE.md)
+- [x] Custom app icon with adaptive variants
+- [x] Code cleanup and DRY refactoring
+- [x] **Ready for Release v1.0.0** 🎉
 
 ---
 
@@ -558,8 +567,18 @@ For each feature, follow this layer-by-layer approach:
 - ✅ Git workflow (GITFLOW.md)
 - ✅ Project plan with 4 versions
 - ✅ Commit template configured
-- 🎯 **Target Version**: v1.0.0 (Basic/MVP)
-- 🔄 **Next Step**: Create `develop` branch and start Feature 1 (MangaList)
+- ✅ **MVP v1.0.0 COMPLETED** - All features implemented and tested
+- 🎉 **Release Status**: Ready for v1.0.0 tag
+- 📋 **Features Completed**:
+  - ✅ MangaList with pagination and filters
+  - ✅ Search (manga by title, author by name)
+  - ✅ Collection management (SwiftData)
+  - ✅ MangaDetail with full information
+  - ✅ iPad adaptive layouts
+  - ✅ InkuUI design system (v1.9.1)
+  - ✅ Spanish/English localization
+  - ✅ Comprehensive test suite
+- 🔄 **Next Step**: Create release/v1.0.0 branch and tag
 
 ---
 
