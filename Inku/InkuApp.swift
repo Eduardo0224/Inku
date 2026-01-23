@@ -25,11 +25,11 @@ struct InkuApp: App {
                     MangaListView()
                 }
 
-                Tab(L10n.Tabs.collection, systemImage: "bookmark.fill") {
+                Tab(L10n.Tabs.collection, systemImage: "bookmark") {
                     CollectionView()
                 }
 
-                Tab(L10n.Search.Screen.title, systemImage: "magnifyingglass", role: .search) {
+                Tab(L10n.Tabs.search, systemImage: "magnifyingglass", role: .search) {
                     SearchView()
                 }
             }

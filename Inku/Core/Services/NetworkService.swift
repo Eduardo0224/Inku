@@ -97,23 +97,4 @@ enum NetworkError: LocalizedError {
     case validationError
     case serverError(Int)
     case unknown(Int)
-
-    var errorDescription: String? {
-        switch self {
-        case .invalidURL:
-            return "Invalid URL"
-        case .invalidResponse:
-            return "Invalid server response"
-        case .unauthorized:
-            return "Authentication required"
-        case .notFound:
-            return "Resource not found"
-        case .validationError:
-            return "Validation failed"
-        case .serverError(let code):
-            return "Server error (\(code))"
-        case .unknown(let code):
-            return "Unexpected error (\(code))"
-        }
-    }
 }
