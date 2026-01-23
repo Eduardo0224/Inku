@@ -25,14 +25,15 @@ struct InkuApp: App {
                     MangaListView()
                 }
 
-                Tab(L10n.Search.Screen.title, systemImage: "magnifyingglass", role: .search) {
-                    SearchView()
-                }
-
                 Tab(L10n.Tabs.collection, systemImage: "bookmark.fill") {
                     CollectionView()
                 }
+
+                Tab(L10n.Search.Screen.title, systemImage: "magnifyingglass", role: .search) {
+                    SearchView()
+                }
             }
+            .tabViewStyle(.sidebarAdaptable)
             .environment(\.collectionViewModel, collectionViewModel)
             .inkuTabStyle()
         }

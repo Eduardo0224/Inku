@@ -54,6 +54,7 @@ struct MangaStatsSection: View {
                 label: L10n.MangaDetail.Stats.volumes,
                 accentColor: .blue
             )
+            .inkuCard()
 
             InkuStatCard(
                 icon: "doc.text.fill",
@@ -61,6 +62,7 @@ struct MangaStatsSection: View {
                 label: L10n.MangaDetail.Stats.chapters,
                 accentColor: .green
             )
+            .inkuCard()
 
             InkuStatCard(
                 icon: "checkmark.circle.fill",
@@ -68,6 +70,7 @@ struct MangaStatsSection: View {
                 label: L10n.MangaDetail.Stats.status,
                 accentColor: statusColor
             )
+            .inkuCard()
         }
     }
 }
