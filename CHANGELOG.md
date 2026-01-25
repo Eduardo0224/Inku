@@ -7,53 +7,69 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Nothing pending for next release.
-
----
-
-## [1.1.0] - 2026-01-25
-
-### 📚 Documentation Reorganization
+### 📚 Documentation
 
 **Major documentation restructuring to separate reusable patterns from project-specific content.**
 
+> **Note**: These are documentation-only changes. No code changes to v1.0.0. These will be included in the next version release.
+
 ### Added
 
-#### New Documentation Structure
+#### skills/ - Reusable iOS Development Patterns (5 files, ~3,500 lines)
 
-- **skills/ directory** - Reusable iOS development patterns
-  - `skills/clean-architecture-ios/SKILL.md` - Complete Clean Architecture guide
-    - **CORRECTED**: Mock vs Spy terminology (Mock for previews, Spy for tests)
-    - Production, Mock, and Spy implementation patterns
-    - Dependency injection patterns
-    - Feature-based organization
-  - Directory structure for future skills:
-    - `skills/swiftui-observable/` (pending)
-    - `skills/swift-testing-patterns/` (pending)
-    - `skills/swiftui-components/` (pending)
-    - `skills/ios-localization/` (pending)
+- `skills/clean-architecture-ios/SKILL.md` - Complete Clean Architecture guide
+  - **CORRECTED**: Mock vs Spy terminology (Mock for previews, Spy for tests)
+  - Production, Mock, and Spy implementation patterns
+  - Dependency injection patterns
+  - Feature-based organization
 
-- **specs/ - Project-specific documentation**
-  - `specs/project-overview.md` - Complete Inku project description
-    - Technology stack
-    - All features (MangaList, Search, Collection, MangaDetail)
-    - iPad optimization details
-    - InkuUI design system overview
-    - Current status and statistics
-    - Future versions roadmap
-  - `specs/api-endpoints.md` - Complete MangaAPI documentation
-    - All endpoints with request/response examples
-    - Swift models for all API responses
-    - Error handling patterns
-    - Pagination best practices
-    - Code organization with API.Endpoints enum
+- `skills/swiftui-observable/SKILL.md` - SwiftUI + Observation patterns
+  - @Observable patterns with @State ownership
+  - MARK comment structure (10-section order)
+  - Async/await patterns and pagination
+  - Error handling and state management
 
-- **REORGANIZATION_SUMMARY.md** - Complete reorganization guide
+- `skills/swift-testing-patterns/SKILL.md` - Modern testing patterns
+  - Swift Testing framework (@Test, @Suite, #expect)
+  - Spy pattern with tracking properties
+  - SUT (Subject Under Test) pattern
+  - Parameterized testing
+
+- `skills/swiftui-components/SKILL.md` - Component patterns
+  - One component = one file rule
+  - @ViewBuilder usage
+  - Custom view modifiers
+  - Liquid Glass guidelines (DO/DON'T tables)
+
+- `skills/ios-localization/SKILL.md` - Localization patterns
+  - String Catalog (.xcstrings) patterns
+  - Type-safe L10n enum structure
+  - Pluralization and interpolation
+  - Package localization (#bundle vs .module)
+
+#### specs/ - Inku-Specific Documentation
+
+- `specs/project-overview.md` - Complete Inku project description
+  - Technology stack, all features, iPad optimization
+  - InkuUI design system overview
+  - Current status and roadmap
+
+- `specs/api-endpoints.md` - Complete MangaAPI documentation
+  - All 15+ endpoints with request/response examples
+  - Swift models for all API responses
+  - Error handling and pagination patterns
+
+- `specs/inku-ui-design-system.md` - InkuUI Design System
+  - Combined specs 07 + 09
+  - Inku color palette (#FFD0B5 accent)
+  - InkuUI Swift Package v1.9.1 documentation
+  - All components, design tokens, view modifiers
+  - Decision tree for Library vs App components
+
+- `REORGANIZATION_SUMMARY.md` - Complete reorganization guide
   - What changed and why
-  - New structure explanation
-  - Key corrections made
-  - Pending work for future PRs
-  - Benefits of new structure
+  - File statistics (~5,000 lines total)
+  - Implementation details
 
 ### Changed
 
@@ -90,22 +106,12 @@ Nothing pending for next release.
 - ✅ Corrected Mock/Spy terminology matches codebase
 - ✅ Better Claude Code context management
 
-#### Pending Work
-
-Due to scope, the following skills still need to be extracted from legacy specs:
-- [ ] `skills/swiftui-observable/SKILL.md` (from specs 02, 03, 04)
-- [ ] `skills/swift-testing-patterns/SKILL.md` (from spec 05)
-- [ ] `skills/swiftui-components/SKILL.md` (from spec 06)
-- [ ] `skills/ios-localization/SKILL.md` (from spec 08)
-- [ ] `specs/inku-ui-design-system.md` (combine specs 07 + 09)
-
-Legacy numbered specs (01-09) remain for compatibility but will be phased out.
-
 ### Notes
 
-- This is a **documentation-only** release - no code changes
+- **No version bump**: These are documentation-only changes
 - v1.0.0 codebase remains unchanged
-- New documentation structure improves Claude Code's ability to provide context-aware assistance
+- Legacy numbered specs (01-09) retained for reference
+- New documentation structure improves Claude Code context management
 - All corrections verified against actual v1.0.0 implementation
 
 ---

@@ -1,8 +1,10 @@
-# Documentation Reorganization Summary (v1.1.0)
+# Documentation Reorganization Summary
 
 ## What Changed
 
 The documentation has been reorganized to separate **reusable patterns** (skills) from **project-specific content** (specs).
+
+> **Note**: This is a documentation-only change. No code changes to v1.0.0. This work is in `develop` branch and will be included in the next version release with actual features.
 
 ## New Structure
 
@@ -156,18 +158,20 @@ All documentation reorganization has been completed successfully!
 - ✅ Corrected Mock/Spy terminology
 - ✅ Better Claude Code context management
 
-## Version
+## Version Status
 
-**This reorganization is part of v1.1.0**
+**Current Version**: v1.0.0 (no version bump for documentation-only changes)
 
-- v1.0.0: MVP release (2026-01-23)
-- v1.1.0: Documentation reorganization + bug fixes (2026-01-25)
+- v1.0.0: MVP release (2026-01-23) - **Current**
+- v1.x.x: Next version (TBD) - Will include these docs + new features
+
+**Branch**: `develop` (merged, awaiting next release)
 
 ## Related Files
 
 - `CLAUDE.md` - Updated with skills/ and specs/ references
-- `CHANGELOG.md` - Entry for v1.1.0
-- `PROJECT_PLAN.md` - Updated current status
+- `CHANGELOG.md` - Entry in `[Unreleased]` section
+- `PROJECT_PLAN.md` - May need update for next version planning
 
 ## Implementation Details
 
@@ -228,12 +232,16 @@ To verify Claude Code works with the new structure:
 4. Ask Claude about "Inku's API endpoints"
    - Should reference `specs/api-endpoints.md`
 
-## Next Steps
+## Status
 
 1. ✅ Review this summary
 2. ✅ Complete all skill files
 3. ✅ Create specs/inku-ui-design-system.md
-4. ⏳ Commit changes to feature branch
-5. ⏳ Merge to develop
-6. ⏳ Update PROJECT_PLAN.md
-7. ⏳ Tag v1.1.0
+4. ✅ Commit changes to feature branch
+5. ✅ Merge to develop
+6. ✅ Update CHANGELOG.md with [Unreleased] section
+7. ⏳ Wait for next feature to create actual version release
+
+**All documentation reorganization is complete and merged into `develop`.**
+
+The next version release (e.g., v1.1.0, v1.2.0, v2.0.0) will include these documentation improvements along with actual code changes.
