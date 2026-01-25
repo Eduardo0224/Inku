@@ -12,19 +12,33 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Testing**: Swift Testing framework only (no XCTest)
 - **Localization**: String Catalog (Spanish & English)
 
-## Specifications
+## Documentation Structure
 
-Read the following specs in `specs/` based on task type:
+This project uses **skills** (reusable patterns) and **specs** (project-specific content).
 
-| Task | Required Specs |
+### Skills (Reusable Patterns)
+
+Read the appropriate skill before implementing:
+
+| Task | Required Skill |
 |------|----------------|
-| New feature | `01-architecture.md` + `02-swiftui-patterns.md` |
-| UI work | `02-swiftui-patterns.md` + `07-ui-design.md` + `09-inku-ui.md` |
-| Reusable component | `09-inku-ui.md` |
-| Networking | `04-async-networking.md` |
-| Testing | `05-testing.md` |
-| iOS 26 / LiquidGlass | `06-ios-versions.md` |
-| Localization | `08-localization.md` |
+| New feature | `skills/clean-architecture-ios/SKILL.md` |
+| SwiftUI code | `skills/swiftui-observable/SKILL.md` |
+| Create component | `skills/swiftui-components/SKILL.md` |
+| Write tests | `skills/swift-testing-patterns/SKILL.md` |
+| Add localization | `skills/ios-localization/SKILL.md` |
+
+### Specs (Inku-Specific Content)
+
+Consult project-specific information:
+
+| Information | Spec |
+|-------------|------|
+| Project overview | `specs/project-overview.md` |
+| API endpoints | `specs/api-endpoints.md` |
+| Design system | `specs/inku-ui-design-system.md` (or `07-ui-design.md` + `09-inku-ui.md`) |
+
+> **Note**: Legacy numbered specs (01-09) are being phased out. Prefer skills/ and new specs/ files.
 
 > **Note**: All UI work should use InkuUI tokens (`InkuSpacing`, `InkuRadius`, `.inkuText`, etc.) and components when applicable.
 
@@ -33,7 +47,8 @@ Read the following specs in `specs/` based on task type:
 ```
 Inku/
 ├── CLAUDE.md                          ← This file
-├── specs/                             ← Architecture & style guides
+├── specs/                             ← Project-specific documentation
+├── skills/                            ← Reusable iOS patterns
 ├── Inku.xcodeproj                     ← Xcode project
 ├── Inku/                              ← Main app target
 │   ├── InkuApp.swift                  ← App entry point

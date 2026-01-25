@@ -11,6 +11,105 @@ Nothing pending for next release.
 
 ---
 
+## [1.1.0] - 2026-01-25
+
+### 📚 Documentation Reorganization
+
+**Major documentation restructuring to separate reusable patterns from project-specific content.**
+
+### Added
+
+#### New Documentation Structure
+
+- **skills/ directory** - Reusable iOS development patterns
+  - `skills/clean-architecture-ios/SKILL.md` - Complete Clean Architecture guide
+    - **CORRECTED**: Mock vs Spy terminology (Mock for previews, Spy for tests)
+    - Production, Mock, and Spy implementation patterns
+    - Dependency injection patterns
+    - Feature-based organization
+  - Directory structure for future skills:
+    - `skills/swiftui-observable/` (pending)
+    - `skills/swift-testing-patterns/` (pending)
+    - `skills/swiftui-components/` (pending)
+    - `skills/ios-localization/` (pending)
+
+- **specs/ - Project-specific documentation**
+  - `specs/project-overview.md` - Complete Inku project description
+    - Technology stack
+    - All features (MangaList, Search, Collection, MangaDetail)
+    - iPad optimization details
+    - InkuUI design system overview
+    - Current status and statistics
+    - Future versions roadmap
+  - `specs/api-endpoints.md` - Complete MangaAPI documentation
+    - All endpoints with request/response examples
+    - Swift models for all API responses
+    - Error handling patterns
+    - Pagination best practices
+    - Code organization with API.Endpoints enum
+
+- **REORGANIZATION_SUMMARY.md** - Complete reorganization guide
+  - What changed and why
+  - New structure explanation
+  - Key corrections made
+  - Pending work for future PRs
+  - Benefits of new structure
+
+### Changed
+
+- **CLAUDE.md** - Updated with new documentation structure
+  - Skills (reusable patterns) section
+  - Specs (project-specific) section
+  - Clear guidance on which file to read for each task
+  - Updated project structure diagram
+
+### Fixed
+
+- **Terminology Correction**: Mock vs Spy in Clean Architecture
+  - **Before**: Specs incorrectly said "Two implementations: Production + Spy"
+  - **After**: Correctly documented three implementations:
+    - **Production**: Real app logic (e.g., `MangaListInteractor`)
+    - **Mock**: For previews and manual testing (e.g., `MockMangaListInteractor`)
+    - **Spy**: For unit tests with tracking (e.g., `SpyMangaListInteractor` in test target)
+  - This now matches the actual implementation in Inku v1.0.0
+
+### Documentation
+
+#### Benefits of Reorganization
+
+**Before** (specs-only):
+- ❌ Mixed reusable patterns with Inku-specific details
+- ❌ Hard to reuse knowledge in other projects
+- ❌ Unclear what's general vs project-specific
+- ❌ Inconsistent terminology (Spy vs Mock confusion)
+
+**After** (specs + skills):
+- ✅ Clear separation: patterns vs project details
+- ✅ Skills are 100% reusable in other iOS projects
+- ✅ Specs are concise and Inku-focused
+- ✅ Corrected Mock/Spy terminology matches codebase
+- ✅ Better Claude Code context management
+
+#### Pending Work
+
+Due to scope, the following skills still need to be extracted from legacy specs:
+- [ ] `skills/swiftui-observable/SKILL.md` (from specs 02, 03, 04)
+- [ ] `skills/swift-testing-patterns/SKILL.md` (from spec 05)
+- [ ] `skills/swiftui-components/SKILL.md` (from spec 06)
+- [ ] `skills/ios-localization/SKILL.md` (from spec 08)
+- [ ] `specs/inku-ui-design-system.md` (combine specs 07 + 09)
+
+Legacy numbered specs (01-09) remain for compatibility but will be phased out.
+
+### Notes
+
+- This is a **documentation-only** release - no code changes
+- v1.0.0 codebase remains unchanged
+- New documentation structure improves Claude Code's ability to provide context-aware assistance
+- All corrections verified against actual v1.0.0 implementation
+
+---
+
 ## [1.0.0] - 2026-01-23
 
 ### 🎉 MVP Release - First Stable Version
