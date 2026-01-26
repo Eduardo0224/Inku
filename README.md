@@ -1,7 +1,7 @@
-# Inku 📚
+# Inku
 
 <div align="left">
-  <img src="Inku/Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png" width="120" align="left" style="margin-right: 20px;">
+  <img src="https://github.com/user-attachments/assets/fe093325-5994-4a61-a3f4-0b5016e38382" width="220" align="left" style="margin-right: 20px;">
 
   <div>
 
@@ -83,33 +83,95 @@
 
 ## 📱 Capturas de Pantalla
 
-> **Nota**: Las capturas de pantalla se agregarán aquí próximamente.
-
-<!--
 ### iPhone
-<div align="center">
-  <img src="docs/screenshots/iphone-manga-list.png" width="200" />
-  <img src="docs/screenshots/iphone-search.png" width="200" />
-  <img src="docs/screenshots/iphone-collection.png" width="200" />
-  <img src="docs/screenshots/iphone-detail.png" width="200" />
-</div>
+
+<table width="800" align="center">
+    <tr>
+        <th>Manga List</th>
+        <th>Search</th>
+        <th>Manga Colelction</th>
+        <th>Manga Detail</th>
+    </tr>
+    <tr>
+        <td width="200" align="center">
+            <img src="https://github.com/user-attachments/assets/c01d8d3e-22d5-4ab9-9131-709c47be090a">
+        </td>
+        <td width="200" align="center">
+            <img src="https://github.com/user-attachments/assets/b17f6542-12ee-4090-a532-7649e4f010ae">
+        </td>
+        <td width="200" align="center">
+            <img src="https://github.com/user-attachments/assets/106b59f5-633c-4627-a80f-fe65d52d042a">
+        </td>
+        <td width="200" align="center">
+            <img src="https://github.com/user-attachments/assets/3f3f82be-bd8e-49c5-90c0-f7f51be8063d">
+        </td>
+    </tr>
+    <tr>
+        <th>Authors</th>
+        <th>Statistics</th>
+        <th>More Info</th>
+        <th>Filters</th>
+    </tr>
+    <tr>
+        <td width="200" align="center">
+            <img src="https://github.com/user-attachments/assets/6e93c4e2-4368-472e-9af0-b5536df7886f">
+        </td>
+        <td width="200" align="center">
+            <img src="https://github.com/user-attachments/assets/a66f60b6-7112-4561-8fbd-223bdec8e3e7">
+        </td>
+        <td width="200" align="center">
+            <img src="https://github.com/user-attachments/assets/dfbbb71d-5394-4f3c-ac86-4a8e99ce16c1">
+        </td>
+        <td width="200" align="center">
+            <img src="https://github.com/user-attachments/assets/f5d4d1d7-02e4-48c5-a7f1-6f62c59f9ccb">
+        </td>
+    </tr>
+</table>
 
 ### iPad
-<div align="center">
-  <img src="docs/screenshots/ipad-manga-list.png" width="400" />
-  <img src="docs/screenshots/ipad-collection.png" width="400" />
-</div>
--->
+
+<table width="800" align="center">
+    <tr>
+        <th>Manga List</th>
+        <th>Mang Collection</th>
+    </tr>
+    <tr>
+        <td width="400" align="center">
+            <img src="https://github.com/user-attachments/assets/03701171-bc4a-4281-abf5-2f6fcb336c16">
+        </td>
+        <td width="400" align="center">
+            <img src="https://github.com/user-attachments/assets/8abd7811-ddc6-475a-823f-2483a082e6f8">
+        </td>
+    </tr>
+    <tr>
+        <th>Manga Detail</th>
+        <th>Search</th>
+    </tr>
+    <tr>
+        <td width="400" align="center">
+            <img src="https://github.com/user-attachments/assets/bf1daa96-f9c7-47c4-8f9a-a82e37e298e2">
+        </td>
+        <td width="400" align="center">
+            <img src="https://github.com/user-attachments/assets/60970848-648d-4023-a567-3f92c62e98a9">
+        </td>
+    </tr>
+</table>
 
 ---
 
 ## 🎥 Video Demo
 
-> **Nota**: El video demo se agregará próximamente.
-
-<!--
-[![Video Demo](docs/screenshots/video-thumbnail.png)](https://youtu.be/your-video-id)
--->
+<table width="800" align="center">
+    <tr>
+        <th>App Demo</th>
+    </tr>
+    <tr>
+        <td width="800" align="center">
+            <video source src="https://github.com/user-attachments/assets/b66e4a5e-e20e-40f8-846b-34d793842f25">
+            </video>
+        </td>
+    </tr>
+</table>
 
 ---
 
@@ -123,7 +185,7 @@ Inku implementa **Clean Architecture** con 4 capas claramente separadas:
 ├─────────────────────────────────────────┤
 │  ViewModels (@Observable)               │  ← Lógica de presentación, estado
 ├─────────────────────────────────────────┤
-│  Interactors (Protocol-first)          │  ← Lógica de negocio, acceso a datos
+│  Interactors (Protocol-first)           │  ← Lógica de negocio, acceso a datos
 ├─────────────────────────────────────────┤
 │  Models (Structs)                       │  ← Datos puros, Codable/Sendable
 └─────────────────────────────────────────┘
