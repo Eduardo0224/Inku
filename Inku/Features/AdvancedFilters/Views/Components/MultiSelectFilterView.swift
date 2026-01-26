@@ -68,7 +68,7 @@ struct MultiSelectFilterView: View {
                     Button {
                         dismiss()
                     } label: {
-                        Text("Cancel")
+                        Text(L10n.AdvancedFilters.MultiSelect.cancel)
                     }
                 }
 
@@ -76,7 +76,7 @@ struct MultiSelectFilterView: View {
                     Button {
                         dismiss()
                     } label: {
-                        Text("Done")
+                        Text(L10n.AdvancedFilters.MultiSelect.done)
                             .fontWeight(.semibold)
                     }
                 }
@@ -84,9 +84,9 @@ struct MultiSelectFilterView: View {
             .overlay {
                 if filteredOptions.isEmpty {
                     ContentUnavailableView {
-                        Label("No results", systemImage: "magnifyingglass")
+                        Label(L10n.AdvancedFilters.MultiSelect.noResults, systemImage: "magnifyingglass")
                     } description: {
-                        Text("Try a different search term")
+                        Text(L10n.AdvancedFilters.MultiSelect.tryDifferent)
                     }
                 }
             }

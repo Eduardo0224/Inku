@@ -33,17 +33,17 @@ enum SearchSortOption: String, CaseIterable, Identifiable, Sendable {
     var displayName: String {
         switch self {
         case .scoreDescending:
-            return String(localized: "sort.score.high_to_low", defaultValue: "Score: High to Low")
+            return L10n.AdvancedFilters.Sort.scoreHighToLow
         case .scoreAscending:
-            return String(localized: "sort.score.low_to_high", defaultValue: "Score: Low to High")
+            return L10n.AdvancedFilters.Sort.scoreLowToHigh
         case .titleAscending:
-            return String(localized: "sort.title.a_to_z", defaultValue: "Title: A to Z")
+            return L10n.AdvancedFilters.Sort.titleAToZ
         case .titleDescending:
-            return String(localized: "sort.title.z_to_a", defaultValue: "Title: Z to A")
+            return L10n.AdvancedFilters.Sort.titleZToA
         case .volumesDescending:
-            return String(localized: "sort.volumes.high_to_low", defaultValue: "Volumes: Most to Least")
+            return L10n.AdvancedFilters.Sort.volumesHighToLow
         case .volumesAscending:
-            return String(localized: "sort.volumes.low_to_high", defaultValue: "Volumes: Least to Most")
+            return L10n.AdvancedFilters.Sort.volumesLowToHigh
         }
     }
 

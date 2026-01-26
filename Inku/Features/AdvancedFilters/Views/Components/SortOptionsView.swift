@@ -39,11 +39,11 @@ struct SortOptionsView: View {
                     }
                 }
             }
-            .navigationTitle("Sort By")
+            .navigationTitle(L10n.AdvancedFilters.Sort.title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button(L10n.AdvancedFilters.MultiSelect.cancel) {
                         dismiss()
                     }
                 }

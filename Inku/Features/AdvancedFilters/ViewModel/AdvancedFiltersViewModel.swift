@@ -16,7 +16,7 @@ import Observation
 
 @Observable
 @MainActor
-final class AdvancedFiltersViewModel {
+final class AdvancedFiltersViewModel: AdvancedFiltersViewModelProtocol {
 
     // MARK: - Private Properties
 
@@ -129,10 +129,7 @@ final class AdvancedFiltersViewModel {
     func performSearch() async {
         guard !isLoading else { return }
         guard hasActiveFilters else {
-            errorMessage = String(
-                localized: "advanced_filters.error.no_criteria",
-                defaultValue: "Please select at least one filter criterion"
-            )
+            errorMessage = L10n.AdvancedFilters.Error.noCriteria
             return
         }
 
@@ -201,16 +198,25 @@ final class AdvancedFiltersViewModel {
     // MARK: - Private Functions
 
     private func handleError(_ error: Error) {
-        if let _ = error as? URLError {
-            errorMessage = String(
-                localized: "error.network.generic",
-                defaultValue: "Network error. Please check your connection."
-            )
+        if let networkError = error as? NetworkError {
+            print("[AdvancedFiltersViewModel] NetworkError: \(networkError)")
+            errorMessage = L10n.Error.generic
+        } else if let urlError = error as? URLError {
+            print("[AdvancedFiltersViewModel] URLError: \(urlError.code)")
+
+            switch urlError.code {
+            case .notConnectedToInternet:
+                errorMessage = L10n.Error.network
+            case .timedOut:
+                errorMessage = L10n.Error.timeout
+            case .cancelled:
+                return
+            default:
+                errorMessage = L10n.Error.generic
+            }
         } else {
-            errorMessage = String(
-                localized: "error.generic",
-                defaultValue: "An unexpected error occurred. Please try again."
-            )
+            print("[AdvancedFiltersViewModel] Unknown error: \(error)")
+            errorMessage = L10n.Error.generic
         }
     }
 }

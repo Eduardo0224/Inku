@@ -244,10 +244,18 @@ enum L10n {
         enum MultiSelect {
             static let cancel = String(localized: .AdvancedFiltersLocalizable.multiselectCancel)
             static let done = String(localized: .AdvancedFiltersLocalizable.multiselectDone)
+            static let noResults = String(localized: .AdvancedFiltersLocalizable.multiselectNoResults)
+            static let tryDifferent = String(localized: .AdvancedFiltersLocalizable.multiselectTryDifferent)
         }
 
         enum Sort {
             static let title = String(localized: .AdvancedFiltersLocalizable.sortTitle)
+            static let scoreHighToLow = String(localized: .AdvancedFiltersLocalizable.sortScoreHighToLow)
+            static let scoreLowToHigh = String(localized: .AdvancedFiltersLocalizable.sortScoreLowToHigh)
+            static let titleAToZ = String(localized: .AdvancedFiltersLocalizable.sortTitleAToZ)
+            static let titleZToA = String(localized: .AdvancedFiltersLocalizable.sortTitleZToA)
+            static let volumesHighToLow = String(localized: .AdvancedFiltersLocalizable.sortVolumesHighToLow)
+            static let volumesLowToHigh = String(localized: .AdvancedFiltersLocalizable.sortVolumesLowToHigh)
         }
 
         enum Error {

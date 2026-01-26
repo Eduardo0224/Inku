@@ -432,6 +432,150 @@
           }
         }
       }
+    },
+    "SORT_SCORE_HIGH_TO_LOW" : {
+      "comment" : "Sort by score descending",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Score: High to Low"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puntuación: Mayor a Menor"
+          }
+        }
+      }
+    },
+    "SORT_SCORE_LOW_TO_HIGH" : {
+      "comment" : "Sort by score ascending",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Score: Low to High"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puntuación: Menor a Mayor"
+          }
+        }
+      }
+    },
+    "SORT_TITLE_A_TO_Z" : {
+      "comment" : "Sort by title ascending",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Title: A to Z"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Título: A a Z"
+          }
+        }
+      }
+    },
+    "SORT_TITLE_Z_TO_A" : {
+      "comment" : "Sort by title descending",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Title: Z to A"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Título: Z a A"
+          }
+        }
+      }
+    },
+    "SORT_VOLUMES_HIGH_TO_LOW" : {
+      "comment" : "Sort by volumes descending",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volumes: Most to Least"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volúmenes: Mayor a Menor"
+          }
+        }
+      }
+    },
+    "SORT_VOLUMES_LOW_TO_HIGH" : {
+      "comment" : "Sort by volumes ascending",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volumes: Least to Most"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volúmenes: Menor a Mayor"
+          }
+        }
+      }
+    },
+    "MULTISELECT_NO_RESULTS" : {
+      "comment" : "Empty state in multi-select when search has no results",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No results"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin resultados"
+          }
+        }
+      }
+    },
+    "MULTISELECT_TRY_DIFFERENT" : {
+      "comment" : "Empty state description in multi-select",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try a different search term"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intenta con otro término"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
