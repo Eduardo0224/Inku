@@ -19,14 +19,14 @@ protocol AdvancedFiltersViewModelProtocol: Observable {
     // MARK: - Properties
 
     // Filter Form State
-    var searchTitle: String { get set }
-    var searchAuthorFirstName: String { get set }
-    var searchAuthorLastName: String { get set }
-    var selectedGenres: Set<String> { get set }
-    var selectedDemographics: Set<String> { get set }
-    var selectedThemes: Set<String> { get set }
-    var searchContains: Bool { get set }
-    var sortOption: SearchSortOption { get set }
+    var searchTitle: String { get }
+    var searchAuthorFirstName: String { get }
+    var searchAuthorLastName: String { get }
+    var selectedGenres: Set<String> { get }
+    var selectedDemographics: Set<String> { get }
+    var selectedThemes: Set<String> { get }
+    var searchContains: Bool { get }
+    var sortOption: SearchSortOption { get }
 
     // Filter Options
     var availableGenres: [String] { get }
@@ -41,7 +41,7 @@ protocol AdvancedFiltersViewModelProtocol: Observable {
     var isLoading: Bool { get }
     var isLoadingMore: Bool { get }
     var isLoadingFilters: Bool { get }
-    var errorMessage: String? { get set }
+    var errorMessage: String? { get }
     var hasMorePages: Bool { get }
     var hasLoadedFilterOptions: Bool { get }
 

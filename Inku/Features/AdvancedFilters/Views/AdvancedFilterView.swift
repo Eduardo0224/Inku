@@ -112,7 +112,7 @@ struct AdvancedFilterView: View {
                     .foregroundStyle(.secondary)
 
                 TextField(L10n.AdvancedFilters.Placeholder.title, text: $viewModel.searchTitle)
-                    .textFieldStyle(.roundedBorder)
+                    .textFieldStyle(.automatic)
             }
 
             VStack(alignment: .leading, spacing: InkuSpacing.spacing8) {
@@ -121,10 +121,10 @@ struct AdvancedFilterView: View {
                     .foregroundStyle(.secondary)
 
                 TextField(L10n.AdvancedFilters.Placeholder.firstName, text: $viewModel.searchAuthorFirstName)
-                    .textFieldStyle(.roundedBorder)
+                    .textFieldStyle(.automatic)
 
                 TextField(L10n.AdvancedFilters.Placeholder.lastName, text: $viewModel.searchAuthorLastName)
-                    .textFieldStyle(.roundedBorder)
+                    .textFieldStyle(.automatic)
             }
 
             Divider()
@@ -218,9 +218,16 @@ struct AdvancedFilterView: View {
             }
 
             if viewModel.isLoading {
-                LoadingResultsView()
+                InkuLoadingView(message: L10n.AdvancedFilters.State.searching)
+                    .padding(InkuSpacing.spacing32)
             } else if viewModel.searchResults.isEmpty {
-                EmptySearchResultsView()
+                InkuEmptyView(
+                    icon: "magnifyingglass",
+                    iconSize: .large,
+                    title: L10n.AdvancedFilters.Empty.noResults,
+                    subtitle: L10n.AdvancedFilters.Empty.adjustFilters
+                )
+                .padding(InkuSpacing.spacing32)
             } else {
                 resultsListView
             }
@@ -286,11 +293,11 @@ private struct FilterSelectorButton: View {
                     .font(.system(size: 14))
             }
             .padding(InkuSpacing.spacing12)
-            .background(Color(.systemBackground))
+            .background(Color.inkuSurfaceElevated)
             .cornerRadius(InkuRadius.radius8)
             .overlay(
                 RoundedRectangle(cornerRadius: InkuRadius.radius8)
-                    .stroke(Color(.separator), lineWidth: 1)
+                    .stroke(Color.inkuTextTertiary.opacity(0.2), lineWidth: 1)
             )
         }
     }
@@ -307,7 +314,7 @@ private struct MangaResultRow: View {
                     .aspectRatio(contentMode: .fill)
             } placeholder: {
                 Rectangle()
-                    .fill(Color(.systemGray5))
+                    .fill(Color.inkuSurfaceSecondary)
             }
             .frame(width: 60, height: 90)
             .cornerRadius(InkuRadius.radius8)
@@ -323,7 +330,7 @@ private struct MangaResultRow: View {
                         Image(systemName: "star")
                             .symbolVariant(.fill)
                             .foregroundStyle(Color.inkuAccent)
-                        Text(String(format: "%.2f", score)) // debe ir con el API .formatted
+                        Text(score.formatted(.number.precision(.fractionLength(2))))
                             .fontWeight(.medium)
                     }
                     .font(.caption)
@@ -343,30 +350,6 @@ private struct MangaResultRow: View {
     }
 }
 
-private struct LoadingResultsView: View {
-    var body: some View {
-        VStack(spacing: InkuSpacing.spacing12) {
-            ProgressView()
-            Text(L10n.AdvancedFilters.State.searching)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(InkuSpacing.spacing32)
-    }
-}
-
-private struct EmptySearchResultsView: View {
-    var body: some View {
-        ContentUnavailableView {
-            Label(L10n.AdvancedFilters.Empty.noResults, systemImage: "magnifyingglass")
-        } description: {
-            Text(L10n.AdvancedFilters.Empty.adjustFilters)
-        }
-        .padding(InkuSpacing.spacing32)
-    }
-}
-
 private struct LoadMoreButton: View {
     let isLoading: Bool
     let action: () -> Void
@@ -382,7 +365,7 @@ private struct LoadMoreButton: View {
         }
         .frame(maxWidth: .infinity)
         .padding(InkuSpacing.spacing12)
-        .background(Color(.systemGray6))
+        .background(Color.inkuSurfaceSecondary)
         .cornerRadius(InkuRadius.radius8)
         .disabled(isLoading)
     }
