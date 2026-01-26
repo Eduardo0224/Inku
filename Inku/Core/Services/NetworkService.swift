@@ -57,6 +57,32 @@ final class NetworkService: NetworkServiceProtocol, Sendable {
         return try await perform(request)
     }
 
+    func post<T: Encodable & Sendable, U: Decodable & Sendable>(
+        endpoint: String,
+        body: T,
+        queryItems: [URLQueryItem] = []
+    ) async throws -> U {
+        let url = baseURL.appending(path: endpoint, directoryHint: .notDirectory)
+        var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
+        components?.queryItems = queryItems.isEmpty ? nil : queryItems
+
+        guard let finalURL = components?.url else {
+            throw NetworkError.invalidURL
+        }
+
+        var request = URLRequest(url: finalURL)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        encoder.dateEncodingStrategy = .iso8601
+        request.httpBody = try encoder.encode(body)
+
+        return try await perform(request)
+    }
+
     // MARK: - Private Functions
 
     private func perform<T: Decodable>(_ request: URLRequest) async throws -> T {

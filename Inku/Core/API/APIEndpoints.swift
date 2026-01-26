@@ -57,6 +57,9 @@ enum API {
         static func searchAuthor(_ name: String) -> String {
             "/search/author/\(name)"
         }
+
+        /// Custom multi-criteria search (POST endpoint)
+        static let searchCustom = "/search/manga"
     }
 
     enum Constants {
