@@ -47,16 +47,33 @@ struct MultiSelectFilterView: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(filteredOptions, id: \.self) { option in
-                    MultiSelectRow(
-                        option: option,
-                        isSelected: selectedItems.contains(option)
-                    ) {
-                        toggleSelection(for: option)
+            ScrollView {
+                VStack(alignment: .leading, spacing: InkuSpacing.spacing16) {
+                    if !filteredOptions.isEmpty {
+                        FlowLayout(spacing: InkuSpacing.spacing8) {
+                            ForEach(filteredOptions, id: \.self) { option in
+                                InkuBadge(
+                                    text: option,
+                                    style: selectedItems.contains(option) ? .accent : .secondary
+                                )
+                                .onTapGesture {
+                                    toggleSelection(for: option)
+                                }
+                            }
+                        }
+                        .padding(InkuSpacing.spacing16)
+                    } else {
+                        InkuEmptyView(
+                            icon: "magnifyingglass",
+                            iconSize: .medium,
+                            title: L10n.AdvancedFilters.MultiSelect.noResults,
+                            subtitle: L10n.AdvancedFilters.MultiSelect.tryDifferent
+                        )
+                        .padding(InkuSpacing.spacing32)
                     }
                 }
             }
+            .background(Color.inkuSurface)
             .searchable(
                 text: $searchText,
                 prompt: Text("Search \(title.lowercased())")
@@ -81,15 +98,6 @@ struct MultiSelectFilterView: View {
                     }
                 }
             }
-            .overlay {
-                if filteredOptions.isEmpty {
-                    ContentUnavailableView {
-                        Label(L10n.AdvancedFilters.MultiSelect.noResults, systemImage: "magnifyingglass")
-                    } description: {
-                        Text(L10n.AdvancedFilters.MultiSelect.tryDifferent)
-                    }
-                }
-            }
         }
     }
 
@@ -104,32 +112,60 @@ struct MultiSelectFilterView: View {
     }
 }
 
-// MARK: - MultiSelectRow
+// MARK: - Flow Layout
 
-private struct MultiSelectRow: View {
+private struct FlowLayout: Layout {
 
-    // MARK: - Properties
+    var spacing: CGFloat = 8
 
-    let option: String
-    let isSelected: Bool
-    let action: () -> Void
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let result = FlowResult(
+            in: proposal.replacingUnspecifiedDimensions().width,
+            subviews: subviews,
+            spacing: spacing
+        )
+        return result.size
+    }
 
-    // MARK: - Body
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let result = FlowResult(
+            in: bounds.width,
+            subviews: subviews,
+            spacing: spacing
+        )
+        for (index, subview) in subviews.enumerated() {
+            let position = CGPoint(
+                x: bounds.minX + result.positions[index].x,
+                y: bounds.minY + result.positions[index].y
+            )
+            subview.place(at: position, proposal: .unspecified)
+        }
+    }
 
-    var body: some View {
-        Button(action: action) {
-            HStack {
-                Text(option)
-                    .foregroundStyle(.primary)
+    struct FlowResult {
+        var size: CGSize = .zero
+        var positions: [CGPoint] = []
 
-                Spacer()
+        init(in maxWidth: CGFloat, subviews: Subviews, spacing: CGFloat) {
+            var x: CGFloat = 0
+            var y: CGFloat = 0
+            var lineHeight: CGFloat = 0
 
-                if isSelected {
-                    Image(systemName: "checkmark")
-                        .foregroundStyle(Color.inkuAccent)
-                        .fontWeight(.semibold)
+            for subview in subviews {
+                let size = subview.sizeThatFits(.unspecified)
+
+                if x + size.width > maxWidth && x > 0 {
+                    x = 0
+                    y += lineHeight + spacing
+                    lineHeight = 0
                 }
+
+                positions.append(CGPoint(x: x, y: y))
+                lineHeight = max(lineHeight, size.height)
+                x += size.width + spacing
             }
+
+            self.size = CGSize(width: maxWidth, height: y + lineHeight)
         }
     }
 }

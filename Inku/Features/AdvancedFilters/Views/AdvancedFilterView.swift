@@ -22,7 +22,6 @@ struct AdvancedFilterView: View {
     @State private var showGenreSelector = false
     @State private var showDemographicSelector = false
     @State private var showThemeSelector = false
-    @State private var showSortOptions = false
 
     // MARK: - Initializers
 
@@ -60,6 +59,7 @@ struct AdvancedFilterView: View {
             .task {
                 await viewModel.loadFilterOptions()
             }
+            .background(Color.inkuSurface)
             .sheet(isPresented: $showGenreSelector) {
                 MultiSelectFilterView(
                     selectedItems: $viewModel.selectedGenres,
@@ -83,12 +83,6 @@ struct AdvancedFilterView: View {
                     options: viewModel.availableThemes,
                     icon: "tag.fill"
                 )
-            }
-            .sheet(isPresented: $showSortOptions) {
-                SortOptionsView(selectedOption: $viewModel.sortOption)
-                    .onChange(of: viewModel.sortOption) { _, _ in
-                        viewModel.applySorting()
-                    }
             }
             .alert(L10n.Error.title, isPresented: .constant(viewModel.errorMessage != nil)) {
                 Button(L10n.Common.ok) {
@@ -205,8 +199,23 @@ struct AdvancedFilterView: View {
 
                 Spacer()
 
-                Button {
-                    showSortOptions = true
+                Menu {
+                    ForEach(SearchSortOption.allCases) { option in
+                        Button {
+                            viewModel.sortOption = option
+                            viewModel.applySorting()
+                        } label: {
+                            HStack {
+                                Image(systemName: option.iconName)
+                                Text(option.displayName)
+
+                                if viewModel.sortOption == option {
+                                    Spacer()
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
+                    }
                 } label: {
                     HStack(spacing: InkuSpacing.spacing4) {
                         Image(systemName: "arrow.up.arrow.down")
@@ -214,6 +223,8 @@ struct AdvancedFilterView: View {
                     }
                     .font(.subheadline)
                     .foregroundStyle(Color.inkuAccent)
+                } primaryAction: {
+                    // No primary action needed
                 }
             }
 
