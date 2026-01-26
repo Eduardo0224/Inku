@@ -13,9 +13,6 @@
 
 import Foundation
 
-/// Production implementation of AdvancedFiltersInteractorProtocol.
-///
-/// Handles multi-criteria manga search and filter options fetching.
 final class AdvancedFiltersInteractor: AdvancedFiltersInteractorProtocol {
 
     // MARK: - Private Properties

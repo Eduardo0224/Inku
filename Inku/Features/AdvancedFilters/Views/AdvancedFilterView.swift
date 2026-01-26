@@ -14,10 +14,6 @@
 import SwiftUI
 import InkuUI
 
-/// Main view for Advanced Filters feature.
-///
-/// Provides a comprehensive filtering interface with multi-criteria search,
-/// sorting options, and paginated results display.
 struct AdvancedFilterView: View {
 
     // MARK: - States
@@ -40,25 +36,21 @@ struct AdvancedFilterView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: InkuSpacing.spacing20) {
-                    // Filter Form
                     filterFormSection
-
-                    // Search Button
                     searchButton
 
-                    // Results Section
                     if viewModel.hasSearched {
                         resultsSection
                     }
                 }
                 .padding(InkuSpacing.spacing16)
             }
-            .navigationTitle("Advanced Filters")
+            .navigationTitle(L10n.AdvancedFilters.Screen.title)
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     if viewModel.hasActiveFilters {
-                        Button("Clear All") {
+                        Button(L10n.AdvancedFilters.Button.clearAll) {
                             viewModel.clearAllFilters()
                         }
                         .fontWeight(.medium)
@@ -71,7 +63,7 @@ struct AdvancedFilterView: View {
             .sheet(isPresented: $showGenreSelector) {
                 MultiSelectFilterView(
                     selectedItems: $viewModel.selectedGenres,
-                    title: "Genres",
+                    title: L10n.AdvancedFilters.Filter.genres,
                     options: viewModel.availableGenres,
                     icon: "theatermasks.fill"
                 )
@@ -79,7 +71,7 @@ struct AdvancedFilterView: View {
             .sheet(isPresented: $showDemographicSelector) {
                 MultiSelectFilterView(
                     selectedItems: $viewModel.selectedDemographics,
-                    title: "Demographics",
+                    title: L10n.AdvancedFilters.Filter.demographics,
                     options: viewModel.availableDemographics,
                     icon: "person.3.fill"
                 )
@@ -87,7 +79,7 @@ struct AdvancedFilterView: View {
             .sheet(isPresented: $showThemeSelector) {
                 MultiSelectFilterView(
                     selectedItems: $viewModel.selectedThemes,
-                    title: "Themes",
+                    title: L10n.AdvancedFilters.Filter.themes,
                     options: viewModel.availableThemes,
                     icon: "tag.fill"
                 )
@@ -98,8 +90,8 @@ struct AdvancedFilterView: View {
                         viewModel.applySorting()
                     }
             }
-            .alert("Error", isPresented: .constant(viewModel.errorMessage != nil)) {
-                Button("OK") {
+            .alert(L10n.Error.title, isPresented: .constant(viewModel.errorMessage != nil)) {
+                Button(L10n.Common.ok) {
                     viewModel.errorMessage = nil
                 }
             } message: {
@@ -112,37 +104,33 @@ struct AdvancedFilterView: View {
 
     // MARK: - Private Views
 
-    @ViewBuilder
     private var filterFormSection: some View {
         VStack(spacing: InkuSpacing.spacing16) {
-            // Title Search
             VStack(alignment: .leading, spacing: InkuSpacing.spacing8) {
-                Text("Title")
-                    .font(.inkuText(.headlineSmall))
+                Text(L10n.AdvancedFilters.Filter.title)
+                    .font(.subheadline)
                     .foregroundStyle(.secondary)
 
-                TextField("Search by title", text: $viewModel.searchTitle)
+                TextField(L10n.AdvancedFilters.Placeholder.title, text: $viewModel.searchTitle)
                     .textFieldStyle(.roundedBorder)
             }
 
-            // Author Search
             VStack(alignment: .leading, spacing: InkuSpacing.spacing8) {
-                Text("Author")
-                    .font(.inkuText(.headlineSmall))
+                Text(L10n.AdvancedFilters.Filter.author)
+                    .font(.subheadline)
                     .foregroundStyle(.secondary)
 
-                TextField("First name", text: $viewModel.searchAuthorFirstName)
+                TextField(L10n.AdvancedFilters.Placeholder.firstName, text: $viewModel.searchAuthorFirstName)
                     .textFieldStyle(.roundedBorder)
 
-                TextField("Last name", text: $viewModel.searchAuthorLastName)
+                TextField(L10n.AdvancedFilters.Placeholder.lastName, text: $viewModel.searchAuthorLastName)
                     .textFieldStyle(.roundedBorder)
             }
 
             Divider()
 
-            // Multi-select Filters
             FilterSelectorButton(
-                title: "Genres",
+                title: L10n.AdvancedFilters.Filter.genres,
                 selectedCount: viewModel.selectedGenres.count,
                 icon: "theatermasks.fill"
             ) {
@@ -150,7 +138,7 @@ struct AdvancedFilterView: View {
             }
 
             FilterSelectorButton(
-                title: "Demographics",
+                title: L10n.AdvancedFilters.Filter.demographics,
                 selectedCount: viewModel.selectedDemographics.count,
                 icon: "person.3.fill"
             ) {
@@ -158,7 +146,7 @@ struct AdvancedFilterView: View {
             }
 
             FilterSelectorButton(
-                title: "Themes",
+                title: L10n.AdvancedFilters.Filter.themes,
                 selectedCount: viewModel.selectedThemes.count,
                 icon: "tag.fill"
             ) {
@@ -167,14 +155,13 @@ struct AdvancedFilterView: View {
 
             Divider()
 
-            // Search Mode Toggle
             Toggle(isOn: $viewModel.searchContains) {
                 VStack(alignment: .leading, spacing: InkuSpacing.spacing4) {
-                    Text("Search Mode")
-                        .font(.inkuText(.headlineSmall))
+                    Text(L10n.AdvancedFilters.Filter.searchMode)
+                        .font(.subheadline)
 
-                    Text(viewModel.searchContains ? "Contains text" : "Begins with text")
-                        .font(.inkuText(.bodySmall))
+                    Text(viewModel.searchContains ? L10n.AdvancedFilters.SearchMode.contains : L10n.AdvancedFilters.SearchMode.beginsWith)
+                        .font(.caption)
                         .foregroundStyle(.secondary)
                 }
             }
@@ -183,7 +170,6 @@ struct AdvancedFilterView: View {
         .inkuCard()
     }
 
-    @ViewBuilder
     private var searchButton: some View {
         Button {
             Task {
@@ -192,7 +178,7 @@ struct AdvancedFilterView: View {
         } label: {
             HStack {
                 Image(systemName: "magnifyingglass")
-                Text("Search")
+                Text(L10n.AdvancedFilters.Button.search)
                     .fontWeight(.semibold)
 
                 if viewModel.activeFilterCount > 0 {
@@ -202,7 +188,7 @@ struct AdvancedFilterView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(InkuSpacing.spacing12)
-            .background(.inkuAccent)
+            .background(Color.inkuAccent)
             .foregroundStyle(.white)
             .cornerRadius(InkuRadius.radius12)
         }
@@ -210,13 +196,11 @@ struct AdvancedFilterView: View {
         .opacity((viewModel.isLoading || !viewModel.hasActiveFilters) ? 0.6 : 1.0)
     }
 
-    @ViewBuilder
     private var resultsSection: some View {
         VStack(alignment: .leading, spacing: InkuSpacing.spacing16) {
-            // Results Header
             HStack {
-                Text("\(viewModel.searchResults.count) Results")
-                    .font(.inkuText(.headlineMedium))
+                Text("\(viewModel.searchResults.count) \(L10n.AdvancedFilters.Results.count)")
+                    .font(.headline)
                     .fontWeight(.semibold)
 
                 Spacer()
@@ -226,14 +210,13 @@ struct AdvancedFilterView: View {
                 } label: {
                     HStack(spacing: InkuSpacing.spacing4) {
                         Image(systemName: "arrow.up.arrow.down")
-                        Text("Sort")
+                        Text(L10n.AdvancedFilters.Button.sort)
                     }
-                    .font(.inkuText(.bodyMedium))
-                    .foregroundStyle(.inkuAccent)
+                    .font(.subheadline)
+                    .foregroundStyle(Color.inkuAccent)
                 }
             }
 
-            // Results List
             if viewModel.isLoading {
                 LoadingResultsView()
             } else if viewModel.searchResults.isEmpty {
@@ -244,7 +227,6 @@ struct AdvancedFilterView: View {
         }
     }
 
-    @ViewBuilder
     private var resultsListView: some View {
         LazyVStack(spacing: InkuSpacing.spacing12) {
             ForEach(viewModel.searchResults) { manga in
@@ -254,7 +236,6 @@ struct AdvancedFilterView: View {
                 .buttonStyle(.plain)
             }
 
-            // Load More
             if viewModel.hasMorePages {
                 LoadMoreButton(isLoading: viewModel.isLoadingMore) {
                     Task {
@@ -281,7 +262,7 @@ private struct FilterSelectorButton: View {
         Button(action: action) {
             HStack {
                 Image(systemName: icon)
-                    .foregroundStyle(.inkuAccent)
+                    .foregroundStyle(Color.inkuAccent)
                     .frame(width: 24)
 
                 Text(title)
@@ -291,12 +272,12 @@ private struct FilterSelectorButton: View {
 
                 if selectedCount > 0 {
                     Text("\(selectedCount)")
-                        .font(.inkuText(.bodySmall))
+                        .font(.caption)
                         .fontWeight(.semibold)
                         .foregroundStyle(.white)
                         .padding(.horizontal, InkuSpacing.spacing8)
                         .padding(.vertical, InkuSpacing.spacing4)
-                        .background(.inkuAccent)
+                        .background(Color.inkuAccent)
                         .cornerRadius(InkuRadius.radius8)
                 }
 
@@ -333,23 +314,24 @@ private struct MangaResultRow: View {
 
             VStack(alignment: .leading, spacing: InkuSpacing.spacing4) {
                 Text(manga.title)
-                    .font(.inkuText(.headlineSmall))
+                    .font(.subheadline)
                     .fontWeight(.semibold)
                     .lineLimit(2)
 
                 if let score = manga.score {
                     HStack(spacing: InkuSpacing.spacing4) {
-                        Image(systemName: "star.fill")
-                            .foregroundStyle(.inkuAccent)
-                        Text(String(format: "%.2f", score))
+                        Image(systemName: "star")
+                            .symbolVariant(.fill)
+                            .foregroundStyle(Color.inkuAccent)
+                        Text(String(format: "%.2f", score)) // debe ir con el API .formatted
                             .fontWeight(.medium)
                     }
-                    .font(.inkuText(.bodySmall))
+                    .font(.caption)
                 }
 
                 if let volumes = manga.volumes {
                     Text("\(volumes) volumes")
-                        .font(.inkuText(.bodySmall))
+                        .font(.caption)
                         .foregroundStyle(.secondary)
                 }
             }
@@ -365,8 +347,8 @@ private struct LoadingResultsView: View {
     var body: some View {
         VStack(spacing: InkuSpacing.spacing12) {
             ProgressView()
-            Text("Searching...")
-                .font(.inkuText(.bodyMedium))
+            Text(L10n.AdvancedFilters.State.searching)
+                .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity)
@@ -377,9 +359,9 @@ private struct LoadingResultsView: View {
 private struct EmptySearchResultsView: View {
     var body: some View {
         ContentUnavailableView {
-            Label("No Results", systemImage: "magnifyingglass")
+            Label(L10n.AdvancedFilters.Empty.noResults, systemImage: "magnifyingglass")
         } description: {
-            Text("Try adjusting your filters")
+            Text(L10n.AdvancedFilters.Empty.adjustFilters)
         }
         .padding(InkuSpacing.spacing32)
     }
@@ -394,7 +376,7 @@ private struct LoadMoreButton: View {
             if isLoading {
                 ProgressView()
             } else {
-                Text("Load More")
+                Text(L10n.AdvancedFilters.Button.loadMore)
                     .fontWeight(.medium)
             }
         }
@@ -412,20 +394,7 @@ private struct LoadMoreButton: View {
     AdvancedFilterView(interactor: MockAdvancedFiltersInteractor())
 }
 
-#Preview("With Filters") {
-    let view = AdvancedFilterView(interactor: MockAdvancedFiltersInteractor())
-    view.viewModel = .mockWithFilters
-    return view
+#Preview("With Errors") {
+    AdvancedFilterView(interactor: MockAdvancedFiltersInteractorWithError())
 }
 
-#Preview("With Search Results") {
-    let view = AdvancedFilterView(interactor: MockAdvancedFiltersInteractor())
-    view.viewModel = .mockWithSearch
-    return view
-}
-
-#Preview("Loading State") {
-    let view = AdvancedFilterView(interactor: MockAdvancedFiltersInteractor())
-    view.viewModel = .mockLoading
-    return view
-}

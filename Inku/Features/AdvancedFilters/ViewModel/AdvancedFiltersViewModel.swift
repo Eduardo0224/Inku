@@ -55,17 +55,14 @@ final class AdvancedFiltersViewModel {
     var isLoadingMore = false
     var isLoadingFilters = false
 
-    // Error Handling
     var errorMessage: String?
 
-    // Pagination
     var hasMorePages = true
 
-    private(set) var hasLoadedFilterOptions = false
+    var hasLoadedFilterOptions = false
 
     // MARK: - Computed Properties
 
-    /// Returns `true` if at least one filter is active.
     var hasActiveFilters: Bool {
         !searchTitle.isEmpty ||
         !searchAuthorFirstName.isEmpty ||
@@ -75,7 +72,6 @@ final class AdvancedFiltersViewModel {
         !selectedThemes.isEmpty
     }
 
-    /// Count of active filters for UI display.
     var activeFilterCount: Int {
         var count = 0
         if !searchTitle.isEmpty { count += 1 }
@@ -87,9 +83,8 @@ final class AdvancedFiltersViewModel {
         return count
     }
 
-    /// Current CustomSearch object based on form state.
     var currentSearch: CustomSearch {
-        CustomSearch(
+        .init(
             searchTitle: searchTitle.isEmpty ? nil : searchTitle,
             searchAuthorFirstName: searchAuthorFirstName.isEmpty ? nil : searchAuthorFirstName,
             searchAuthorLastName: searchAuthorLastName.isEmpty ? nil : searchAuthorLastName,
@@ -108,7 +103,6 @@ final class AdvancedFiltersViewModel {
 
     // MARK: - Functions
 
-    /// Loads filter options (genres, demographics, themes) from API.
     func loadFilterOptions() async {
         guard !hasLoadedFilterOptions, !isLoadingFilters else { return }
 
@@ -132,7 +126,6 @@ final class AdvancedFiltersViewModel {
         }
     }
 
-    /// Performs search with current filter criteria.
     func performSearch() async {
         guard !isLoading else { return }
         guard hasActiveFilters else {
@@ -156,7 +149,6 @@ final class AdvancedFiltersViewModel {
                 per: itemsPerPage
             )
 
-            // Sort results client-side
             searchResults = sortOption.sort(response.items)
             hasMorePages = response.metadata.hasMorePages
             hasSearched = true
@@ -165,7 +157,6 @@ final class AdvancedFiltersViewModel {
         }
     }
 
-    /// Loads next page of search results.
     func loadMoreResults() async {
         guard !isLoadingMore, !isLoading, hasMorePages, hasSearched else { return }
 
@@ -181,7 +172,6 @@ final class AdvancedFiltersViewModel {
                 per: itemsPerPage
             )
 
-            // Sort and append new results
             let sortedNewItems = sortOption.sort(response.items)
             searchResults.append(contentsOf: sortedNewItems)
             currentPage = nextPage
@@ -191,7 +181,6 @@ final class AdvancedFiltersViewModel {
         }
     }
 
-    /// Clears all filter criteria and search results.
     func clearAllFilters() {
         searchTitle = ""
         searchAuthorFirstName = ""
@@ -204,7 +193,6 @@ final class AdvancedFiltersViewModel {
         errorMessage = nil
     }
 
-    /// Re-sorts current search results (client-side).
     func applySorting() {
         guard !searchResults.isEmpty else { return }
         searchResults = sortOption.sort(searchResults)
@@ -213,7 +201,7 @@ final class AdvancedFiltersViewModel {
     // MARK: - Private Functions
 
     private func handleError(_ error: Error) {
-        if let urlError = error as? URLError {
+        if let _ = error as? URLError {
             errorMessage = String(
                 localized: "error.network.generic",
                 defaultValue: "Network error. Please check your connection."

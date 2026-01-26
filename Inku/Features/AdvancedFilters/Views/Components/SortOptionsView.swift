@@ -14,9 +14,6 @@
 import SwiftUI
 import InkuUI
 
-/// Sort options picker for search results.
-///
-/// Displays available sort options with icons and descriptions.
 struct SortOptionsView: View {
 
     // MARK: - Environment
@@ -71,7 +68,7 @@ private struct SortOptionRow: View {
         Button(action: action) {
             HStack(spacing: InkuSpacing.spacing12) {
                 Image(systemName: option.iconName)
-                    .foregroundStyle(.inkuAccent)
+                    .foregroundStyle(Color.inkuAccent)
                     .frame(width: 24)
 
                 Text(option.displayName)
@@ -80,8 +77,9 @@ private struct SortOptionRow: View {
                 Spacer()
 
                 if isSelected {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(.inkuAccent)
+                    Image(systemName: "checkmark")
+                        .symbolVariant(.circle.fill)
+                        .foregroundStyle(Color.inkuAccent)
                         .fontWeight(.semibold)
                 }
             }
@@ -92,13 +90,16 @@ private struct SortOptionRow: View {
 // MARK: - Previews
 
 #Preview("Sort Options - Score Selected") {
-    SortOptionsView(selectedOption: .constant(.scoreDescending))
+    @Previewable @State var selectedOption: SearchSortOption = .scoreDescending
+    SortOptionsView(selectedOption: $selectedOption)
 }
 
 #Preview("Sort Options - Title Selected") {
-    SortOptionsView(selectedOption: .constant(.titleAscending))
+    @Previewable @State var selectedOption: SearchSortOption = .titleAscending
+    SortOptionsView(selectedOption: $selectedOption)
 }
 
 #Preview("Sort Options - Volumes Selected") {
-    SortOptionsView(selectedOption: .constant(.volumesDescending))
+    @Previewable @State var selectedOption: SearchSortOption = .volumesDescending
+    SortOptionsView(selectedOption: $selectedOption)
 }

@@ -13,9 +13,6 @@
 
 import Foundation
 
-/// Sorting options for manga search results.
-///
-/// Used in AdvancedFilters to determine how results should be sorted.
 enum SearchSortOption: String, CaseIterable, Identifiable, Sendable {
 
     // MARK: - Cases
@@ -33,7 +30,6 @@ enum SearchSortOption: String, CaseIterable, Identifiable, Sendable {
 
     // MARK: - Computed Properties
 
-    /// Localized display name for UI.
     var displayName: String {
         switch self {
         case .scoreDescending:
@@ -51,7 +47,6 @@ enum SearchSortOption: String, CaseIterable, Identifiable, Sendable {
         }
     }
 
-    /// SF Symbol icon for UI.
     var iconName: String {
         switch self {
         case .scoreDescending, .scoreAscending:
@@ -63,7 +58,6 @@ enum SearchSortOption: String, CaseIterable, Identifiable, Sendable {
         }
     }
 
-    /// Returns `true` if this is a descending sort.
     var isDescending: Bool {
         switch self {
         case .scoreDescending, .titleDescending, .volumesDescending:
@@ -78,7 +72,6 @@ enum SearchSortOption: String, CaseIterable, Identifiable, Sendable {
 
 extension SearchSortOption {
 
-    /// Sorts an array of mangas based on this option.
     func sort(_ mangas: [Manga]) -> [Manga] {
         switch self {
         case .scoreDescending:

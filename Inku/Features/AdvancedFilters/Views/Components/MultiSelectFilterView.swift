@@ -14,10 +14,6 @@
 import SwiftUI
 import InkuUI
 
-/// Multi-selection filter component for genres, demographics, and themes.
-///
-/// Displays a list of options with checkmarks for selected items.
-/// Supports expandable sections and search filtering.
 struct MultiSelectFilterView: View {
 
     // MARK: - Environment
@@ -130,7 +126,7 @@ private struct MultiSelectRow: View {
 
                 if isSelected {
                     Image(systemName: "checkmark")
-                        .foregroundStyle(.inkuAccent)
+                        .foregroundStyle(Color.inkuAccent)
                         .fontWeight(.semibold)
                 }
             }
@@ -140,18 +136,10 @@ private struct MultiSelectRow: View {
 
 // MARK: - Previews
 
-#Preview("Empty Selection") {
-    MultiSelectFilterView(
-        selectedItems: .constant([]),
-        title: "Genres",
-        options: ["Action", "Adventure", "Comedy", "Drama", "Fantasy"],
-        icon: "theatermasks.fill"
-    )
-}
-
 #Preview("With Selection") {
+    @Previewable @State var selectedItems: Set<String> = ["Action", "Adventure"]
     MultiSelectFilterView(
-        selectedItems: .constant(["Action", "Adventure"]),
+        selectedItems: $selectedItems,
         title: "Genres",
         options: ["Action", "Adventure", "Comedy", "Drama", "Fantasy"],
         icon: "theatermasks.fill"
@@ -159,8 +147,9 @@ private struct MultiSelectRow: View {
 }
 
 #Preview("Demographics") {
+    @Previewable @State var selectedItems: Set<String> = ["Shounen"]
     MultiSelectFilterView(
-        selectedItems: .constant(["Shounen"]),
+        selectedItems: $selectedItems,
         title: "Demographics",
         options: ["Shounen", "Shoujo", "Seinen", "Kids", "Josei"],
         icon: "person.3.fill"

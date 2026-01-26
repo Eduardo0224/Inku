@@ -19,9 +19,7 @@ final class MockAdvancedFiltersInteractor: AdvancedFiltersInteractorProtocol {
     // MARK: - Functions
 
     func searchMangas(_ search: CustomSearch, page: Int, per: Int) async throws -> MangaListResponse {
-        // Simulate network delay
-        try await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
-        return .testData
+        .testData
     }
 
     func fetchGenres() async throws -> [String] {
@@ -67,7 +65,6 @@ final class MockAdvancedFiltersInteractor: AdvancedFiltersInteractorProtocol {
 
 // MARK: - Mock Error
 
-/// Mock that always throws errors for testing error states.
 final class MockAdvancedFiltersInteractorWithError: AdvancedFiltersInteractorProtocol {
 
     // MARK: - Functions

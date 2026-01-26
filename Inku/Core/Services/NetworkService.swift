@@ -76,7 +76,6 @@ final class NetworkService: NetworkServiceProtocol, Sendable {
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
 
         let encoder = JSONEncoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
         encoder.dateEncodingStrategy = .iso8601
         request.httpBody = try encoder.encode(body)
 
@@ -99,6 +98,8 @@ final class NetworkService: NetworkServiceProtocol, Sendable {
         switch httpResponse.statusCode {
         case 200...299:
             return
+        case 400:
+            throw NetworkError.badRequest
         case 401:
             throw NetworkError.unauthorized
         case 404:
@@ -118,6 +119,7 @@ final class NetworkService: NetworkServiceProtocol, Sendable {
 enum NetworkError: LocalizedError {
     case invalidURL
     case invalidResponse
+    case badRequest
     case unauthorized
     case notFound
     case validationError
