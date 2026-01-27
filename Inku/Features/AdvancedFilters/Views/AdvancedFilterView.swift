@@ -77,14 +77,16 @@ struct AdvancedFilterView: View {
 
     private var filterFormSection: some View {
         VStack(spacing: InkuSpacing.spacing16) {
+            if viewModel.hasFilterCategories {
+                filterCategoriesSection
+            }
             textFieldsSection
-            filterCategoriesSection
             searchModeSection
         }
     }
 
     private var textFieldsSection: some View {
-        VStack(spacing: InkuSpacing.spacing16) {
+        VStack(spacing: InkuSpacing.spacing20) {
             VStack(alignment: .leading, spacing: InkuSpacing.spacing8) {
                 Text(L10n.AdvancedFilters.Filter.title)
                     .font(.subheadline)
@@ -101,6 +103,8 @@ struct AdvancedFilterView: View {
 
                 TextField(L10n.AdvancedFilters.Placeholder.firstName, text: $viewModel.searchAuthorFirstName)
                     .textFieldStyle(.automatic)
+
+                Divider()
 
                 TextField(L10n.AdvancedFilters.Placeholder.lastName, text: $viewModel.searchAuthorLastName)
                     .textFieldStyle(.automatic)
@@ -336,8 +340,12 @@ private struct LoadMoreButton: View {
 
 // MARK: - Previews
 
-#Preview("Empty State") {
+#Preview("Default") {
     AdvancedFilterView(interactor: MockAdvancedFiltersInteractor())
+}
+
+#Preview("Empty Categories") {
+    AdvancedFilterView(interactor: MockAdvancedFiltersInteractorEmptyCategories())
 }
 
 #Preview("With Errors") {

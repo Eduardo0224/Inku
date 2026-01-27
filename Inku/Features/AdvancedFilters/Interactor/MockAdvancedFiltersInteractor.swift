@@ -85,3 +85,28 @@ final class MockAdvancedFiltersInteractorWithError: AdvancedFiltersInteractorPro
         throw URLError(.notConnectedToInternet)
     }
 }
+
+// MARK: - Mock Empty Categories
+
+/// Mock implementation that returns empty filter categories.
+/// Used to test conditional rendering when no filter options are available.
+final class MockAdvancedFiltersInteractorEmptyCategories: AdvancedFiltersInteractorProtocol {
+
+    // MARK: - Functions
+
+    func searchMangas(_ search: CustomSearch, page: Int, per: Int) async throws -> MangaListResponse {
+        .testData
+    }
+
+    func fetchGenres() async throws -> [String] {
+        []
+    }
+
+    func fetchDemographics() async throws -> [String] {
+        []
+    }
+
+    func fetchThemes() async throws -> [String] {
+        []
+    }
+}

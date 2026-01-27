@@ -83,6 +83,12 @@ final class AdvancedFiltersViewModel: AdvancedFiltersViewModelProtocol {
         return count
     }
 
+    var hasFilterCategories: Bool {
+        !availableGenres.isEmpty ||
+        !availableDemographics.isEmpty ||
+        !availableThemes.isEmpty
+    }
+
     var currentSearch: CustomSearch {
         .init(
             searchTitle: searchTitle.isEmpty ? nil : searchTitle,

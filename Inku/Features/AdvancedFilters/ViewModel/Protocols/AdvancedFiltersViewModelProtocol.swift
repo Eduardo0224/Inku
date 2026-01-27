@@ -48,6 +48,7 @@ protocol AdvancedFiltersViewModelProtocol: Observable {
     // Computed Properties
     var hasActiveFilters: Bool { get }
     var activeFilterCount: Int { get }
+    var hasFilterCategories: Bool { get }
     var currentSearch: CustomSearch { get }
 
     // MARK: - Functions

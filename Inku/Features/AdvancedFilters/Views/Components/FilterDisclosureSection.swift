@@ -36,7 +36,7 @@ struct FilterDisclosureSection: View {
                             InkuBadge(
                                 text: option,
                                 style: selectedItems.contains(option) ? .accent : .secondary,
-                                size: .large
+                                size: .medium
                             )
                             .onTapGesture {
                                 toggleSelection(for: option)
