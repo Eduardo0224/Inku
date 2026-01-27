@@ -100,135 +100,30 @@ struct AdvancedFilterView: View {
             Divider()
 
             // Genres
-            DisclosureGroup(
-                isExpanded: $genresExpanded,
-                content: {
-                    if !viewModel.availableGenres.isEmpty {
-                        FlowLayout(spacing: InkuSpacing.spacing8) {
-                            ForEach(viewModel.availableGenres, id: \.self) { genre in
-                                InkuBadge(
-                                    text: genre,
-                                    style: viewModel.selectedGenres.contains(genre) ? .accent : .secondary
-                                )
-                                .onTapGesture {
-                                    toggleGenre(genre)
-                                }
-                            }
-                        }
-                        .padding(.top, InkuSpacing.spacing8)
-                    }
-                },
-                label: {
-                    HStack {
-                        Image(systemName: "theatermasks.fill")
-                            .foregroundStyle(Color.inkuAccent)
-                            .frame(width: 24)
-
-                        Text(L10n.AdvancedFilters.Filter.genres)
-                            .foregroundStyle(.primary)
-
-                        Spacer()
-
-                        if viewModel.selectedGenres.count > 0 {
-                            Text("\(viewModel.selectedGenres.count)")
-                                .font(.caption)
-                                .fontWeight(.semibold)
-                                .foregroundStyle(.white)
-                                .padding(.horizontal, InkuSpacing.spacing8)
-                                .padding(.vertical, InkuSpacing.spacing4)
-                                .background(Color.inkuAccent)
-                                .cornerRadius(InkuRadius.radius8)
-                        }
-                    }
-                }
+            FilterDisclosureSection(
+                title: L10n.AdvancedFilters.Filter.genres,
+                icon: "theatermasks.fill",
+                options: viewModel.availableGenres,
+                selectedItems: $viewModel.selectedGenres,
+                isExpanded: $genresExpanded
             )
 
             // Demographics
-            DisclosureGroup(
-                isExpanded: $demographicsExpanded,
-                content: {
-                    if !viewModel.availableDemographics.isEmpty {
-                        FlowLayout(spacing: InkuSpacing.spacing8) {
-                            ForEach(viewModel.availableDemographics, id: \.self) { demographic in
-                                InkuBadge(
-                                    text: demographic,
-                                    style: viewModel.selectedDemographics.contains(demographic) ? .accent : .secondary
-                                )
-                                .onTapGesture {
-                                    toggleDemographic(demographic)
-                                }
-                            }
-                        }
-                        .padding(.top, InkuSpacing.spacing8)
-                    }
-                },
-                label: {
-                    HStack {
-                        Image(systemName: "person.3.fill")
-                            .foregroundStyle(Color.inkuAccent)
-                            .frame(width: 24)
-
-                        Text(L10n.AdvancedFilters.Filter.demographics)
-                            .foregroundStyle(.primary)
-
-                        Spacer()
-
-                        if viewModel.selectedDemographics.count > 0 {
-                            Text("\(viewModel.selectedDemographics.count)")
-                                .font(.caption)
-                                .fontWeight(.semibold)
-                                .foregroundStyle(.white)
-                                .padding(.horizontal, InkuSpacing.spacing8)
-                                .padding(.vertical, InkuSpacing.spacing4)
-                                .background(Color.inkuAccent)
-                                .cornerRadius(InkuRadius.radius8)
-                        }
-                    }
-                }
+            FilterDisclosureSection(
+                title: L10n.AdvancedFilters.Filter.demographics,
+                icon: "person.3.fill",
+                options: viewModel.availableDemographics,
+                selectedItems: $viewModel.selectedDemographics,
+                isExpanded: $demographicsExpanded
             )
 
             // Themes
-            DisclosureGroup(
-                isExpanded: $themesExpanded,
-                content: {
-                    if !viewModel.availableThemes.isEmpty {
-                        FlowLayout(spacing: InkuSpacing.spacing8) {
-                            ForEach(viewModel.availableThemes, id: \.self) { theme in
-                                InkuBadge(
-                                    text: theme,
-                                    style: viewModel.selectedThemes.contains(theme) ? .accent : .secondary
-                                )
-                                .onTapGesture {
-                                    toggleTheme(theme)
-                                }
-                            }
-                        }
-                        .padding(.top, InkuSpacing.spacing8)
-                    }
-                },
-                label: {
-                    HStack {
-                        Image(systemName: "tag.fill")
-                            .foregroundStyle(Color.inkuAccent)
-                            .frame(width: 24)
-
-                        Text(L10n.AdvancedFilters.Filter.themes)
-                            .foregroundStyle(.primary)
-
-                        Spacer()
-
-                        if viewModel.selectedThemes.count > 0 {
-                            Text("\(viewModel.selectedThemes.count)")
-                                .font(.caption)
-                                .fontWeight(.semibold)
-                                .foregroundStyle(.white)
-                                .padding(.horizontal, InkuSpacing.spacing8)
-                                .padding(.vertical, InkuSpacing.spacing4)
-                                .background(Color.inkuAccent)
-                                .cornerRadius(InkuRadius.radius8)
-                        }
-                    }
-                }
+            FilterDisclosureSection(
+                title: L10n.AdvancedFilters.Filter.themes,
+                icon: "tag.fill",
+                options: viewModel.availableThemes,
+                selectedItems: $viewModel.selectedThemes,
+                isExpanded: $themesExpanded
             )
 
             Divider()
@@ -351,92 +246,9 @@ struct AdvancedFilterView: View {
         }
     }
 
-    // MARK: - Private Functions
-
-    private func toggleGenre(_ genre: String) {
-        if viewModel.selectedGenres.contains(genre) {
-            viewModel.selectedGenres.remove(genre)
-        } else {
-            viewModel.selectedGenres.insert(genre)
-        }
-    }
-
-    private func toggleDemographic(_ demographic: String) {
-        if viewModel.selectedDemographics.contains(demographic) {
-            viewModel.selectedDemographics.remove(demographic)
-        } else {
-            viewModel.selectedDemographics.insert(demographic)
-        }
-    }
-
-    private func toggleTheme(_ theme: String) {
-        if viewModel.selectedThemes.contains(theme) {
-            viewModel.selectedThemes.remove(theme)
-        } else {
-            viewModel.selectedThemes.insert(theme)
-        }
-    }
 }
 
 // MARK: - Supporting Components
-
-// MARK: - Flow Layout
-
-private struct FlowLayout: Layout {
-
-    var spacing: CGFloat = 8
-
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let result = FlowResult(
-            in: proposal.replacingUnspecifiedDimensions().width,
-            subviews: subviews,
-            spacing: spacing
-        )
-        return result.size
-    }
-
-    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        let result = FlowResult(
-            in: bounds.width,
-            subviews: subviews,
-            spacing: spacing
-        )
-        for (index, subview) in subviews.enumerated() {
-            let position = CGPoint(
-                x: bounds.minX + result.positions[index].x,
-                y: bounds.minY + result.positions[index].y
-            )
-            subview.place(at: position, proposal: .unspecified)
-        }
-    }
-
-    struct FlowResult {
-        var size: CGSize = .zero
-        var positions: [CGPoint] = []
-
-        init(in maxWidth: CGFloat, subviews: Subviews, spacing: CGFloat) {
-            var x: CGFloat = 0
-            var y: CGFloat = 0
-            var lineHeight: CGFloat = 0
-
-            for subview in subviews {
-                let size = subview.sizeThatFits(.unspecified)
-
-                if x + size.width > maxWidth && x > 0 {
-                    x = 0
-                    y += lineHeight + spacing
-                    lineHeight = 0
-                }
-
-                positions.append(CGPoint(x: x, y: y))
-                lineHeight = max(lineHeight, size.height)
-                x += size.width + spacing
-            }
-
-            self.size = CGSize(width: maxWidth, height: y + lineHeight)
-        }
-    }
-}
 
 private struct MangaResultRow: View {
     let manga: Manga
