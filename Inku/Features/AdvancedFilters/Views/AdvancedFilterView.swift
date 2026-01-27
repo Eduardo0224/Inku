@@ -16,6 +16,10 @@ import InkuUI
 
 struct AdvancedFilterView: View {
 
+    // MARK: - Environment
+
+    @Environment(\.dismiss) private var dismiss
+
     // MARK: - States
 
     @State private var viewModel: AdvancedFiltersViewModel
@@ -23,10 +27,34 @@ struct AdvancedFilterView: View {
     @State private var demographicsExpanded = false
     @State private var themesExpanded = false
 
+    // MARK: - Properties
+
+    let onSearch: ((CustomSearch, SearchSortOption) -> Void)?
+
     // MARK: - Initializers
 
-    init(interactor: AdvancedFiltersInteractorProtocol = AdvancedFiltersInteractor()) {
-        self.viewModel = AdvancedFiltersViewModel(interactor: interactor)
+    init(
+        interactor: AdvancedFiltersInteractorProtocol = AdvancedFiltersInteractor(),
+        preloadedGenres: [String] = [],
+        preloadedDemographics: [String] = [],
+        preloadedThemes: [String] = [],
+        preselectedSearch: CustomSearch? = nil,
+        preselectedSortOption: SearchSortOption? = nil,
+        onSearch: ((CustomSearch, SearchSortOption) -> Void)? = nil
+    ) {
+        self.onSearch = onSearch
+        self.viewModel = AdvancedFiltersViewModel(
+            interactor: interactor,
+            preloadedGenres: preloadedGenres,
+            preloadedDemographics: preloadedDemographics,
+            preloadedThemes: preloadedThemes,
+            preselectedSearch: preselectedSearch,
+            preselectedSortOption: preselectedSortOption
+        )
+
+        self._genresExpanded = State(initialValue: preselectedSearch?.hasSelectedGenres ?? false)
+        self._demographicsExpanded = State(initialValue: preselectedSearch?.hasSelectedDemographics ?? false)
+        self._themesExpanded = State(initialValue: preselectedSearch?.hasSelectedThemes ?? false)
     }
 
     // MARK: - Body
@@ -37,16 +65,20 @@ struct AdvancedFilterView: View {
                 VStack(spacing: InkuSpacing.spacing20) {
                     filterFormSection
                     searchButton
-
-                    if viewModel.hasSearched {
-                        resultsSection
-                    }
                 }
                 .padding(InkuSpacing.spacing16)
             }
             .navigationTitle(L10n.AdvancedFilters.Screen.title)
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    if onSearch != nil {
+                        Button(L10n.Common.cancel) {
+                            dismiss()
+                        }
+                    }
+                }
+
                 ToolbarItem(placement: .primaryAction) {
                     if viewModel.hasActiveFilters {
                         Button(L10n.AdvancedFilters.Button.clearAll) {
@@ -58,7 +90,9 @@ struct AdvancedFilterView: View {
                 }
             }
             .task {
-                await viewModel.loadFilterOptions()
+                if !viewModel.hasPreloadedData {
+                    await viewModel.loadFilterOptions()
+                }
             }
             .background(Color.inkuSurface)
             .alert(L10n.Error.title, isPresented: .constant(viewModel.errorMessage != nil)) {
@@ -82,6 +116,7 @@ struct AdvancedFilterView: View {
             }
             textFieldsSection
             searchModeSection
+            sortingSection
         }
     }
 
@@ -163,10 +198,61 @@ struct AdvancedFilterView: View {
         .inkuCard()
     }
 
+    private var sortingSection: some View {
+        VStack(alignment: .leading, spacing: InkuSpacing.spacing12) {
+            Text(L10n.AdvancedFilters.Sort.title)
+                .font(.inkuSubheadline)
+                .foregroundStyle(Color.inkuTextSecondary)
+
+            Menu {
+                ForEach(SearchSortOption.allCases) { option in
+                    Button {
+                        viewModel.sortOption = option
+                    } label: {
+                        Label(
+                            option.displayName,
+                            systemImage: viewModel.sortOption == option
+                                ? "checkmark.circle.fill"
+                                : option.iconName
+                        )
+                    }
+                }
+            } label: {
+                HStack {
+                    Image(systemName: viewModel.sortOption.iconName)
+                        .foregroundStyle(Color.inkuAccentStrong)
+
+                    Text(viewModel.sortOption.displayName)
+                        .foregroundStyle(Color.inkuText)
+
+                    Spacer()
+
+                    Image(systemName: "chevron.up.chevron.down")
+                        .font(.caption)
+                        .foregroundStyle(Color.inkuAccentSoft)
+                }
+                .padding(InkuSpacing.spacing12)
+                .background(Color.inkuSurface)
+                .cornerRadius(InkuRadius.radius8)
+                .overlay(
+                    RoundedRectangle(cornerRadius: InkuRadius.radius8)
+                        .stroke(Color.inkuAccent, lineWidth: 1)
+                )
+            }
+        }
+        .padding(InkuSpacing.spacing16)
+        .inkuCard()
+    }
+
     private var searchButton: some View {
         Button {
-            Task {
-                await viewModel.performSearch()
+            if let onSearch {
+                onSearch(viewModel.currentSearch, viewModel.sortOption)
+                dismiss()
+            } else {
+                Task {
+                    await viewModel.performSearch()
+                }
             }
         } label: {
             HStack {
@@ -188,154 +274,6 @@ struct AdvancedFilterView: View {
         .disabled(viewModel.isLoading || !viewModel.hasActiveFilters)
         .opacity((viewModel.isLoading || !viewModel.hasActiveFilters) ? 0.6 : 1.0)
     }
-
-    private var resultsSection: some View {
-        VStack(alignment: .leading, spacing: InkuSpacing.spacing16) {
-            HStack {
-                Text("\(viewModel.searchResults.count) \(L10n.AdvancedFilters.Results.count)")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-
-                Spacer()
-
-                Menu {
-                    ForEach(SearchSortOption.allCases) { option in
-                        Button {
-                            viewModel.sortOption = option
-                            viewModel.applySorting()
-                        } label: {
-                            HStack {
-                                Image(systemName: option.iconName)
-                                Text(option.displayName)
-
-                                if viewModel.sortOption == option {
-                                    Spacer()
-                                    Image(systemName: "checkmark")
-                                }
-                            }
-                        }
-                    }
-                } label: {
-                    HStack(spacing: InkuSpacing.spacing4) {
-                        Image(systemName: "arrow.up.arrow.down")
-                        Text(L10n.AdvancedFilters.Button.sort)
-                    }
-                    .font(.subheadline)
-                    .foregroundStyle(Color.inkuAccent)
-                } primaryAction: {
-                    // No primary action needed
-                }
-            }
-
-            if viewModel.isLoading {
-                InkuLoadingView(message: L10n.AdvancedFilters.State.searching)
-                    .padding(InkuSpacing.spacing32)
-            } else if viewModel.searchResults.isEmpty {
-                InkuEmptyView(
-                    icon: "magnifyingglass",
-                    iconSize: .large,
-                    title: L10n.AdvancedFilters.Empty.noResults,
-                    subtitle: L10n.AdvancedFilters.Empty.adjustFilters
-                )
-                .padding(InkuSpacing.spacing32)
-            } else {
-                resultsListView
-            }
-        }
-    }
-
-    private var resultsListView: some View {
-        LazyVStack(spacing: InkuSpacing.spacing12) {
-            ForEach(viewModel.searchResults) { manga in
-                NavigationLink(value: manga) {
-                    MangaResultRow(manga: manga)
-                }
-                .buttonStyle(.plain)
-            }
-
-            if viewModel.hasMorePages {
-                LoadMoreButton(isLoading: viewModel.isLoadingMore) {
-                    Task {
-                        await viewModel.loadMoreResults()
-                    }
-                }
-            }
-        }
-        .navigationDestination(for: Manga.self) { manga in
-            MangaDetailView(manga: manga)
-        }
-    }
-
-}
-
-// MARK: - Supporting Components
-
-private struct MangaResultRow: View {
-    let manga: Manga
-
-    var body: some View {
-        HStack(spacing: InkuSpacing.spacing12) {
-            AsyncImage(url: manga.coverImageURL) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } placeholder: {
-                Rectangle()
-                    .fill(Color.inkuSurfaceSecondary)
-            }
-            .frame(width: 60, height: 90)
-            .cornerRadius(InkuRadius.radius8)
-
-            VStack(alignment: .leading, spacing: InkuSpacing.spacing4) {
-                Text(manga.title)
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    .lineLimit(2)
-
-                if let score = manga.score {
-                    HStack(spacing: InkuSpacing.spacing4) {
-                        Image(systemName: "star")
-                            .symbolVariant(.fill)
-                            .foregroundStyle(Color.inkuAccent)
-                        Text(score.formatted(.number.precision(.fractionLength(2))))
-                            .fontWeight(.medium)
-                    }
-                    .font(.caption)
-                }
-
-                if let volumes = manga.volumes {
-                    Text("\(volumes) volumes")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
-
-            Spacer()
-        }
-        .padding(InkuSpacing.spacing12)
-        .inkuCard()
-    }
-}
-
-private struct LoadMoreButton: View {
-    let isLoading: Bool
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            if isLoading {
-                ProgressView()
-            } else {
-                Text(L10n.AdvancedFilters.Button.loadMore)
-                    .fontWeight(.medium)
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .padding(InkuSpacing.spacing12)
-        .background(Color.inkuSurfaceSecondary)
-        .cornerRadius(InkuRadius.radius8)
-        .disabled(isLoading)
-    }
 }
 
 // MARK: - Previews
@@ -352,3 +290,17 @@ private struct LoadMoreButton: View {
     AdvancedFilterView(interactor: MockAdvancedFiltersInteractorWithError())
 }
 
+#Preview("With Preselected Values") {
+    let preselectedSearch = CustomSearch(
+        searchTitle: "Dragon",
+        searchGenres: ["Action", "Fantasy"],
+        searchDemographics: ["Shounen"],
+        searchContains: true
+    )
+
+    AdvancedFilterView(
+        interactor: MockAdvancedFiltersInteractor(),
+        preselectedSearch: preselectedSearch,
+        preselectedSortOption: .volumesDescending
+    )
+}

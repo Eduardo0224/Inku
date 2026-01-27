@@ -19,6 +19,7 @@ struct MangaListView: View {
     // MARK: - States
 
     @State private var viewModel: MangaListViewModel
+    @State private var showingAdvancedFilters = false
 
     // MARK: - Initializers
 
@@ -44,9 +45,39 @@ struct MangaListView: View {
             .navigationTitle(L10n.MangaList.Screen.title)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
+                    if viewModel.isAdvancedFilterActive {
+                        Menu {
+                            clearFiltersButton
+                            Divider()
+                            advancedFiltersButton
+                        } label: {
+                            Image(systemName: "slider.horizontal.2.square.on.square")
+                        }
+                    } else {
+                        advancedFiltersButton
+                    }
+                }
+
+                ToolbarItem(placement: .topBarTrailing) {
                     filterMenu
                         .disabled(viewModel.errorMessage != nil)
                 }
+            }
+            .sheet(isPresented: $showingAdvancedFilters) {
+                AdvancedFilterView(
+                    preloadedGenres: viewModel.genres.map(\.genre),
+                    preloadedDemographics: viewModel.demographics.map(\.demographic),
+                    preloadedThemes: viewModel.themes.map(\.theme),
+                    preselectedSearch: viewModel.currentAdvancedSearch,
+                    preselectedSortOption: viewModel.currentSortOption
+                ) { search, sortOption in
+                    Task {
+                        await viewModel.applyAdvancedSearch(search, sortOption: sortOption)
+                    }
+                }
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+                .presentationSizing(.form)
             }
             .alert(
                 L10n.Error.title,
@@ -124,25 +155,40 @@ struct MangaListView: View {
             message: message,
             retryActionTitle: L10n.Common.retry
         ) {
-            Task {
-                await viewModel.loadMangas()
+            if viewModel.isAdvancedFilterActive {
+                showingAdvancedFilters = true
+            } else {
+                Task {
+                    await viewModel.loadMangas()
+                }
             }
         }
         .background(Color.inkuSurface)
     }
 
+    private var advancedFiltersButton: some View {
+        Button {
+            showingAdvancedFilters = true
+        } label: {
+            Label(L10n.MangaList.Filter.advancedFilters, systemImage: "slider.horizontal.3")
+        }
+    }
+
+    private var clearFiltersButton: some View {
+        Button(role: .destructive) {
+            Task {
+                await viewModel.clearFilters()
+            }
+        } label: {
+            Label(L10n.MangaList.Filter.clear, systemImage: "xmark")
+                .symbolVariant(.circle)
+        }
+    }
+
     private var filterMenu: some View {
         Menu {
             if viewModel.isFilterActive {
-                Button(role: .destructive) {
-                    Task {
-                        await viewModel.clearFilters()
-                    }
-                } label: {
-                    Label(L10n.MangaList.Filter.clear, systemImage: "xmark")
-                        .symbolVariant(.circle)
-                }
-
+                clearFiltersButton
                 Divider()
             }
 

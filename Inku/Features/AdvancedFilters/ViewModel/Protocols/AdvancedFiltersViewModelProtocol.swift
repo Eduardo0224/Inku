@@ -44,6 +44,7 @@ protocol AdvancedFiltersViewModelProtocol: Observable {
     var errorMessage: String? { get }
     var hasMorePages: Bool { get }
     var hasLoadedFilterOptions: Bool { get }
+    var hasPreloadedData: Bool { get }
 
     // Computed Properties
     var hasActiveFilters: Bool { get }

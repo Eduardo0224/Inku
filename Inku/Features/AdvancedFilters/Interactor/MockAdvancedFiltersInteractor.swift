@@ -13,7 +13,6 @@
 
 import Foundation
 
-/// Mock implementation for SwiftUI previews and manual testing.
 final class MockAdvancedFiltersInteractor: AdvancedFiltersInteractorProtocol {
 
     // MARK: - Functions
@@ -88,8 +87,6 @@ final class MockAdvancedFiltersInteractorWithError: AdvancedFiltersInteractorPro
 
 // MARK: - Mock Empty Categories
 
-/// Mock implementation that returns empty filter categories.
-/// Used to test conditional rendering when no filter options are available.
 final class MockAdvancedFiltersInteractorEmptyCategories: AdvancedFiltersInteractorProtocol {
 
     // MARK: - Functions

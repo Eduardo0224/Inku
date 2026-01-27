@@ -58,7 +58,6 @@ enum API {
             "/search/author/\(name)"
         }
 
-        /// Custom multi-criteria search (POST endpoint)
         static let searchCustom = "/search/manga"
     }
 

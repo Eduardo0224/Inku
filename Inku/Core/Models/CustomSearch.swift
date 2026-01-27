@@ -29,7 +29,7 @@ import Foundation
 ///     searchContains: true
 /// )
 /// ```
-struct CustomSearch: Codable, Sendable {
+struct CustomSearch: Codable, Sendable, Equatable {
 
     // MARK: - Properties
 
@@ -68,6 +68,30 @@ extension CustomSearch {
         if let themes = searchThemes, !themes.isEmpty { count += themes.count }
         if let demographics = searchDemographics, !demographics.isEmpty { count += demographics.count }
         return count
+    }
+
+    var hasSelectedGenres: Bool {
+        if let searchGenres {
+            !searchGenres.isEmpty
+        } else {
+            false
+        }
+    }
+
+    var hasSelectedDemographics: Bool {
+        if let searchDemographics {
+            !searchDemographics.isEmpty
+        } else {
+            false
+        }
+    }
+
+    var hasSelectedThemes: Bool {
+        if let searchThemes {
+            !searchThemes.isEmpty
+        } else {
+            false
+        }
     }
 }
 

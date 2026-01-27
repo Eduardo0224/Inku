@@ -70,6 +70,7 @@ enum L10n {
             static let genre = String(localized: .MangaListLocalizable.filterGenre)
             static let demographic = String(localized: .MangaListLocalizable.filterDemographic)
             static let theme = String(localized: .MangaListLocalizable.filterTheme)
+            static let advancedFilters = String(localized: .MangaListLocalizable.filterAdvancedFilters)
         }
     }
 

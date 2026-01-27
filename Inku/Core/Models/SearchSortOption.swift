@@ -33,37 +33,37 @@ enum SearchSortOption: String, CaseIterable, Identifiable, Sendable {
     var displayName: String {
         switch self {
         case .scoreDescending:
-            return L10n.AdvancedFilters.Sort.scoreHighToLow
+            L10n.AdvancedFilters.Sort.scoreHighToLow
         case .scoreAscending:
-            return L10n.AdvancedFilters.Sort.scoreLowToHigh
+            L10n.AdvancedFilters.Sort.scoreLowToHigh
         case .titleAscending:
-            return L10n.AdvancedFilters.Sort.titleAToZ
+            L10n.AdvancedFilters.Sort.titleAToZ
         case .titleDescending:
-            return L10n.AdvancedFilters.Sort.titleZToA
+            L10n.AdvancedFilters.Sort.titleZToA
         case .volumesDescending:
-            return L10n.AdvancedFilters.Sort.volumesHighToLow
+            L10n.AdvancedFilters.Sort.volumesHighToLow
         case .volumesAscending:
-            return L10n.AdvancedFilters.Sort.volumesLowToHigh
+            L10n.AdvancedFilters.Sort.volumesLowToHigh
         }
     }
 
     var iconName: String {
         switch self {
         case .scoreDescending, .scoreAscending:
-            return "star.fill"
+            "star.fill"
         case .titleAscending, .titleDescending:
-            return "textformat.abc"
+            "textformat.abc"
         case .volumesDescending, .volumesAscending:
-            return "books.vertical.fill"
+            "books.vertical.fill"
         }
     }
 
     var isDescending: Bool {
         switch self {
         case .scoreDescending, .titleDescending, .volumesDescending:
-            return true
+            true
         case .scoreAscending, .titleAscending, .volumesAscending:
-            return false
+            false
         }
     }
 }
@@ -75,17 +75,17 @@ extension SearchSortOption {
     func sort(_ mangas: [Manga]) -> [Manga] {
         switch self {
         case .scoreDescending:
-            return mangas.sorted { ($0.score ?? 0) > ($1.score ?? 0) }
+            mangas.sorted { ($0.score ?? 0) > ($1.score ?? 0) }
         case .scoreAscending:
-            return mangas.sorted { ($0.score ?? 0) < ($1.score ?? 0) }
+            mangas.sorted { ($0.score ?? 0) < ($1.score ?? 0) }
         case .titleAscending:
-            return mangas.sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
+            mangas.sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
         case .titleDescending:
-            return mangas.sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedDescending }
+            mangas.sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedDescending }
         case .volumesDescending:
-            return mangas.sorted { ($0.volumes ?? 0) > ($1.volumes ?? 0) }
+            mangas.sorted { ($0.volumes ?? 0) > ($1.volumes ?? 0) }
         case .volumesAscending:
-            return mangas.sorted { ($0.volumes ?? 0) < ($1.volumes ?? 0) }
+            mangas.sorted { ($0.volumes ?? 0) < ($1.volumes ?? 0) }
         }
     }
 }

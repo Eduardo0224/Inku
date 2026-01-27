@@ -38,7 +38,7 @@ final class AdvancedFiltersViewModel: AdvancedFiltersViewModelProtocol {
     var selectedGenres: Set<String> = []
     var selectedDemographics: Set<String> = []
     var selectedThemes: Set<String> = []
-    var searchContains: Bool = true
+    var searchContains: Bool = false
     var sortOption: SearchSortOption = .scoreDescending
 
     // Filter Options (fetched from API)
@@ -60,6 +60,12 @@ final class AdvancedFiltersViewModel: AdvancedFiltersViewModelProtocol {
     var hasMorePages = true
 
     var hasLoadedFilterOptions = false
+
+    var hasPreloadedData: Bool {
+        !availableGenres.isEmpty ||
+        !availableDemographics.isEmpty ||
+        !availableThemes.isEmpty
+    }
 
     // MARK: - Computed Properties
 
@@ -103,8 +109,37 @@ final class AdvancedFiltersViewModel: AdvancedFiltersViewModelProtocol {
 
     // MARK: - Initializers
 
-    init(interactor: AdvancedFiltersInteractorProtocol = AdvancedFiltersInteractor()) {
+    init(
+        interactor: AdvancedFiltersInteractorProtocol = AdvancedFiltersInteractor(),
+        preloadedGenres: [String] = [],
+        preloadedDemographics: [String] = [],
+        preloadedThemes: [String] = [],
+        preselectedSearch: CustomSearch? = nil,
+        preselectedSortOption: SearchSortOption? = nil
+    ) {
         self.interactor = interactor
+        self.availableGenres = preloadedGenres
+        self.availableDemographics = preloadedDemographics
+        self.availableThemes = preloadedThemes
+
+        if hasPreloadedData {
+            self.hasLoadedFilterOptions = true
+        }
+
+        // Restore previous selections if available
+        if let search = preselectedSearch {
+            self.searchTitle = search.searchTitle ?? ""
+            self.searchAuthorFirstName = search.searchAuthorFirstName ?? ""
+            self.searchAuthorLastName = search.searchAuthorLastName ?? ""
+            self.selectedGenres = Set(search.searchGenres ?? [])
+            self.selectedDemographics = Set(search.searchDemographics ?? [])
+            self.selectedThemes = Set(search.searchThemes ?? [])
+            self.searchContains = search.searchContains
+        }
+
+        if let sortOption = preselectedSortOption {
+            self.sortOption = sortOption
+        }
     }
 
     // MARK: - Functions
