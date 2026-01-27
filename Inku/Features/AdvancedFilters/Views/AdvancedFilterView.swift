@@ -53,6 +53,7 @@ struct AdvancedFilterView: View {
                             viewModel.clearAllFilters()
                         }
                         .fontWeight(.medium)
+                        .tint(Color.inkuAccentStrong)
                     }
                 }
             }
@@ -76,6 +77,14 @@ struct AdvancedFilterView: View {
 
     private var filterFormSection: some View {
         VStack(spacing: InkuSpacing.spacing16) {
+            textFieldsSection
+            filterCategoriesSection
+            searchModeSection
+        }
+    }
+
+    private var textFieldsSection: some View {
+        VStack(spacing: InkuSpacing.spacing16) {
             VStack(alignment: .leading, spacing: InkuSpacing.spacing8) {
                 Text(L10n.AdvancedFilters.Filter.title)
                     .font(.subheadline)
@@ -96,9 +105,13 @@ struct AdvancedFilterView: View {
                 TextField(L10n.AdvancedFilters.Placeholder.lastName, text: $viewModel.searchAuthorLastName)
                     .textFieldStyle(.automatic)
             }
+        }
+        .padding(InkuSpacing.spacing16)
+        .inkuCard()
+    }
 
-            Divider()
-
+    private var filterCategoriesSection: some View {
+        VStack(spacing: InkuSpacing.spacing16) {
             // Genres
             FilterDisclosureSection(
                 title: L10n.AdvancedFilters.Filter.genres,
@@ -125,19 +138,22 @@ struct AdvancedFilterView: View {
                 selectedItems: $viewModel.selectedThemes,
                 isExpanded: $themesExpanded
             )
+        }
+        .padding(InkuSpacing.spacing16)
+        .inkuCard()
+    }
 
-            Divider()
+    private var searchModeSection: some View {
+        VStack(alignment: .leading, spacing: InkuSpacing.spacing12) {
+            Text(L10n.AdvancedFilters.Filter.searchMode)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
 
-            Toggle(isOn: $viewModel.searchContains) {
-                VStack(alignment: .leading, spacing: InkuSpacing.spacing4) {
-                    Text(L10n.AdvancedFilters.Filter.searchMode)
-                        .font(.subheadline)
-
-                    Text(viewModel.searchContains ? L10n.AdvancedFilters.SearchMode.contains : L10n.AdvancedFilters.SearchMode.beginsWith)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
+            Picker("", selection: $viewModel.searchContains) {
+                Text(L10n.AdvancedFilters.SearchMode.beginsWith).tag(false)
+                Text(L10n.AdvancedFilters.SearchMode.contains).tag(true)
             }
+            .pickerStyle(.segmented)
         }
         .padding(InkuSpacing.spacing16)
         .inkuCard()
@@ -161,7 +177,7 @@ struct AdvancedFilterView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(InkuSpacing.spacing12)
-            .background(Color.inkuAccent)
+            .background(Color.inkuAccentStrong)
             .foregroundStyle(.white)
             .cornerRadius(InkuRadius.radius12)
         }
