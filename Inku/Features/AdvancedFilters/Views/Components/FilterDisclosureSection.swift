@@ -145,81 +145,69 @@ private struct FlowLayout: Layout {
 // MARK: - Previews
 
 #Preview("Expanded - With Selections", traits: .sizeThatFitsLayout) {
-    PreviewWrapper(
+    @Previewable @State var selectedItems: Set<String> = ["Action", "Fantasy", "Shounen"]
+    @Previewable @State var isExpanded: Bool = true
+
+    FilterDisclosureSection(
         title: "Genres",
         icon: "theatermasks.fill",
         options: ["Action", "Adventure", "Comedy", "Drama", "Fantasy", "Romance", "Sci-Fi", "Shounen"],
-        selectedItems: ["Action", "Fantasy", "Shounen"],
-        isExpanded: true
+        selectedItems: $selectedItems,
+        isExpanded: $isExpanded
     )
+    .padding(InkuSpacing.spacing16)
+    .background(Color.inkuSurface)
+    .inkuCard()
+    .padding(InkuSpacing.spacing16)
 }
 
 #Preview("Expanded - No Selections", traits: .sizeThatFitsLayout) {
-    PreviewWrapper(
+    @Previewable @State var selectedItems: Set<String> = []
+    @Previewable @State var isExpanded: Bool = true
+
+    FilterDisclosureSection(
         title: "Demographics",
         icon: "person.3.fill",
         options: ["Shounen", "Shoujo", "Seinen", "Josei"],
-        selectedItems: [],
-        isExpanded: true
+        selectedItems: $selectedItems,
+        isExpanded: $isExpanded
     )
+    .padding(InkuSpacing.spacing16)
+    .background(Color.inkuSurface)
+    .inkuCard()
+    .padding(InkuSpacing.spacing16)
 }
 
 #Preview("Collapsed - With Selections", traits: .sizeThatFitsLayout) {
-    PreviewWrapper(
+    @Previewable @State var selectedItems: Set<String> = ["Pirates", "Super Power"]
+    @Previewable @State var isExpanded: Bool = false
+
+    FilterDisclosureSection(
         title: "Themes",
         icon: "tag.fill",
         options: ["Pirates", "Super Power", "School", "Magic", "Sports"],
-        selectedItems: ["Pirates", "Super Power"],
-        isExpanded: false
+        selectedItems: $selectedItems,
+        isExpanded: $isExpanded
     )
+    .padding(InkuSpacing.spacing16)
+    .background(Color.inkuSurface)
+    .inkuCard()
+    .padding(InkuSpacing.spacing16)
 }
 
 #Preview("Collapsed - No Selections", traits: .sizeThatFitsLayout) {
-    PreviewWrapper(
+    @Previewable @State var selectedItems: Set<String> = []
+    @Previewable @State var isExpanded: Bool = false
+
+    FilterDisclosureSection(
         title: "Genres",
         icon: "theatermasks.fill",
         options: ["Action", "Adventure", "Comedy"],
-        selectedItems: [],
-        isExpanded: false
+        selectedItems: $selectedItems,
+        isExpanded: $isExpanded
     )
-}
-
-#Preview("Empty Options", traits: .sizeThatFitsLayout) {
-    PreviewWrapper(
-        title: "Empty Section",
-        icon: "xmark.circle",
-        options: [],
-        selectedItems: [],
-        isExpanded: true
-    )
-}
-
-// MARK: - Preview Wrapper
-
-private struct PreviewWrapper: View {
-    let title: String
-    let icon: String
-    let options: [String]
-    @State private var selectedItems: Set<String>
-    @State private var isExpanded: Bool
-
-    init(title: String, icon: String, options: [String], selectedItems: [String], isExpanded: Bool) {
-        self.title = title
-        self.icon = icon
-        self.options = options
-        self._selectedItems = State(initialValue: Set(selectedItems))
-        self._isExpanded = State(initialValue: isExpanded)
-    }
-
-    var body: some View {
-        FilterDisclosureSection(
-            title: title,
-            icon: icon,
-            options: options,
-            selectedItems: $selectedItems,
-            isExpanded: $isExpanded
-        )
-        .padding()
-        .background(Color.inkuSurface)
-    }
+    .padding(InkuSpacing.spacing16)
+    .background(Color.inkuSurface)
+    .inkuCard()
+    .padding(InkuSpacing.spacing16)
 }
