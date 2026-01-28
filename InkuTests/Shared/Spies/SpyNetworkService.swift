@@ -21,6 +21,8 @@ final class SpyNetworkService: NetworkServiceProtocol, @unchecked Sendable {
     private(set) var getWasCalled = false
     private(set) var lastEndpoint: String?
     private(set) var lastQueryItems: [URLQueryItem]?
+    private(set) var postWasCalled = false
+    private(set) var lastBody: (any Encodable & Sendable)?
 
     // MARK: - Properties (Stub Data)
 
@@ -44,6 +46,27 @@ final class SpyNetworkService: NetworkServiceProtocol, @unchecked Sendable {
         }
 
         guard let data = dataToReturn as? T else {
+            throw NetworkError.invalidResponse
+        }
+
+        return data
+    }
+
+    func post<T: Encodable & Sendable, U: Decodable & Sendable>(
+        endpoint: String,
+        body: T,
+        queryItems: [URLQueryItem]
+    ) async throws -> U {
+        postWasCalled = true
+        lastEndpoint = endpoint
+        lastBody = body
+        lastQueryItems = queryItems
+
+        if shouldThrowError {
+            throw errorToThrow
+        }
+
+        guard let data = dataToReturn as? U else {
             throw NetworkError.invalidResponse
         }
 
