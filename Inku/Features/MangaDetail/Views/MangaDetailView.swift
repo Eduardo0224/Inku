@@ -193,6 +193,7 @@ struct MangaDetailView: View {
             // Right Column
             VStack(spacing: InkuSpacing.spacing24) {
                 synopsisSection(showsFullText: true)
+                    .padding(.top, InkuSpacing.spacing16)
                 backgroundSection
             }
             .frame(maxWidth: .infinity)

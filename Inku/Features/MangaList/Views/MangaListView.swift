@@ -21,6 +21,13 @@ struct MangaListView: View {
     @State private var viewModel: MangaListViewModel
     @State private var showingAdvancedFilters = false
 
+    @AppStorage("mangaListPresentationMode")
+    private var presentationMode: MangaPresentationMode = .list
+
+    // MARK: - Environment
+
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
     // MARK: - Initializers
 
     init(interactor: MangaListInteractorProtocol = MangaListInteractor()) {
@@ -44,6 +51,10 @@ struct MangaListView: View {
             }
             .navigationTitle(L10n.MangaList.Screen.title)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    presentationModeToggle
+                }
+
                 ToolbarItem(placement: .topBarTrailing) {
                     if viewModel.isAdvancedFilterActive {
                         Menu {
@@ -110,21 +121,43 @@ struct MangaListView: View {
 
     // MARK: - Private Views
 
+    @ViewBuilder
     private var contentView: some View {
-        ScrollView {
-            LazyVStack(spacing: InkuSpacing.spacing16) {
-                ForEach(viewModel.mangas) { manga in
-                    NavigationLink(value: manga) {
-                        MangaRowView(manga: manga)
+        switch presentationMode {
+        case .list:
+            listView
+        case .grid:
+            MangaGridView(
+                mangas: viewModel.mangas,
+                isLoadingMore: viewModel.isLoadingMore,
+                onMangaAppear: { _ in
+                    Task {
+                        await viewModel.loadMoreMangas()
                     }
-                    .buttonStyle(.plain)
-                    .task {
-                        if manga == viewModel.mangas.last {
-                            Task {
-                                await viewModel.loadMoreMangas()
-                            }
-                        }
+                }
+            )
+        }
+    }
+
+    private var listView: some View {
+        GeometryReader { geometry in
+            ScrollView {
+                if shouldUseGridLayout(for: geometry.size.width) {
+                    LazyVGrid(
+                        columns: Array(
+                            repeating: GridItem(.flexible(), spacing: InkuSpacing.spacing16),
+                            count: listColumnCount(for: geometry.size.width)
+                        ),
+                        spacing: InkuSpacing.spacing16
+                    ) {
+                        mangaRows
                     }
+                    .padding(InkuSpacing.spacing16)
+                } else {
+                    LazyVStack(spacing: InkuSpacing.spacing16) {
+                        mangaRows
+                    }
+                    .padding(InkuSpacing.spacing16)
                 }
 
                 if viewModel.isLoadingMore {
@@ -132,22 +165,60 @@ struct MangaListView: View {
                         .padding(InkuSpacing.spacing16)
                 }
             }
-            .padding(InkuSpacing.spacing16)
+            .background(Color.inkuSurface)
         }
-        .background(Color.inkuSurface)
     }
 
-    private var skeletonView: some View {
-        ScrollView {
-            LazyVStack(spacing: InkuSpacing.spacing16) {
-                ForEach(0..<10, id: \.self) { _ in
-                    MangaRowView(manga: .skeletonData, isLoading: true)
+    private var mangaRows: some View {
+        ForEach(viewModel.mangas) { manga in
+            NavigationLink(value: manga) {
+                MangaRowView(manga: manga)
+            }
+            .buttonStyle(.plain)
+            .task {
+                if manga == viewModel.mangas.last {
+                    Task {
+                        await viewModel.loadMoreMangas()
+                    }
                 }
             }
-            .padding(InkuSpacing.spacing16)
         }
-        .scrollDisabled(true)
-        .background(Color.inkuSurface)
+    }
+
+    @ViewBuilder
+    private var skeletonView: some View {
+        switch presentationMode {
+        case .list:
+            GeometryReader { geometry in
+                ScrollView {
+                    if shouldUseGridLayout(for: geometry.size.width) {
+                        LazyVGrid(
+                            columns: Array(
+                                repeating: GridItem(.flexible(), spacing: InkuSpacing.spacing16),
+                                count: listColumnCount(for: geometry.size.width)
+                            ),
+                            spacing: InkuSpacing.spacing16
+                        ) {
+                            ForEach(0..<20, id: \.self) { _ in
+                                MangaRowView(manga: .skeletonData, isLoading: true)
+                            }
+                        }
+                        .padding(InkuSpacing.spacing16)
+                    } else {
+                        LazyVStack(spacing: InkuSpacing.spacing16) {
+                            ForEach(0..<10, id: \.self) { _ in
+                                MangaRowView(manga: .skeletonData, isLoading: true)
+                            }
+                        }
+                        .padding(InkuSpacing.spacing16)
+                    }
+                }
+                .scrollDisabled(true)
+                .background(Color.inkuSurface)
+            }
+        case .grid:
+            MangaGridSkeletonView()
+        }
     }
 
     private func errorView(message: String) -> some View {
@@ -273,6 +344,37 @@ struct MangaListView: View {
         } label: {
             Label(L10n.MangaList.Filter.theme, systemImage: "sparkles")
         }
+    }
+
+    private var presentationModeToggle: some View {
+        Button {
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                presentationMode = presentationMode == .list ? .grid : .list
+            }
+        } label: {
+            Image(systemName: presentationMode.iconName)
+                .symbolVariant(.circle.fill)
+                .font(.inkuHeadline)
+                .foregroundStyle(Color.inkuAccent)
+        }
+    }
+
+    // MARK: - Private Functions
+
+    private func shouldUseGridLayout(for width: CGFloat) -> Bool {
+        if horizontalSizeClass == .regular {
+            return true
+        }
+
+        return width >= 700
+    }
+
+    private func listColumnCount(for width: CGFloat) -> Int {
+        if horizontalSizeClass == .regular {
+            return width > 1000 ? 2 : 1
+        }
+
+        return 2
     }
 }
 
