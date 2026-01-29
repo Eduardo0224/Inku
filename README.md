@@ -175,13 +175,13 @@
         <th>Advanced Filters</th>
     </tr>
     <tr>
-        <td width="200" align="center">
+        <td width="266" align="center">
             <img src="https://github.com/user-attachments/assets/9d5b8842-a3f6-4dc5-841c-0ba8465ea0f3">
         </td>
-        <td width="200" align="center">
+        <td width="266" align="center">
             <img src="https://github.com/user-attachments/assets/0f92e578-6f31-48f0-b51f-2f98410f04cf">
         </td>
-        <td width="200" align="center">
+        <td width="266" align="center">
             <img src="https://github.com/user-attachments/assets/8d72429d-c5f4-4b6f-b526-ac0883c091d9">
         </td>
     </tr>
