@@ -24,6 +24,9 @@ final class MangaListViewModel: MangaListViewModelProtocol {
     private let interactor: MangaListInteractorProtocol
 
     @ObservationIgnored
+    private let advancedFiltersInteractor: AdvancedFiltersInteractorProtocol
+
+    @ObservationIgnored
     private var currentPage = 1
 
     @ObservationIgnored
@@ -47,13 +50,43 @@ final class MangaListViewModel: MangaListViewModelProtocol {
     // MARK: - Computed Properties
 
     var isFilterActive: Bool {
-        selectedFilter != .none
+        switch selectedFilter {
+        case .genre, .demographic, .theme:
+            return true
+        case .advanced, .none:
+            return false
+        }
+    }
+
+    var isAdvancedFilterActive: Bool {
+        if case .advanced = selectedFilter {
+            return true
+        }
+        return false
+    }
+
+    var currentAdvancedSearch: CustomSearch? {
+        if case .advanced(let search, _) = selectedFilter {
+            return search
+        }
+        return nil
+    }
+
+    var currentSortOption: SearchSortOption? {
+        if case .advanced(_, let sortOption) = selectedFilter {
+            return sortOption
+        }
+        return nil
     }
 
     // MARK: - Initializers
 
-    init(interactor: MangaListInteractorProtocol = MangaListInteractor()) {
+    init(
+        interactor: MangaListInteractorProtocol = MangaListInteractor(),
+        advancedFiltersInteractor: AdvancedFiltersInteractorProtocol = AdvancedFiltersInteractor()
+    ) {
         self.interactor = interactor
+        self.advancedFiltersInteractor = advancedFiltersInteractor
     }
 
     // MARK: - Functions
@@ -134,18 +167,27 @@ final class MangaListViewModel: MangaListViewModelProtocol {
         await applyFilter(.none)
     }
 
+    func applyAdvancedSearch(_ search: CustomSearch, sortOption: SearchSortOption) async {
+        selectedFilter = .advanced(search, sortOption)
+        await loadMangas()
+    }
+
     // MARK: - Private Functions
 
     private func fetchCurrentFilter(page: Int, per: Int) async throws -> MangaListResponse {
         switch selectedFilter {
         case .genre(let value):
-            try await interactor.fetchMangasByGenre(value, page: page, per: per)
+            return try await interactor.fetchMangasByGenre(value, page: page, per: per)
         case .demographic(let value):
-            try await interactor.fetchMangasByDemographic(value, page: page,per: per)
+            return try await interactor.fetchMangasByDemographic(value, page: page, per: per)
         case .theme(let value):
-            try await interactor.fetchMangasByTheme(value, page: page, per: per)
+            return try await interactor.fetchMangasByTheme(value, page: page, per: per)
+        case .advanced(let search, let sortOption):
+            let response = try await advancedFiltersInteractor.searchMangas(search, page: page, per: per)
+            let sortedMangas = sortOption.sort(response.items)
+            return MangaListResponse(items: sortedMangas, metadata: response.metadata)
         case .none:
-            try await interactor.fetchMangas(page: page, per: per)
+            return try await interactor.fetchMangas(page: page, per: per)
         }
     }
 

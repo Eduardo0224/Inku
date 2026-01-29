@@ -74,18 +74,12 @@ struct MangaHeaderSection: View {
     }
 
     private var verticalLayout: some View {
-        VStack(spacing: InkuSpacing.spacing16) {
-            ZStack(alignment: .topTrailing) {
-                coverImage(width: 200, height: 300)
-                scoreBadge
-                    .padding(InkuSpacing.spacing8)
-            }
-
-            VStack(spacing: InkuSpacing.spacing8) {
-                titleTexts()
-            }
+        VStack(spacing: InkuSpacing.spacing8) {
+            coverImage(width: 200, height: 300)
+                .padding(.top, InkuSpacing.spacing16)
+            titleTexts()
+            scoreBadge
         }
-        .padding(.vertical, InkuSpacing.spacing24)
     }
 
     private func coverImage(width: CGFloat, height: CGFloat) -> some View {

@@ -36,7 +36,33 @@ final class MockMangaListViewModel: MangaListViewModelProtocol {
     // MARK: - Computed Properties
 
     var isFilterActive: Bool {
-        selectedFilter != .none
+        switch selectedFilter {
+        case .genre, .demographic, .theme:
+            return true
+        case .advanced, .none:
+            return false
+        }
+    }
+
+    var isAdvancedFilterActive: Bool {
+        if case .advanced = selectedFilter {
+            return true
+        }
+        return false
+    }
+
+    var currentAdvancedSearch: CustomSearch? {
+        if case .advanced(let search, _) = selectedFilter {
+            return search
+        }
+        return nil
+    }
+
+    var currentSortOption: SearchSortOption? {
+        if case .advanced(_, let sortOption) = selectedFilter {
+            return sortOption
+        }
+        return nil
     }
 
     // MARK: - Functions
@@ -148,5 +174,9 @@ final class MockMangaListViewModel: MangaListViewModelProtocol {
 
     func clearFilters() async {
         await applyFilter(.none)
+    }
+
+    func applyAdvancedSearch(_ search: CustomSearch, sortOption: SearchSortOption) async {
+        selectedFilter = .advanced(search, sortOption)
     }
 }

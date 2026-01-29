@@ -20,7 +20,7 @@ extension View {
     ///
     /// This modifier enables the Liquid Glass effect for background images,
     /// allowing them to extend beyond their frame boundaries seamlessly.
-    /// Falls back to no-op on iOS 18-25.
+    /// Falls back to no-op on iOS 18.
     func liquidGlassBackground() -> some View {
         modifier(LiquidGlassBackgroundModifier())
     }

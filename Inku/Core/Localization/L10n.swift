@@ -70,6 +70,7 @@ enum L10n {
             static let genre = String(localized: .MangaListLocalizable.filterGenre)
             static let demographic = String(localized: .MangaListLocalizable.filterDemographic)
             static let theme = String(localized: .MangaListLocalizable.filterTheme)
+            static let advancedFilters = String(localized: .MangaListLocalizable.filterAdvancedFilters)
         }
     }
 
@@ -190,6 +191,76 @@ enum L10n {
         enum Mode {
             static let contains = String(localized: .SearchLocalizable.modeContains)
             static let beginsWith = String(localized: .SearchLocalizable.modeBeginsWith)
+        }
+    }
+
+    // MARK: - Advanced Filters (AdvancedFiltersLocalizable.xcstrings)
+
+    enum AdvancedFilters {
+
+        enum Screen {
+            static let title = String(localized: .AdvancedFiltersLocalizable.screenTitle)
+        }
+
+        enum Button {
+            static let clearAll = String(localized: .AdvancedFiltersLocalizable.buttonClearAll)
+            static let search = String(localized: .AdvancedFiltersLocalizable.buttonSearch)
+            static let sort = String(localized: .AdvancedFiltersLocalizable.buttonSort)
+            static let loadMore = String(localized: .AdvancedFiltersLocalizable.buttonLoadMore)
+        }
+
+        enum Filter {
+            static let title = String(localized: .AdvancedFiltersLocalizable.filterTitle)
+            static let author = String(localized: .AdvancedFiltersLocalizable.filterAuthor)
+            static let genres = String(localized: .AdvancedFiltersLocalizable.filterGenres)
+            static let demographics = String(localized: .AdvancedFiltersLocalizable.filterDemographics)
+            static let themes = String(localized: .AdvancedFiltersLocalizable.filterThemes)
+            static let searchMode = String(localized: .AdvancedFiltersLocalizable.filterSearchMode)
+        }
+
+        enum SearchMode {
+            static let contains = String(localized: .AdvancedFiltersLocalizable.searchModeContains)
+            static let beginsWith = String(localized: .AdvancedFiltersLocalizable.searchModeBeginsWith)
+        }
+
+        enum Placeholder {
+            static let title = String(localized: .AdvancedFiltersLocalizable.placeholderTitle)
+            static let firstName = String(localized: .AdvancedFiltersLocalizable.placeholderFirstName)
+            static let lastName = String(localized: .AdvancedFiltersLocalizable.placeholderLastName)
+        }
+
+        enum Results {
+            static let count = String(localized: .AdvancedFiltersLocalizable.resultsCount)
+        }
+
+        enum State {
+            static let searching = String(localized: .AdvancedFiltersLocalizable.stateSearching)
+        }
+
+        enum Empty {
+            static let noResults = String(localized: .AdvancedFiltersLocalizable.emptyNoResults)
+            static let adjustFilters = String(localized: .AdvancedFiltersLocalizable.emptyAdjustFilters)
+        }
+
+        enum MultiSelect {
+            static let cancel = String(localized: .AdvancedFiltersLocalizable.multiselectCancel)
+            static let done = String(localized: .AdvancedFiltersLocalizable.multiselectDone)
+            static let noResults = String(localized: .AdvancedFiltersLocalizable.multiselectNoResults)
+            static let tryDifferent = String(localized: .AdvancedFiltersLocalizable.multiselectTryDifferent)
+        }
+
+        enum Sort {
+            static let title = String(localized: .AdvancedFiltersLocalizable.sortTitle)
+            static let scoreHighToLow = String(localized: .AdvancedFiltersLocalizable.sortScoreHighToLow)
+            static let scoreLowToHigh = String(localized: .AdvancedFiltersLocalizable.sortScoreLowToHigh)
+            static let titleAToZ = String(localized: .AdvancedFiltersLocalizable.sortTitleAToZ)
+            static let titleZToA = String(localized: .AdvancedFiltersLocalizable.sortTitleZToA)
+            static let volumesHighToLow = String(localized: .AdvancedFiltersLocalizable.sortVolumesHighToLow)
+            static let volumesLowToHigh = String(localized: .AdvancedFiltersLocalizable.sortVolumesLowToHigh)
+        }
+
+        enum Error {
+            static let noCriteria = String(localized: .AdvancedFiltersLocalizable.errorNoCriteria)
         }
     }
 

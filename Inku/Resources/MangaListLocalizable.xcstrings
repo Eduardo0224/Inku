@@ -198,6 +198,24 @@
           }
         }
       }
+    },
+    "FILTER_ADVANCED_FILTERS" : {
+      "comment" : "Menu item to open advanced filters.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Advanced Filters..."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtros Avanzados..."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

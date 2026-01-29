@@ -34,6 +34,7 @@ struct InkuApp: App {
                 }
             }
             .tabViewStyle(.sidebarAdaptable)
+            .tabBarMinimizeBehaviorOnScrollDown()
             .environment(\.collectionViewModel, collectionViewModel)
             .inkuTabStyle()
         }
