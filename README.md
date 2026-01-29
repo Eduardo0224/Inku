@@ -42,15 +42,23 @@
 ### 📚 Exploración de Manga
 
 - **Navegación por catálogo** con paginación infinita (20 items por página)
-- **Filtros avanzados** por género, demografía y tema
+- **Filtros rápidos** por género, demografía y tema (menú simple)
+- **Vista de cuadrícula adaptativa**: 2 columnas (iPhone) / 4-5 columnas (iPad)
+- **Vista de lista adaptativa**: 1-2 columnas según espacio disponible
+- **Toggle de presentación** con persistencia de preferencia
 - **Skeleton loading** con efecto shimmer
 - **Manejo inteligente de errores** con opciones de reintento
 
 ### 🔍 Búsqueda Avanzada
 
-- **Búsqueda por título** (contiene / comienza con)
+- **Búsqueda simple por título** (contiene / comienza con)
 - **Búsqueda por autor** (nombre y apellido)
 - **Scopes de búsqueda** con toggle entre manga y autores
+- **Filtros avanzados multi-criterio**:
+  - Búsqueda combinada por título + autor + tags
+  - Selección múltiple de géneros, demografías y temas
+  - 6 opciones de ordenamiento (puntuación, título, volúmenes)
+  - Preselección de filtros para continuar búsqueda
 - **Grid adaptativo**: 2 columnas (iPhone) / 4-5 columnas (iPad)
 
 ### 💾 Gestión de Colección
@@ -77,7 +85,8 @@
 - **Design tokens**: colores, espaciado, tipografía, radios
 - **Color accent personalizado**: #FFD0B5 (tono durazno cálido)
 - **Modifiers**: `.inkuCard()`, `.shimmer()`, `.inkuGlass()`
-- **Version**: v1.9.1
+- **InkuMangaCard mejorado**: score, status, y genre badges
+- **Version**: v1.11.0
 
 ---
 
@@ -157,6 +166,27 @@
     </tr>
 </table>
 
+### v1.5.0 - Advanced Filters & Grid View
+
+<table width="800" align="center">
+    <tr>
+        <th>Grid View</th>
+        <th>List View (2-Column)</th>
+        <th>Advanced Filters</th>
+    </tr>
+    <tr>
+        <td width="200" align="center">
+            <img src="https://github.com/user-attachments/assets/9d5b8842-a3f6-4dc5-841c-0ba8465ea0f3">
+        </td>
+        <td width="200" align="center">
+            <img src="https://github.com/user-attachments/assets/0f92e578-6f31-48f0-b51f-2f98410f04cf">
+        </td>
+        <td width="200" align="center">
+            <img src="https://github.com/user-attachments/assets/8d72429d-c5f4-4b6f-b526-ac0883c091d9">
+        </td>
+    </tr>
+</table>
+
 ---
 
 ## 🎥 Video Demo
@@ -164,10 +194,15 @@
 <table width="800" align="center">
     <tr>
         <th>App Demo</th>
+        <th>App Demo 2</th>
     </tr>
     <tr>
         <td width="800" align="center">
             <video source src="https://github.com/user-attachments/assets/b66e4a5e-e20e-40f8-846b-34d793842f25">
+            </video>
+        </td>
+        <td width="800" align="center">
+            <video source src="https://github.com/user-attachments/assets/7acebf96-e5c8-4437-89a2-3bb8010f3cf2">
             </video>
         </td>
     </tr>
@@ -198,6 +233,9 @@ Inku/
 ├── Features/                    # Organización por feature
 │   ├── MangaList/
 │   │   ├── Models/
+│   │   │   ├── AdvancedSearch.swift
+│   │   │   ├── MangaSortOption.swift
+│   │   │   └── MangaFilter.swift
 │   │   ├── Interactor/
 │   │   │   ├── Protocols/
 │   │   │   ├── MangaListInteractor.swift       # Producción
@@ -206,10 +244,15 @@ Inku/
 │   │   │   └── MangaListViewModel.swift
 │   │   └── Views/
 │   │       ├── MangaListView.swift
+│   │       ├── AdvancedFilterView.swift
 │   │       └── Components/
+│   │           ├── MangaGridView.swift
+│   │           ├── MangaCardView.swift
+│   │           └── FilterDisclosureSection.swift
 │   ├── Search/
 │   ├── Collection/
-│   └── MangaDetail/
+│   ├── MangaDetail/
+|   └── AdvancedFilters/
 ├── Core/                        # Código compartido
 │   ├── Models/
 │   ├── Services/
@@ -281,7 +324,7 @@ El proyecto depende del paquete InkuUI disponible en GitHub:
 En Xcode:
 - File → Add Package Dependencies
 - Agregar URL del paquete: `https://github.com/Eduardo0224/InkuUI`
-- Seleccionar la versión más reciente (v1.9.1+)
+- Seleccionar la versión más reciente (v1.11.0+)
 
 3. **Abrir el proyecto**
 
@@ -337,6 +380,7 @@ Text(L10n.MangaList.mangaCount(mangas.count))
 
 - `Localizable.xcstrings` - Strings comunes
 - `MangaListLocalizable.xcstrings` - Feature MangaList
+- `AdvancedFiltersLocalizable.xcstrings` - Advanced Filters (v1.5.0)
 - `SearchLocalizable.xcstrings` - Feature Search
 - `CollectionLocalizable.xcstrings` - Feature Collection
 - `MangaDetailLocalizable.xcstrings` - Feature MangaDetail
@@ -345,7 +389,7 @@ Text(L10n.MangaList.mangaCount(mangas.count))
 
 ## 🗺️ Roadmap
 
-### ✅ v1.0.0 - MVP (Actual)
+### ✅ v1.0.0 - MVP (Completado)
 
 - [x] Exploración de catálogo con paginación
 - [x] Búsqueda por título y autor
@@ -354,6 +398,12 @@ Text(L10n.MangaList.mangaCount(mangas.count))
 - [x] Optimización para iPad
 - [x] Localización español/inglés
 - [x] Design system InkuUI v1.9.1
+
+### ✅ v1.5.0 - Medium Version (Actual)
+
+- [x] **Advanced Filters** - Búsqueda multi-criterio
+- [x] **Grid View** - Vista de cuadrícula adaptativa
+- [x] Design system InkuUI v1.11.1
 
 ---
 
