@@ -7,7 +7,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Nothing pending for next release.
+
+---
+
+## [1.5.0] - 2026-01-29
+
+### 🎉 Medium Version Release - Advanced Filters & Grid View
+
+**Inku v1.5.0** enhances the manga browsing experience with advanced multi-criteria filtering and adaptive grid view. This release includes comprehensive search capabilities, presentation mode toggle, and InkuUI enhancements for improved visual consistency.
+
 ### Added
+
+#### Advanced Filters Feature
+
+- **AdvancedFilterView** - Multi-criteria search interface
+  - Simultaneous search by title, author (first/last name), genres, demographics, and themes
+  - Search modes: Contains (default) and Begins With for title searches
+  - Multi-select pickers for genres, demographics, and themes
+  - 6 sort options: Score ↑↓, Title A-Z/Z-A, Volumes ↑↓
+  - Preloaded data from MangaListViewModel (genres, demographics, themes)
+  - Preselection support for continuing existing searches
+  - Smart search button (enabled only when criteria present)
+  - Clear all functionality for resetting filters
+  - Form-based UI with `.presentationSizing(.form)`
+  - Files: `AdvancedFilterView.swift`, `FilterDisclosureSection.swift`
+
+- **AdvancedFilters Architecture** - Complete Clean Architecture implementation
+  - `AdvancedFiltersInteractor` with protocol-first design
+  - `AdvancedFiltersViewModel` with @Observable pattern
+  - `MockAdvancedFiltersInteractor` for previews
+  - `SpyAdvancedFiltersInteractor` for testing
+  - Integration with existing MangaListViewModel
+  - Files: `AdvancedFiltersInteractor.swift`, `AdvancedFiltersViewModel.swift`
+
+- **Models for Advanced Search**
+  - `CustomSearch` model with multi-criteria support
+  - `SearchSortOption` enum with 6 sorting options
+  - Integration with existing `MangaFilter` enum
+  - Files: `CustomSearch.swift`, `SearchSortOption.swift`
+
+- **Localization for Advanced Filters**
+  - Complete Spanish/English support in `AdvancedFiltersLocalizable.xcstrings`
+  - 50+ localized strings for filters UI
+  - Sort options, placeholders, error messages
+  - Multi-select picker strings
+
+- **Comprehensive Test Suite** (37 tests)
+  - ViewModel tests: search building, clearing, validation
+  - Interactor tests: API integration, error handling
+  - Integration tests: MangaListViewModel with advanced filters
+  - Spy pattern for dependency injection
+  - Files: `AdvancedFiltersTests.swift`, `MangaListTests+AdvancedFilters.swift`
+
+#### Grid View Feature
 
 - **Grid View for MangaList** - Browse manga in adaptive grid layout
   - Toggle button to switch between list and grid presentation modes
@@ -38,27 +91,87 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added MARK comments for better code organization
   - Files: `View+LiquidGlass.swift`, `View+TabBarMinimizeBehavior.swift`
 
+#### MangaList Enhancements
+
+- **Advanced filter integration** in MangaListViewModel
+  - `currentAdvancedSearch` and `currentSortOption` state tracking
+  - `isAdvancedFilterActive` computed property
+  - `applyAdvancedSearch(_:sortOption:)` async function
+  - `clearFilters()` resets both simple and advanced filters
+  - Smart toolbar icons (filled when filters active)
+  - Error handling with retry option
+
+- **New API endpoint** for advanced search
+  - `/manga/search/advanced` with POST method
+  - Accepts `CustomSearch` model with multi-criteria
+  - Returns paginated `MangaResponse`
+  - Added to `NetworkService` and `APIEndpoints`
+
 ### Changed
 
-- **InkuUI v1.11.0** - Enhanced grid components
-  - InkuMangaCard now shows score and status
+#### InkuUI v1.11.0 - Enhanced Components
+
+- **InkuMangaCard** now shows score and status
+  - Added `score: Double?` parameter with star rating
+  - Added `status: Status?` parameter with color-coded indicator
+  - Renamed `badge` → `genre` for clarity
+  - Status enum: `.publishing`, `.completed`, `.hiatus`, `.discontinued`
+  - Status colors: green (publishing), blue (completed), orange (hiatus), red (discontinued)
   - Better visual consistency between row and card layouts
+  - Backward compatible (score and status are optional)
+
+#### User Experience Improvements
 
 - **Animation Improvements** - More noticeable transitions
   - Changed from `.smooth(duration: 0.3)` to `.spring(response: 0.35, dampingFraction: 0.75)`
   - Spring animation provides better visual feedback for presentation mode toggle
   - More natural and noticeable transition effect
 
+- **Smart UI behaviors**
+  - Filter menu disabled when error present
+  - Retry opens advanced filters if they were active
+  - Toast-style error messages for filter errors
+  - Loading states during advanced search
+
+#### Code Organization
+
 - **MARK Comment Ordering** - Standardized code structure
   - Fixed ordering in MangaListView: States → Environment → Initializers
   - Renamed "Computed Properties" to "Private Functions" for consistency
   - Follows established pattern across the codebase
+
+- **ViewModifier separation**
+  - Each ViewModifier in its own file
+  - MARK comments for View Extension and View Modifier sections
+  - Private structs for internal modifiers
 
 ### Fixed
 
 - **InkuCoverImage aspect ratio** - Changed from `.fill` to `.fit`
   - Prevents horizontal manga covers from being cropped incorrectly
   - Ensures covers maintain proper aspect ratio in all contexts
+  - Updated MangaHeaderSection layout after aspect ratio change
+
+- **MangaHeaderSection layout** - Scorebadge positioning
+  - Fixed scorebadge placement after aspect ratio fix
+  - Moved from ZStack overlay to position below titles
+  - More consistent visual hierarchy
+
+### Testing
+
+- ✅ 37 comprehensive tests for Advanced Filters
+- ✅ ViewModel tests with Spy interactors
+- ✅ Interactor tests with SpyNetworkService
+- ✅ Integration tests for MangaListViewModel
+- ✅ All existing tests passing
+
+### Documentation
+
+- ✅ README.md updated for v1.5.0
+- ✅ Added v1.5.0 features section
+- ✅ Updated code organization diagram
+- ✅ Added AdvancedFiltersLocalizable.xcstrings to localization files
+- ✅ Updated roadmap with completed v1.5.0 and future versions
 
 ---
 
