@@ -17,13 +17,14 @@ enum MangaFilter: Sendable, Equatable {
     case genre(String)
     case demographic(String)
     case theme(String)
+    case advanced(CustomSearch, SearchSortOption)
     case none
 
     func matches(with inputValue: String) -> Bool {
         switch self {
         case .genre(let value), .demographic(let value), .theme(let value):
             value == inputValue
-        case .none:
+        case .advanced, .none:
             false
         }
     }

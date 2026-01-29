@@ -32,6 +32,9 @@ protocol MangaListViewModelProtocol: Observable {
     var hasLoadedInitialData: Bool { get }
 
     var isFilterActive: Bool { get }
+    var isAdvancedFilterActive: Bool { get }
+    var currentAdvancedSearch: CustomSearch? { get }
+    var currentSortOption: SearchSortOption? { get }
 
     // MARK: - Functions
 
@@ -41,4 +44,5 @@ protocol MangaListViewModelProtocol: Observable {
     func loadFilterOptions() async
     func applyFilter(_ filter: MangaFilter) async
     func clearFilters() async
+    func applyAdvancedSearch(_ search: CustomSearch, sortOption: SearchSortOption) async
 }

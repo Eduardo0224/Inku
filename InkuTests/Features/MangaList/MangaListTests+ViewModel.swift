@@ -372,6 +372,8 @@ private extension MangaListTests.ViewModelTests {
                 "theme: \(value)"
             case .none:
                 "none"
+            case .advanced(let customSearch, let searchSortOption):
+                "advanced: \(customSearch), \(searchSortOption)"
             }
         }
 

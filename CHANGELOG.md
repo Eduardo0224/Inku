@@ -7,6 +7,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Grid View for MangaList** - Browse manga in adaptive grid layout
+  - Toggle button to switch between list and grid presentation modes
+  - Adaptive grid: 2 columns (iPhone), 4-6 columns (iPad based on width)
+  - MangaCardView component for grid items
+  - MangaGridView and MangaGridSkeletonView components
+  - Presentation mode persistence with @AppStorage
+  - Spring animation transitions between modes for noticeable effect
+  - Files: `MangaPresentationMode.swift`, `MangaCardView.swift`, `MangaGridView.swift`, `MangaGridSkeletonView.swift`
+
+- **Adaptive 2-Column Grid for List Mode** - Responsive list layout
+  - Automatically switches to 2-column grid when horizontal space allows (width >= 700)
+  - Always uses grid on iPad (.regular size class)
+  - Dynamic column count: 1-2 columns based on device and width
+  - Matches CollectionListView adaptive pattern
+  - Files: `MangaListView.swift`
+
+- **Enhanced InkuMangaCard** (InkuUI v1.11.0)
+  - Added score display with star rating
+  - Added status indicator (publishing/completed/hiatus/discontinued)
+  - Renamed badge parameter to genre for clarity
+  - Consistent information parity with InkuMangaRow
+  - Updated previews with new parameters
+
+- **ViewModifier Organization** - Improved code structure
+  - Separated LiquidGlassBackgroundModifier into individual file
+  - Separated TabBarMinimizeBehaviorModifier into individual file with dedicated extension
+  - Added MARK comments for better code organization
+  - Files: `View+LiquidGlass.swift`, `View+TabBarMinimizeBehavior.swift`
+
+### Changed
+
+- **InkuUI v1.11.0** - Enhanced grid components
+  - InkuMangaCard now shows score and status
+  - Better visual consistency between row and card layouts
+
+- **Animation Improvements** - More noticeable transitions
+  - Changed from `.smooth(duration: 0.3)` to `.spring(response: 0.35, dampingFraction: 0.75)`
+  - Spring animation provides better visual feedback for presentation mode toggle
+  - More natural and noticeable transition effect
+
+- **MARK Comment Ordering** - Standardized code structure
+  - Fixed ordering in MangaListView: States → Environment → Initializers
+  - Renamed "Computed Properties" to "Private Functions" for consistency
+  - Follows established pattern across the codebase
+
+### Fixed
+
+- **InkuCoverImage aspect ratio** - Changed from `.fill` to `.fit`
+  - Prevents horizontal manga covers from being cropped incorrectly
+  - Ensures covers maintain proper aspect ratio in all contexts
+
+---
+
 ### 📚 Documentation
 
 **Major documentation restructuring to separate reusable patterns from project-specific content.**
