@@ -17,9 +17,12 @@ import InkuUI
 
 struct ProfileView: View {
 
+    // MARK: - Properties
+
+    @Bindable var authViewModel: AuthViewModel
+
     // MARK: - Environment
 
-    @Environment(\.authViewModel) private var authViewModel
     @Environment(\.collectionViewModel) private var collectionViewModel
     @Query private var localMangas: [CollectionManga]
 
@@ -305,8 +308,7 @@ struct ProfileView: View {
 // MARK: - Preview
 
 #Preview("Unauthenticated") {
-    ProfileView()
-        .environment(\.authViewModel, AuthViewModel(interactor: MockAuthInteractor()))
+    ProfileView(authViewModel: AuthViewModel(interactor: MockAuthInteractor()))
         .environment(\.collectionViewModel, MockCollectionViewModel.empty)
         .modelContainer(for: CollectionManga.self, inMemory: true)
 }
@@ -314,8 +316,7 @@ struct ProfileView: View {
 #Preview("Authenticated") {
     let viewModel = AuthViewModel(interactor: MockAuthInteractor())
 
-    ProfileView()
-        .environment(\.authViewModel, viewModel)
+    ProfileView(authViewModel: viewModel)
         .environment(\.collectionViewModel, MockCollectionViewModel.withData)
         .modelContainer(for: CollectionManga.self, inMemory: true)
         .task {

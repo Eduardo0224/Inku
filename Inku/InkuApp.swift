@@ -35,13 +35,12 @@ struct InkuApp: App {
                 }
 
                 Tab(L10n.Tabs.profile, systemImage: "person.circle") {
-                    ProfileView()
+                    ProfileView(authViewModel: authViewModel)
                 }
             }
             .tabViewStyle(.sidebarAdaptable)
             .tabBarMinimizeBehaviorOnScrollDown()
             .environment(\.collectionViewModel, collectionViewModel)
-            .environment(\.authViewModel, authViewModel)
             .inkuTabStyle()
         }
         .modelContainer(for: CollectionManga.self)
