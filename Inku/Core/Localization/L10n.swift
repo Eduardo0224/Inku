@@ -368,4 +368,39 @@ enum L10n {
             static let deleteFailed = String(localized: .CollectionLocalizable.errorDeleteFailed)
         }
     }
+
+    // MARK: - Authentication (AuthenticationLocalizable.xcstrings)
+
+    enum Authentication {
+
+        static let emailLabel = String(localized: .AuthenticationLocalizable.emailLabel)
+        static let passwordLabel = String(localized: .AuthenticationLocalizable.passwordLabel)
+
+        enum Login {
+            static let title = String(localized: .AuthenticationLocalizable.loginTitle)
+            static let subtitle = String(localized: .AuthenticationLocalizable.loginSubtitle)
+            static let button = String(localized: .AuthenticationLocalizable.loginButton)
+        }
+
+        enum Register {
+            static let title = String(localized: .AuthenticationLocalizable.registerTitle)
+            static let subtitle = String(localized: .AuthenticationLocalizable.registerSubtitle)
+            static let button = String(localized: .AuthenticationLocalizable.registerButton)
+        }
+
+        enum Prompt {
+            static let noAccount = String(localized: .AuthenticationLocalizable.noAccount)
+            static let hasAccount = String(localized: .AuthenticationLocalizable.hasAccount)
+            static let signUp = String(localized: .AuthenticationLocalizable.signUp)
+            static let signIn = String(localized: .AuthenticationLocalizable.signIn)
+        }
+
+        enum Validation {
+            static let passwordRequirement = String(localized: .AuthenticationLocalizable.passwordRequirement)
+        }
+
+        enum Actions {
+            static let logout = String(localized: .AuthenticationLocalizable.logoutButton)
+        }
+    }
 }

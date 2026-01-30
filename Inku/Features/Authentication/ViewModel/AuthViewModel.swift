@@ -71,13 +71,13 @@ final class AuthViewModel {
             }
         } catch {
             authState = .unauthenticated
-            errorMessage = error.localizedDescription
+            handleError(error)
         }
     }
 
     func register() async {
         guard isFormValid else {
-            errorMessage = "Invalid email or password"
+            errorMessage = L10n.Error.generic
             return
         }
 
@@ -91,13 +91,13 @@ final class AuthViewModel {
             await login()
         } catch {
             isLoading = false
-            errorMessage = error.localizedDescription
+            handleError(error)
         }
     }
 
     func login() async {
         guard isFormValid else {
-            errorMessage = "Invalid email or password"
+            errorMessage = L10n.Error.generic
             return
         }
 
@@ -115,7 +115,7 @@ final class AuthViewModel {
         } catch {
             isLoading = false
             authState = .unauthenticated
-            errorMessage = error.localizedDescription
+            handleError(error)
         }
     }
 
@@ -130,7 +130,7 @@ final class AuthViewModel {
             isLoading = false
         } catch {
             isLoading = false
-            errorMessage = error.localizedDescription
+            handleError(error)
         }
     }
 
@@ -143,7 +143,7 @@ final class AuthViewModel {
                 authState = .authenticated(newToken)
             } catch {
                 authState = .unauthenticated
-                errorMessage = error.localizedDescription
+                handleError(error)
             }
         }
     }
@@ -160,5 +160,34 @@ final class AuthViewModel {
 
     func clearError() {
         errorMessage = nil
+    }
+
+    // MARK: - Private Functions
+
+    private func handleError(_ error: Error) {
+        if let networkError = error as? NetworkError {
+            print("[AuthViewModel] NetworkError: \(networkError)")
+
+            errorMessage = L10n.Error.generic
+        } else if let urlError = error as? URLError {
+            print("[AuthViewModel] URLError: \(urlError.code)")
+
+            switch urlError.code {
+            case .notConnectedToInternet:
+                errorMessage = L10n.Error.network
+            case .timedOut:
+                errorMessage = L10n.Error.timeout
+            case .cancelled:
+                return
+            default:
+                errorMessage = L10n.Error.generic
+            }
+        } else if let keychainError = error as? KeychainError {
+            print("[AuthViewModel] KeychainError: \(keychainError)")
+            errorMessage = L10n.Error.generic
+        } else {
+            print("[AuthViewModel] Unknown error: \(error)")
+            errorMessage = L10n.Error.generic
+        }
     }
 }

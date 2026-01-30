@@ -15,23 +15,17 @@ import Foundation
 
 final class MockAuthInteractor: AuthInteractorProtocol, Sendable {
 
-    func register(user: User) async throws {
-        try await Task.sleep(for: .milliseconds(500))
-    }
+    func register(user: User) async throws { }
 
     func login(user: User) async throws -> AuthToken {
-        try await Task.sleep(for: .milliseconds(500))
-        return AuthToken(token: "mock_token_12345")
+        .init(token: "mock_token_12345")
     }
 
     func renewToken(_ token: AuthToken) async throws -> AuthToken {
-        try await Task.sleep(for: .milliseconds(500))
-        return AuthToken(token: "mock_renewed_token_67890")
+        .init(token: "mock_renewed_token_67890")
     }
 
-    func logout() async throws {
-        try await Task.sleep(for: .milliseconds(200))
-    }
+    func logout() async throws { }
 
     func getSavedToken() async throws -> AuthToken? {
         nil
