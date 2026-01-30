@@ -41,3 +41,19 @@ enum AuthState: Sendable {
         return false
     }
 }
+
+extension AuthState: Equatable {
+
+    static func == (lhs: AuthState, rhs: AuthState) -> Bool {
+        switch (lhs, rhs) {
+        case (.unauthenticated, .unauthenticated):
+            return true
+        case (.authenticated(let lhsToken), .authenticated(let rhsToken)):
+            return lhsToken.token == rhsToken.token
+        case (.loading, .loading):
+            return true
+        default:
+            return false
+        }
+    }
+}

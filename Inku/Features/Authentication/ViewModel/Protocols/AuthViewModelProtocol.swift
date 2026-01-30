@@ -14,7 +14,7 @@
 import Foundation
 
 @MainActor
-protocol AuthViewModelProtocol {
+protocol AuthViewModelProtocol: AnyObject, Observable {
 
     var authState: AuthState { get }
     var isLoading: Bool { get }

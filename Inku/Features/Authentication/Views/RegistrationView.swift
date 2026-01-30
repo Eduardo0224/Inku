@@ -14,11 +14,11 @@
 import SwiftUI
 import InkuUI
 
-struct RegistrationView: View {
+struct RegistrationView<T: AuthViewModelProtocol>: View {
 
     // MARK: - Properties
 
-    @Bindable var viewModel: AuthViewModel
+    @Bindable var viewModel: T
     let onSwitchToLogin: () -> Void
 
     // MARK: - States
@@ -112,6 +112,7 @@ struct RegistrationView: View {
                         RoundedRectangle(cornerRadius: InkuRadius.radius12)
                             .stroke(Color.inkuTextTertiary.opacity(0.2), lineWidth: 1)
                     }
+                    .disabled(viewModel.isLoading)
             }
 
             VStack(alignment: .leading, spacing: InkuSpacing.spacing8) {
@@ -135,6 +136,7 @@ struct RegistrationView: View {
                         RoundedRectangle(cornerRadius: InkuRadius.radius12)
                             .stroke(Color.inkuTextTertiary.opacity(0.2), lineWidth: 1)
                     }
+                    .disabled(viewModel.isLoading)
 
                 Text(L10n.Authentication.Validation.passwordRequirement)
                     .font(.inkuCaption)
@@ -180,6 +182,7 @@ struct RegistrationView: View {
                     .foregroundStyle(Color.inkuAccent)
                     .fontWeight(.semibold)
             }
+            .disabled(viewModel.isLoading)
         }
     }
 }

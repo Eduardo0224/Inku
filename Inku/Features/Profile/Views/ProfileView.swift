@@ -15,21 +15,20 @@ import SwiftUI
 import SwiftData
 import InkuUI
 
-struct ProfileView: View {
+struct ProfileView<T: AuthViewModelProtocol>: View {
 
-    // MARK: - Properties
+    // MARK: - Query
 
-    @Bindable var authViewModel: AuthViewModel
+    @Query private var localMangas: [CollectionManga]
 
     // MARK: - States
 
     @State private var showingLogin = false
     @State private var showingRegistration = false
 
-    // MARK: - Environment
+    // MARK: - Properties
 
-    @Environment(\.collectionViewModel) private var collectionViewModel
-    @Query private var localMangas: [CollectionManga]
+    @Bindable var authViewModel: T
 
     // MARK: - Body
 
@@ -40,10 +39,8 @@ struct ProfileView: View {
                     switch authViewModel.authState {
                     case .unauthenticated:
                         unauthenticatedContent
-
                     case .authenticated:
                         authenticatedContent
-
                     case .loading:
                         loadingContent
                     }
@@ -60,12 +57,11 @@ struct ProfileView: View {
                     viewModel: authViewModel,
                     onSwitchToRegister: {
                         showingLogin = false
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            showingRegistration = true
-                        }
+                        showingRegistration = true
                     }
                 )
             }
+            .interactiveDismissDisabled(authViewModel.isLoading)
         }
         .sheet(isPresented: $showingRegistration) {
             NavigationStack {
@@ -73,12 +69,11 @@ struct ProfileView: View {
                     viewModel: authViewModel,
                     onSwitchToLogin: {
                         showingRegistration = false
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            showingLogin = true
-                        }
+                        showingLogin = true
                     }
                 )
             }
+            .interactiveDismissDisabled(authViewModel.isLoading)
         }
         .task {
             await authViewModel.checkAuthenticationStatus()
@@ -90,9 +85,7 @@ struct ProfileView: View {
     private var unauthenticatedContent: some View {
         VStack(spacing: InkuSpacing.spacing32) {
             headerSection
-
             localCollectionSection
-
             authButtonsSection
         }
     }
@@ -100,9 +93,7 @@ struct ProfileView: View {
     private var authenticatedContent: some View {
         VStack(spacing: InkuSpacing.spacing24) {
             authenticatedHeaderSection
-
             syncStatusSection
-
             accountSection
         }
     }
@@ -137,7 +128,6 @@ struct ProfileView: View {
                     .multilineTextAlignment(.center)
             }
         }
-        .padding(.top, InkuSpacing.spacing32)
     }
 
     private var localCollectionSection: some View {
@@ -148,9 +138,9 @@ struct ProfileView: View {
                 .foregroundStyle(Color.inkuText)
 
             VStack(spacing: InkuSpacing.spacing12) {
-                HStack {
+                HStack(alignment: .top) {
                     Image(systemName: "iphone")
-                        .font(.inkuCaption)
+                        .font(.inkuIconMedium)
                         .foregroundStyle(Color.inkuAccent)
 
                     VStack(alignment: .leading, spacing: InkuSpacing.spacing4) {
@@ -230,7 +220,6 @@ struct ProfileView: View {
                     .foregroundStyle(Color.inkuText)
             }
         }
-        .padding(.top, InkuSpacing.spacing32)
     }
 
     private var syncStatusSection: some View {
@@ -333,18 +322,13 @@ struct ProfileView: View {
 // MARK: - Preview
 
 #Preview("Unauthenticated") {
-    ProfileView(authViewModel: AuthViewModel(interactor: MockAuthInteractor()))
-        .environment(\.collectionViewModel, MockCollectionViewModel.empty)
-//        .modelContainer(for: CollectionManga.self, inMemory: true)
+    @Previewable @State var viewModel: MockAuthViewModel = .unauthenticated
+    ProfileView(authViewModel: viewModel)
+        .modelContainer(for: CollectionManga.self, inMemory: true)
 }
 
 #Preview("Authenticated") {
-    let viewModel = AuthViewModel(interactor: MockAuthInteractor())
-
+    @Previewable @State var viewModel: MockAuthViewModel = .authenticated
     ProfileView(authViewModel: viewModel)
-        .environment(\.collectionViewModel, MockCollectionViewModel.withData)
-//        .modelContainer(for: CollectionManga.self, inMemory: true)
-        .task {
-            await viewModel.login()
-        }
+        .modelContainer(for: CollectionManga.self, inMemory: true)
 }
