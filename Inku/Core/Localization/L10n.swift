@@ -21,6 +21,7 @@ enum L10n {
         static let browse = String(localized: .tabBrowse)
         static let collection = String(localized: .tabCollection)
         static let search = String(localized: .tabSearch)
+        static let profile = String(localized: .tabProfile)
     }
 
     // MARK: - Common (Localizable.xcstrings)
@@ -401,6 +402,39 @@ enum L10n {
 
         enum Actions {
             static let logout = String(localized: .AuthenticationLocalizable.logoutButton)
+        }
+
+        enum Error {
+            static let userExists = String(localized: .AuthenticationLocalizable.errorUserExists)
+            static let invalidCredentials = String(localized: .AuthenticationLocalizable.errorInvalidCredentials)
+        }
+    }
+
+    // MARK: - Profile (ProfileLocalizable.xcstrings)
+
+    enum Profile {
+
+        enum Unauthenticated {
+            static let title = String(localized: .ProfileLocalizable.unauthenticatedTitle)
+            static let subtitle = String(localized: .ProfileLocalizable.unauthenticatedSubtitle)
+        }
+
+        enum LocalCollection {
+            static let title = String(localized: .ProfileLocalizable.localCollectionTitle)
+            static let saved = String(localized: .ProfileLocalizable.localCollectionSaved)
+        }
+
+        enum Authenticated {
+            static let welcome = String(localized: .ProfileLocalizable.authenticatedWelcome)
+        }
+
+        enum Sync {
+            static let title = String(localized: .ProfileLocalizable.syncStatusTitle)
+            static let button = String(localized: .ProfileLocalizable.syncButton)
+        }
+
+        enum Section {
+            static let account = String(localized: .ProfileLocalizable.accountSection)
         }
     }
 }

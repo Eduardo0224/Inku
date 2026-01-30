@@ -91,7 +91,7 @@ final class AuthViewModel {
             await login()
         } catch {
             isLoading = false
-            handleError(error)
+            handleError(error, isRegistration: true)
         }
     }
 
@@ -164,11 +164,26 @@ final class AuthViewModel {
 
     // MARK: - Private Functions
 
-    private func handleError(_ error: Error) {
+    private func handleError(_ error: Error, isRegistration: Bool = false) {
         if let networkError = error as? NetworkError {
             print("[AuthViewModel] NetworkError: \(networkError)")
 
-            errorMessage = L10n.Error.generic
+            switch networkError {
+            case .badRequest:
+                if isRegistration {
+                    errorMessage = L10n.Authentication.Error.userExists
+                } else {
+                    errorMessage = L10n.Error.generic
+                }
+            case .unauthorized:
+                errorMessage = L10n.Authentication.Error.invalidCredentials
+            case .notFound:
+                errorMessage = L10n.Authentication.Error.invalidCredentials
+            case .validationError:
+                errorMessage = L10n.Error.generic
+            default:
+                errorMessage = L10n.Error.generic
+            }
         } else if let urlError = error as? URLError {
             print("[AuthViewModel] URLError: \(urlError.code)")
 

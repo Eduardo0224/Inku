@@ -238,6 +238,40 @@
           }
         }
       }
+    },
+    "ERROR_USER_EXISTS" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This email is already registered"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este correo ya está registrado"
+          }
+        }
+      }
+    },
+    "ERROR_INVALID_CREDENTIALS" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid email or password"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Correo o contraseña incorrectos"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

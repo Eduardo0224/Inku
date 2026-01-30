@@ -15,6 +15,7 @@ struct InkuApp: App {
     // MARK: - States
 
     @State private var collectionViewModel = CollectionViewModel()
+    @State private var authViewModel = AuthViewModel()
 
     // MARK: - Body
 
@@ -32,10 +33,15 @@ struct InkuApp: App {
                 Tab(L10n.Tabs.search, systemImage: "magnifyingglass", role: .search) {
                     SearchView()
                 }
+
+                Tab(L10n.Tabs.profile, systemImage: "person.circle") {
+                    ProfileView()
+                }
             }
             .tabViewStyle(.sidebarAdaptable)
             .tabBarMinimizeBehaviorOnScrollDown()
             .environment(\.collectionViewModel, collectionViewModel)
+            .environment(\.authViewModel, authViewModel)
             .inkuTabStyle()
         }
         .modelContainer(for: CollectionManga.self)
