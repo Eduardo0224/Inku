@@ -25,6 +25,10 @@ struct RegistrationView: View {
 
     @FocusState private var focusedField: Field?
 
+    // MARK: - Environment
+
+    @Environment(\.dismiss) private var dismiss
+
     // MARK: - Body
 
     var body: some View {
@@ -55,6 +59,11 @@ struct RegistrationView: View {
         } message: {
             if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)
+            }
+        }
+        .onChange(of: viewModel.authState) { _, newValue in
+            if case .authenticated = newValue {
+                dismiss()
             }
         }
     }
@@ -187,10 +196,8 @@ extension RegistrationView {
 // MARK: - Preview
 
 #Preview {
-    NavigationStack {
-        RegistrationView(
-            viewModel: AuthViewModel(interactor: MockAuthInteractor()),
-            onSwitchToLogin: {}
-        )
-    }
+    RegistrationView(
+        viewModel: AuthViewModel(interactor: MockAuthInteractor()),
+        onSwitchToLogin: {}
+    )
 }

@@ -21,6 +21,11 @@ struct ProfileView: View {
 
     @Bindable var authViewModel: AuthViewModel
 
+    // MARK: - States
+
+    @State private var showingLogin = false
+    @State private var showingRegistration = false
+
     // MARK: - Environment
 
     @Environment(\.collectionViewModel) private var collectionViewModel
@@ -48,6 +53,32 @@ struct ProfileView: View {
             .background(Color.inkuSurface)
             .navigationTitle(L10n.Tabs.profile)
             .navigationBarTitleDisplayMode(.large)
+        }
+        .sheet(isPresented: $showingLogin) {
+            NavigationStack {
+                LoginView(
+                    viewModel: authViewModel,
+                    onSwitchToRegister: {
+                        showingLogin = false
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            showingRegistration = true
+                        }
+                    }
+                )
+            }
+        }
+        .sheet(isPresented: $showingRegistration) {
+            NavigationStack {
+                RegistrationView(
+                    viewModel: authViewModel,
+                    onSwitchToLogin: {
+                        showingRegistration = false
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            showingLogin = true
+                        }
+                    }
+                )
+            }
         }
         .task {
             await authViewModel.checkAuthenticationStatus()
@@ -144,11 +175,8 @@ struct ProfileView: View {
 
     private var authButtonsSection: some View {
         VStack(spacing: InkuSpacing.spacing12) {
-            NavigationLink {
-                LoginView(
-                    viewModel: authViewModel,
-                    onSwitchToRegister: {}
-                )
+            Button {
+                showingLogin = true
             } label: {
                 Text(L10n.Authentication.Login.button)
                     .font(.inkuBody)
@@ -160,11 +188,8 @@ struct ProfileView: View {
                     .clipShape(RoundedRectangle(cornerRadius: InkuRadius.radius12))
             }
 
-            NavigationLink {
-                RegistrationView(
-                    viewModel: authViewModel,
-                    onSwitchToLogin: {}
-                )
+            Button {
+                showingRegistration = true
             } label: {
                 Text(L10n.Authentication.Register.button)
                     .font(.inkuBody)
@@ -310,7 +335,7 @@ struct ProfileView: View {
 #Preview("Unauthenticated") {
     ProfileView(authViewModel: AuthViewModel(interactor: MockAuthInteractor()))
         .environment(\.collectionViewModel, MockCollectionViewModel.empty)
-        .modelContainer(for: CollectionManga.self, inMemory: true)
+//        .modelContainer(for: CollectionManga.self, inMemory: true)
 }
 
 #Preview("Authenticated") {
@@ -318,7 +343,7 @@ struct ProfileView: View {
 
     ProfileView(authViewModel: viewModel)
         .environment(\.collectionViewModel, MockCollectionViewModel.withData)
-        .modelContainer(for: CollectionManga.self, inMemory: true)
+//        .modelContainer(for: CollectionManga.self, inMemory: true)
         .task {
             await viewModel.login()
         }
