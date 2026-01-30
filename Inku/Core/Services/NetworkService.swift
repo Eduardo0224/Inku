@@ -42,6 +42,14 @@ final class NetworkService: NetworkServiceProtocol, Sendable {
     }
 
     func get<T: Decodable & Sendable>(endpoint: String, queryItems: [URLQueryItem]) async throws -> T {
+        try await get(endpoint: endpoint, queryItems: queryItems, headers: [:])
+    }
+
+    func get<T: Decodable & Sendable>(endpoint: String, headers: [String: String]) async throws -> T {
+        try await get(endpoint: endpoint, queryItems: [], headers: headers)
+    }
+
+    func get<T: Decodable & Sendable>(endpoint: String, queryItems: [URLQueryItem], headers: [String: String]) async throws -> T {
         let url = baseURL.appending(path: endpoint, directoryHint: .notDirectory)
         var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
         components?.queryItems = queryItems.isEmpty ? nil : queryItems
@@ -54,6 +62,11 @@ final class NetworkService: NetworkServiceProtocol, Sendable {
         request.httpMethod = "GET"
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+
+        for (key, value) in headers {
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+
         return try await perform(request)
     }
 
@@ -61,6 +74,23 @@ final class NetworkService: NetworkServiceProtocol, Sendable {
         endpoint: String,
         body: T,
         queryItems: [URLQueryItem] = []
+    ) async throws -> U {
+        try await post(endpoint: endpoint, body: body, queryItems: queryItems, headers: [:])
+    }
+
+    func post<T: Encodable & Sendable, U: Decodable & Sendable>(
+        endpoint: String,
+        body: T,
+        headers: [String: String]
+    ) async throws -> U {
+        try await post(endpoint: endpoint, body: body, queryItems: [], headers: headers)
+    }
+
+    func post<T: Encodable & Sendable, U: Decodable & Sendable>(
+        endpoint: String,
+        body: T,
+        queryItems: [URLQueryItem],
+        headers: [String: String]
     ) async throws -> U {
         let url = baseURL.appending(path: endpoint, directoryHint: .notDirectory)
         var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
@@ -75,11 +105,53 @@ final class NetworkService: NetworkServiceProtocol, Sendable {
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
 
+        for (key, value) in headers {
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
         request.httpBody = try encoder.encode(body)
 
         return try await perform(request)
+    }
+
+    func post<U: Decodable & Sendable>(endpoint: String, headers: [String: String]) async throws -> U {
+        let url = baseURL.appending(path: endpoint, directoryHint: .notDirectory)
+
+        guard let finalURL = URL(string: url.absoluteString) else {
+            throw NetworkError.invalidURL
+        }
+
+        var request = URLRequest(url: finalURL)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+
+        for (key, value) in headers {
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+
+        return try await perform(request)
+    }
+
+    func delete(endpoint: String, headers: [String: String]) async throws {
+        let url = baseURL.appending(path: endpoint, directoryHint: .notDirectory)
+
+        guard let finalURL = URL(string: url.absoluteString) else {
+            throw NetworkError.invalidURL
+        }
+
+        var request = URLRequest(url: finalURL)
+        request.httpMethod = "DELETE"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+        for (key, value) in headers {
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+
+        let (_, response) = try await session.data(for: request)
+        try validateResponse(response)
     }
 
     // MARK: - Private Functions

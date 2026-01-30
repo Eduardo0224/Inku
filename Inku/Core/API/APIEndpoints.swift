@@ -59,10 +59,25 @@ enum API {
         }
 
         static let searchCustom = "/search/manga"
+
+        // MARK: - Authentication
+
+        static let registerUser = "/users"
+        static let loginUser = "/users/login"
+        static let renewToken = "/users/renew"
+
+        // MARK: - Collection
+
+        static let collectionManga = "/collection/manga"
+
+        static func collectionManga(id: Int) -> String {
+            "/collection/manga/\(id)"
+        }
     }
 
     enum Constants {
         static let defaultPageSize = 20
         static let maxPageSize = 100
+        static let appToken = "sLGH38NhEJ0_anlIWwhsz1-LarClEohiAHQqayF0FY"
     }
 }
