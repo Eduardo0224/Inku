@@ -16,7 +16,7 @@ import SwiftUI
 // MARK: - AuthViewModelKey
 
 private struct AuthViewModelKey: EnvironmentKey {
-    nonisolated(unsafe) static let defaultValue = AuthViewModel()
+    static let defaultValue = AuthViewModel()
 }
 
 // MARK: - EnvironmentValues Extension

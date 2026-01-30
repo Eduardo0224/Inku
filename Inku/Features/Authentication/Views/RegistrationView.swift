@@ -187,8 +187,10 @@ extension RegistrationView {
 // MARK: - Preview
 
 #Preview {
-    RegistrationView(
-        viewModel: AuthViewModel(interactor: MockAuthInteractor()),
-        onSwitchToLogin: {}
-    )
+    NavigationStack {
+        RegistrationView(
+            viewModel: AuthViewModel(interactor: MockAuthInteractor()),
+            onSwitchToLogin: {}
+        )
+    }
 }

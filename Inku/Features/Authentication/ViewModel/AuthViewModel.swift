@@ -16,7 +16,7 @@ import Observation
 
 @Observable
 @MainActor
-final class AuthViewModel {
+final class AuthViewModel: AuthViewModelProtocol {
 
     // MARK: - Private Properties
 

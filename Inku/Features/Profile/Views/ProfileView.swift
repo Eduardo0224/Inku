@@ -93,7 +93,7 @@ struct ProfileView: View {
 
             VStack(spacing: InkuSpacing.spacing8) {
                 Text(L10n.Profile.Unauthenticated.title)
-                    .font(.inkuTitle2)
+                    .font(.inkuBody)
                     .fontWeight(.bold)
                     .foregroundStyle(Color.inkuText)
 
@@ -116,7 +116,7 @@ struct ProfileView: View {
             VStack(spacing: InkuSpacing.spacing12) {
                 HStack {
                     Image(systemName: "iphone")
-                        .font(.inkuTitle3)
+                        .font(.inkuCaption)
                         .foregroundStyle(Color.inkuAccent)
 
                     VStack(alignment: .leading, spacing: InkuSpacing.spacing4) {
@@ -125,7 +125,7 @@ struct ProfileView: View {
                             .foregroundStyle(Color.inkuTextSecondary)
 
                         Text("\(localMangas.count) mangas")
-                            .font(.inkuTitle3)
+                            .font(.inkuCaption)
                             .fontWeight(.semibold)
                             .foregroundStyle(Color.inkuText)
                     }
@@ -226,7 +226,7 @@ struct ProfileView: View {
                         }
 
                         Text("\(localMangas.count) mangas")
-                            .font(.inkuTitle3)
+                            .font(.inkuCaption)
                             .fontWeight(.semibold)
                             .foregroundStyle(Color.inkuText)
                     }
@@ -245,7 +245,7 @@ struct ProfileView: View {
                         }
 
                         Text("-- mangas")
-                            .font(.inkuTitle3)
+                            .font(.inkuCaption)
                             .fontWeight(.semibold)
                             .foregroundStyle(Color.inkuText)
                     }
@@ -312,8 +312,7 @@ struct ProfileView: View {
 }
 
 #Preview("Authenticated") {
-    let interactor = MockAuthInteractor()
-    let viewModel = AuthViewModel(interactor: interactor)
+    let viewModel = AuthViewModel(interactor: MockAuthInteractor())
 
     ProfileView()
         .environment(\.authViewModel, viewModel)

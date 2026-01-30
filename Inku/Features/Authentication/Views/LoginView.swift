@@ -187,8 +187,10 @@ extension LoginView {
 // MARK: - Preview
 
 #Preview {
-    LoginView(
-        viewModel: AuthViewModel(interactor: MockAuthInteractor()),
-        onSwitchToRegister: {}
-    )
+    NavigationStack {
+        LoginView(
+            viewModel: AuthViewModel(interactor: MockAuthInteractor()),
+            onSwitchToRegister: {}
+        )
+    }
 }
