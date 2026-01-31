@@ -24,12 +24,14 @@ protocol AuthViewModelProtocol: AnyObject, Observable {
     var savedEmail: String? { get }
     var isFormValid: Bool { get }
     var isAuthenticated: Bool { get }
+    var cloudMangaCount: Int { get set }
 
     func checkAuthenticationStatus() async
     func register() async
     func login() async
     func logout() async
     func renewTokenIfNeeded() async
+    func fetchCloudCollection() async
     func clearForm()
     func clearPassword()
     func clearError()

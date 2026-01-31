@@ -26,6 +26,7 @@ final class MockAuthViewModel: AuthViewModelProtocol {
     var email: String = ""
     var password: String = ""
     var savedEmail: String?
+    var cloudMangaCount: Int = 0
     var isFormValid: Bool { true }
     var isAuthenticated: Bool {
         authState.isAuthenticated
@@ -90,6 +91,11 @@ final class MockAuthViewModel: AuthViewModelProtocol {
 
     func clearError() {
         errorMessage = nil
+    }
+
+    func fetchCloudCollection() async {
+        // Simulate fetch
+        cloudMangaCount = 3
     }
 
     // MARK: - Static Factory Methods

@@ -20,4 +20,5 @@ protocol AuthInteractorProtocol: Sendable {
     func logout() async throws
     func getSavedToken() async throws -> AuthToken?
     func getSavedEmail() async throws -> String?
+    func getCloudCollection(token: AuthToken) async throws -> [CloudCollectionManga]
 }

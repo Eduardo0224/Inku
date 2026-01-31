@@ -32,6 +32,7 @@ final class AuthViewModel: AuthViewModelProtocol {
     var email = ""
     var password = ""
     var savedEmail: String?
+    var cloudMangaCount: Int = 0
 
     // MARK: - Computed Properties
 
@@ -160,6 +161,21 @@ final class AuthViewModel: AuthViewModelProtocol {
 
     func clearError() {
         errorMessage = nil
+    }
+
+    func fetchCloudCollection() async {
+        guard case .authenticated(let token) = authState else {
+            cloudMangaCount = 0
+            return
+        }
+
+        do {
+            let collection = try await interactor.getCloudCollection(token: token)
+            cloudMangaCount = collection.count
+        } catch {
+            print("[AuthViewModel] Failed to fetch cloud collection: \(error)")
+            cloudMangaCount = 0
+        }
     }
 
     // MARK: - Private Functions

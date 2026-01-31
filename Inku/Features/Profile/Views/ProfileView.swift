@@ -78,6 +78,15 @@ struct ProfileView<T: AuthViewModelProtocol>: View {
         .task {
             await authViewModel.checkAuthenticationStatus()
         }
+        .onChange(of: authViewModel.authState) { _, newValue in
+            if case .authenticated = newValue {
+                Task {
+                    await authViewModel.fetchCloudCollection()
+                }
+            } else {
+                authViewModel.cloudMangaCount = 0
+            }
+        }
     }
 
     // MARK: - Private Views
@@ -261,7 +270,7 @@ struct ProfileView<T: AuthViewModelProtocol>: View {
                                 .foregroundStyle(Color.inkuTextSecondary)
                         }
 
-                        Text("-- mangas")
+                        Text("\(authViewModel.cloudMangaCount) mangas")
                             .font(.inkuCaption)
                             .fontWeight(.semibold)
                             .foregroundStyle(Color.inkuText)

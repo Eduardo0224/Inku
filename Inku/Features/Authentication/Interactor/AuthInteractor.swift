@@ -92,4 +92,15 @@ final class AuthInteractor: AuthInteractorProtocol, Sendable {
     func getSavedEmail() async throws -> String? {
         try keychainService.getEmail()
     }
+
+    func getCloudCollection(token: AuthToken) async throws -> [CloudCollectionManga] {
+        let headers = ["Authorization": token.bearerToken]
+
+        let collection: [CloudCollectionManga] = try await networkService.get(
+            endpoint: API.Endpoints.collectionManga,
+            headers: headers
+        )
+
+        return collection
+    }
 }
