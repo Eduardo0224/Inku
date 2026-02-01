@@ -66,9 +66,9 @@ struct SyncMangaRow: View {
         case .uploading:
             Color.inkuAccent
         case .uploaded:
-            Color.green.opacity(0.8)
+            Color.green.opacity(0.5)
         case .failed:
-            Color.red.opacity(0.85)
+            Color.red.opacity(0.55)
         }
     }
 }

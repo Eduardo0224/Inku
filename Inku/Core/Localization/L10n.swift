@@ -432,8 +432,26 @@ enum L10n {
             static let title = String(localized: .ProfileLocalizable.syncStatusTitle)
             static let button = String(localized: .ProfileLocalizable.syncButton)
             static let mangasToSync = String(localized: .ProfileLocalizable.mangasToSync)
+            static let fetchingCloud = String(localized: .ProfileLocalizable.syncFetchingCloud)
+            static let allSynced = String(localized: .ProfileLocalizable.syncAllSynced)
+            static let downloadingFromCloud = String(localized: .ProfileLocalizable.syncDownloadingFromCloud)
+            static let allLocal = String(localized: .ProfileLocalizable.syncAllLocal)
+            static let errorDownload = String(localized: .ProfileLocalizable.syncErrorDownload)
+
             static func mangasCount(_ count: Int) -> String {
                 String(localized: .ProfileLocalizable.mangasCount(count))
+            }
+
+            static func uploadingCount(_ count: Int) -> String {
+                String(localized: .ProfileLocalizable.syncUploadingCount(count))
+            }
+
+            static func successCount(_ count: Int) -> String {
+                String(localized: .ProfileLocalizable.syncSuccessCount(count))
+            }
+
+            static func downloadedCount(_ count: Int) -> String {
+                String(localized: .ProfileLocalizable.syncDownloadedCount(count))
             }
         }
 

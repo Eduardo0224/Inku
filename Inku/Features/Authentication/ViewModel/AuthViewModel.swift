@@ -219,7 +219,7 @@ final class AuthViewModel: AuthViewModelProtocol {
         do {
             let localMangas = try collectionViewModel.getAllLocalMangas()
 
-            syncProgress = "Fetching cloud collection..."
+            syncProgress = L10n.Profile.Sync.fetchingCloud
             let cloudCollection = try await interactor.getCloudCollection(token: token)
 
             let cloudMangaIds = Set(cloudCollection.map { $0.manga.id })
@@ -230,7 +230,7 @@ final class AuthViewModel: AuthViewModelProtocol {
 
             guard !mangasToUpload.isEmpty else {
                 if mangasToDownload.isEmpty {
-                    syncProgress = "All mangas are already synced"
+                    syncProgress = L10n.Profile.Sync.allSynced
                     try? await Task.sleep(for: .seconds(2))
                     syncProgress = nil
                 }
@@ -242,7 +242,7 @@ final class AuthViewModel: AuthViewModelProtocol {
                 syncStatuses[manga.mangaId] = .pending
             }
 
-            syncProgress = "Uploading \(mangasToUpload.count) manga(s)..."
+            syncProgress = L10n.Profile.Sync.uploadingCount(mangasToUpload.count)
 
             let uploadResults = await withTaskGroup(of: (Int, Result<Void, Error>).self) { group in
                 for manga in mangasToUpload {
@@ -284,7 +284,7 @@ final class AuthViewModel: AuthViewModelProtocol {
 
             await fetchCloudCollection()
 
-            syncProgress = "Successfully synced \(mangasToUpload.count) manga(s)"
+            syncProgress = L10n.Profile.Sync.successCount(mangasToUpload.count)
             isSyncing = false
 
             try? await Task.sleep(for: .seconds(2))
@@ -313,7 +313,7 @@ final class AuthViewModel: AuthViewModelProtocol {
     func downloadCloudToLocal(collectionViewModel: CollectionViewModelProtocol) async {
         guard case .authenticated(let token) = authState else { return }
 
-        syncProgress = "Downloading from cloud..."
+        syncProgress = L10n.Profile.Sync.downloadingFromCloud
 
         do {
             let cloudCollection: [CloudCollectionManga]
@@ -332,9 +332,9 @@ final class AuthViewModel: AuthViewModelProtocol {
             let localCount = (try? collectionViewModel.getLocalMangaIds())?.count ?? 0
             let addedCount = cloudCollection.count - localCount
             if addedCount > 0 {
-                syncProgress = "Downloaded \(addedCount) manga(s)"
+                syncProgress = L10n.Profile.Sync.downloadedCount(addedCount)
             } else {
-                syncProgress = "All cloud mangas already in local"
+                syncProgress = L10n.Profile.Sync.allLocal
             }
             try? await Task.sleep(for: .seconds(2))
             syncProgress = nil
@@ -346,7 +346,7 @@ final class AuthViewModel: AuthViewModelProtocol {
                 showSessionExpiredAlert = true
                 clearForm()
             } else {
-                errorMessage = "Failed to download cloud collection"
+                errorMessage = L10n.Profile.Sync.errorDownload
             }
         }
     }
