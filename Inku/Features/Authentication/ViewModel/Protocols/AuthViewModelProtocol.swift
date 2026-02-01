@@ -25,6 +25,12 @@ protocol AuthViewModelProtocol: AnyObject, Observable {
     var isFormValid: Bool { get }
     var isAuthenticated: Bool { get }
     var cloudMangaCount: Int { get set }
+    var cloudMangaIds: Set<Int> { get set }
+    var isSyncing: Bool { get }
+    var isLoadingCloud: Bool { get }
+    var syncProgress: String? { get }
+    var syncStatuses: [Int: SyncStatus] { get }
+    var showSessionExpiredAlert: Bool { get set }
 
     func checkAuthenticationStatus() async
     func register() async
@@ -32,6 +38,9 @@ protocol AuthViewModelProtocol: AnyObject, Observable {
     func logout() async
     func renewTokenIfNeeded() async
     func fetchCloudCollection() async
+    func syncToCloud(collectionViewModel: CollectionViewModelProtocol) async
+    func downloadCloudToLocal(collectionViewModel: CollectionViewModelProtocol) async
+    func fullSync(collectionViewModel: CollectionViewModelProtocol) async
     func clearForm()
     func clearPassword()
     func clearError()

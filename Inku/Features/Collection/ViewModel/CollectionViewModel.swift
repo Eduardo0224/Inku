@@ -217,6 +217,68 @@ final class CollectionViewModel: CollectionViewModelProtocol {
         errorMessage = nil
     }
 
+    func addCloudMangasToLocal(_ cloudMangas: [CloudCollectionManga]) throws {
+        guard let modelContext else {
+            let error = CollectionError.contextNotAvailable
+            handleError(error)
+            throw error
+        }
+
+        // Get existing local manga IDs
+        let descriptor = FetchDescriptor<CollectionManga>()
+        let localMangas = try modelContext.fetch(descriptor)
+        let localMangaIds = Set(localMangas.map { $0.mangaId })
+
+        // Filter mangas that are in cloud but not in local
+        let mangasToAdd = cloudMangas.filter { !localMangaIds.contains($0.manga.id) }
+
+        // Add each manga to local
+        for cloudManga in mangasToAdd {
+            let collectionManga = CollectionManga(
+                mangaId: cloudManga.manga.id,
+                title: cloudManga.manga.title,
+                coverImageURL: cloudManga.manga.mainPicture,
+                totalVolumes: cloudManga.manga.volumes,
+                volumesOwnedCount: cloudManga.volumesOwned.count,
+                currentReadingVolume: cloudManga.readingVolume,
+                hasCompleteCollection: cloudManga.completeCollection
+            )
+
+            modelContext.insert(collectionManga)
+        }
+
+        // Save context
+        do {
+            if modelContext.hasChanges {
+                try modelContext.save()
+                errorMessage = nil
+            }
+        } catch {
+            let collectionError = CollectionError.saveFailed(error)
+            handleError(collectionError)
+            throw collectionError
+        }
+    }
+
+    func getAllLocalMangas() throws -> [CollectionManga] {
+        guard let modelContext else {
+            throw CollectionError.contextNotAvailable
+        }
+
+        let descriptor = FetchDescriptor<CollectionManga>()
+        return try modelContext.fetch(descriptor)
+    }
+
+    func getLocalMangaIds() throws -> Set<Int> {
+        guard let modelContext else {
+            throw CollectionError.contextNotAvailable
+        }
+
+        let descriptor = FetchDescriptor<CollectionManga>()
+        let localMangas = try modelContext.fetch(descriptor)
+        return Set(localMangas.map { $0.mangaId })
+    }
+
     // MARK: - Private Functions
 
     private func handleError(_ error: Error) {

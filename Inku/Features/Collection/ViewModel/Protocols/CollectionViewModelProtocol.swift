@@ -55,4 +55,10 @@ protocol CollectionViewModelProtocol {
     // MARK: - Model Context
 
     func setModelContext(_ modelContext: ModelContext)
+
+    // MARK: - Cloud Sync
+
+    func getAllLocalMangas() throws -> [CollectionManga]
+    func addCloudMangasToLocal(_ cloudMangas: [CloudCollectionManga]) throws
+    func getLocalMangaIds() throws -> Set<Int>
 }

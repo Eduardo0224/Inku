@@ -431,10 +431,33 @@ enum L10n {
         enum Sync {
             static let title = String(localized: .ProfileLocalizable.syncStatusTitle)
             static let button = String(localized: .ProfileLocalizable.syncButton)
+            static let mangasToSync = String(localized: .ProfileLocalizable.mangasToSync)
+            static func mangasCount(_ count: Int) -> String {
+                String(localized: .ProfileLocalizable.mangasCount(count))
+            }
         }
 
         enum Section {
             static let account = String(localized: .ProfileLocalizable.accountSection)
+        }
+
+        enum Labels {
+            static let local = String(localized: .ProfileLocalizable.localLabel)
+            static let cloud = String(localized: .ProfileLocalizable.cloudLabel)
+        }
+
+        enum SessionExpired {
+            static let title = String(localized: .ProfileLocalizable.sessionExpiredTitle)
+            static let message = String(localized: .ProfileLocalizable.sessionExpiredMessage)
+            static let okButton = String(localized: .ProfileLocalizable.okButton)
+        }
+
+        enum Loading {
+            static let cloudCollection = String(localized: .ProfileLocalizable.loadingCloudCollection)
+        }
+
+        static func version(_ version: String) -> String {
+            String(localized: .ProfileLocalizable.versionLabel(version))
         }
     }
 }

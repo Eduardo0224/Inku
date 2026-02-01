@@ -27,6 +27,12 @@ final class MockAuthViewModel: AuthViewModelProtocol {
     var password: String = ""
     var savedEmail: String?
     var cloudMangaCount: Int = 0
+    var cloudMangaIds: Set<Int> = []
+    var isSyncing: Bool = false
+    var isLoadingCloud: Bool = false
+    var syncProgress: String?
+    var syncStatuses: [Int: SyncStatus] = [:]
+    var showSessionExpiredAlert: Bool = false
     var isFormValid: Bool { true }
     var isAuthenticated: Bool {
         authState.isAuthenticated
@@ -94,8 +100,30 @@ final class MockAuthViewModel: AuthViewModelProtocol {
     }
 
     func fetchCloudCollection() async {
-        // Simulate fetch
         cloudMangaCount = 3
+    }
+
+    func syncToCloud(collectionViewModel: CollectionViewModelProtocol) async {
+        isSyncing = true
+        syncProgress = "Syncing..."
+        let localMangas = (try? collectionViewModel.getAllLocalMangas()) ?? []
+        cloudMangaCount = localMangas.count
+        syncProgress = "Synced successfully"
+        isSyncing = false
+        syncProgress = nil
+    }
+
+    func downloadCloudToLocal(collectionViewModel: CollectionViewModelProtocol) async {
+        syncProgress = "Downloading from cloud..."
+        try? await Task.sleep(for: .seconds(1))
+        syncProgress = "Downloaded successfully"
+        try? await Task.sleep(for: .seconds(1))
+        syncProgress = nil
+    }
+
+    func fullSync(collectionViewModel: CollectionViewModelProtocol) async {
+        await syncToCloud(collectionViewModel: collectionViewModel)
+        await downloadCloudToLocal(collectionViewModel: collectionViewModel)
     }
 
     // MARK: - Static Factory Methods

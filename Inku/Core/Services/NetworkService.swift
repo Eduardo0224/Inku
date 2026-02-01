@@ -135,6 +135,30 @@ final class NetworkService: NetworkServiceProtocol, Sendable {
         return try await perform(request)
     }
 
+    func post<T: Encodable & Sendable>(endpoint: String, body: T, headers: [String: String]) async throws {
+        let url = baseURL.appending(path: endpoint, directoryHint: .notDirectory)
+
+        guard let finalURL = URL(string: url.absoluteString) else {
+            throw NetworkError.invalidURL
+        }
+
+        var request = URLRequest(url: finalURL)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+
+        for (key, value) in headers {
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        request.httpBody = try encoder.encode(body)
+
+        let (_, response) = try await session.data(for: request)
+        try validateResponse(response)
+    }
+
     func delete(endpoint: String, headers: [String: String]) async throws {
         let url = baseURL.appending(path: endpoint, directoryHint: .notDirectory)
 

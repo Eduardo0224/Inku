@@ -67,4 +67,16 @@ final class EmptyCollectionViewModel: CollectionViewModelProtocol {
     func loadMangaById(_ id: Int) async {
         // No-op: EmptyCollectionViewModel is a placeholder
     }
+
+    func getAllLocalMangas() throws -> [CollectionManga] {
+        []
+    }
+
+    func addCloudMangasToLocal(_ cloudMangas: [CloudCollectionManga]) throws {
+        fatalError("CollectionViewModel not provided in environment")
+    }
+
+    func getLocalMangaIds() throws -> Set<Int> {
+        []
+    }
 }

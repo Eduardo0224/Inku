@@ -20,5 +20,6 @@ protocol NetworkServiceProtocol: Sendable {
     func post<T: Encodable & Sendable, U: Decodable & Sendable>(endpoint: String, body: T, queryItems: [URLQueryItem]) async throws -> U
     func post<T: Encodable & Sendable, U: Decodable & Sendable>(endpoint: String, body: T, headers: [String: String]) async throws -> U
     func post<U: Decodable & Sendable>(endpoint: String, headers: [String: String]) async throws -> U
+    func post<T: Encodable & Sendable>(endpoint: String, body: T, headers: [String: String]) async throws
     func delete(endpoint: String, headers: [String: String]) async throws
 }

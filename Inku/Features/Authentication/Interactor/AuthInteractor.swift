@@ -103,4 +103,14 @@ final class AuthInteractor: AuthInteractorProtocol, Sendable {
 
         return collection
     }
+
+    func addToCloudCollection(token: AuthToken, manga: CreateCollectionMangaRequest) async throws {
+        let headers = ["Authorization": token.bearerToken]
+
+        try await networkService.post(
+            endpoint: API.Endpoints.collectionManga,
+            body: manga,
+            headers: headers
+        )
+    }
 }

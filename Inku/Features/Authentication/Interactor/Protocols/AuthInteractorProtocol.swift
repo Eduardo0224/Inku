@@ -21,4 +21,5 @@ protocol AuthInteractorProtocol: Sendable {
     func getSavedToken() async throws -> AuthToken?
     func getSavedEmail() async throws -> String?
     func getCloudCollection(token: AuthToken) async throws -> [CloudCollectionManga]
+    func addToCloudCollection(token: AuthToken, manga: CreateCollectionMangaRequest) async throws
 }

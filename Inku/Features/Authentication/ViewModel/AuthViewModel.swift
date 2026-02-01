@@ -23,6 +23,9 @@ final class AuthViewModel: AuthViewModelProtocol {
     @ObservationIgnored
     private let interactor: AuthInteractorProtocol
 
+    @ObservationIgnored
+    private var cachedCloudCollection: [CloudCollectionManga]?
+
     // MARK: - Properties
 
     var authState: AuthState = .unauthenticated
@@ -33,6 +36,12 @@ final class AuthViewModel: AuthViewModelProtocol {
     var password = ""
     var savedEmail: String?
     var cloudMangaCount: Int = 0
+    var cloudMangaIds: Set<Int> = []
+    var isSyncing: Bool = false
+    var isLoadingCloud: Bool = false
+    var syncProgress: String?
+    var syncStatuses: [Int: SyncStatus] = [:]
+    var showSessionExpiredAlert: Bool = false
 
     // MARK: - Computed Properties
 
@@ -153,6 +162,8 @@ final class AuthViewModel: AuthViewModelProtocol {
         email = ""
         password = ""
         errorMessage = nil
+        cachedCloudCollection = nil
+        cloudMangaIds = []
     }
 
     func clearPassword() {
@@ -166,15 +177,177 @@ final class AuthViewModel: AuthViewModelProtocol {
     func fetchCloudCollection() async {
         guard case .authenticated(let token) = authState else {
             cloudMangaCount = 0
+            cloudMangaIds = []
+            cachedCloudCollection = nil
+            isLoadingCloud = false
             return
         }
 
+        isLoadingCloud = true
+
         do {
             let collection = try await interactor.getCloudCollection(token: token)
+            cachedCloudCollection = collection
             cloudMangaCount = collection.count
+            cloudMangaIds = Set(collection.map { $0.manga.id })
+            isLoadingCloud = false
         } catch {
-            print("[AuthViewModel] Failed to fetch cloud collection: \(error)")
             cloudMangaCount = 0
+            cloudMangaIds = []
+            cachedCloudCollection = nil
+            isLoadingCloud = false
+
+            if let networkError = error as? NetworkError,
+               case .unauthorized = networkError {
+                authState = .unauthenticated
+                showSessionExpiredAlert = true
+                clearForm()
+            }
+        }
+    }
+
+    func syncToCloud(collectionViewModel: CollectionViewModelProtocol) async {
+        guard case .authenticated(let token) = authState else {
+            errorMessage = L10n.Error.generic
+            return
+        }
+
+        isSyncing = true
+        errorMessage = nil
+        syncStatuses.removeAll()
+
+        do {
+            let localMangas = try collectionViewModel.getAllLocalMangas()
+
+            syncProgress = "Fetching cloud collection..."
+            let cloudCollection = try await interactor.getCloudCollection(token: token)
+
+            let cloudMangaIds = Set(cloudCollection.map { $0.manga.id })
+            let mangasToUpload = localMangas.filter { !cloudMangaIds.contains($0.mangaId) }
+
+            let localMangaIds = Set(localMangas.map { $0.mangaId })
+            let mangasToDownload = cloudCollection.filter { !localMangaIds.contains($0.manga.id) }
+
+            guard !mangasToUpload.isEmpty else {
+                if mangasToDownload.isEmpty {
+                    syncProgress = "All mangas are already synced"
+                    try? await Task.sleep(for: .seconds(2))
+                    syncProgress = nil
+                }
+                isSyncing = false
+                return
+            }
+
+            for manga in mangasToUpload {
+                syncStatuses[manga.mangaId] = .pending
+            }
+
+            syncProgress = "Uploading \(mangasToUpload.count) manga(s)..."
+
+            let uploadResults = await withTaskGroup(of: (Int, Result<Void, Error>).self) { group in
+                for manga in mangasToUpload {
+                    let mangaId = manga.mangaId
+                    let request = CreateCollectionMangaRequest(from: manga)
+
+                    group.addTask { [interactor] in
+                        do {
+                            try await interactor.addToCloudCollection(token: token, manga: request)
+                            return (mangaId, .success(()))
+                        } catch {
+                            return (mangaId, .failure(error))
+                        }
+                    }
+
+                    syncStatuses[mangaId] = .uploading
+                }
+
+                var results: [(Int, Result<Void, Error>)] = []
+                for await result in group {
+                    results.append(result)
+                }
+                return results
+            }
+
+            for (mangaId, result) in uploadResults {
+                switch result {
+                case .success:
+                    syncStatuses[mangaId] = .uploaded
+                case .failure:
+                    syncStatuses[mangaId] = .failed
+                }
+            }
+
+            let failedCount = syncStatuses.values.filter { $0 == .failed }.count
+            if failedCount > 0 {
+                throw NSError(domain: "AuthViewModel", code: -1, userInfo: [NSLocalizedDescriptionKey: "\(failedCount) manga(s) failed to upload"])
+            }
+
+            await fetchCloudCollection()
+
+            syncProgress = "Successfully synced \(mangasToUpload.count) manga(s)"
+            isSyncing = false
+
+            try? await Task.sleep(for: .seconds(2))
+            syncProgress = nil
+            syncStatuses.removeAll()
+        } catch {
+            isSyncing = false
+            syncProgress = nil
+
+            if let networkError = error as? NetworkError, case .unauthorized = networkError {
+                authState = .unauthenticated
+                showSessionExpiredAlert = true
+                clearForm()
+                syncStatuses.removeAll()
+            } else {
+                handleError(error)
+            }
+        }
+    }
+
+    func fullSync(collectionViewModel: CollectionViewModelProtocol) async {
+        await syncToCloud(collectionViewModel: collectionViewModel)
+        await downloadCloudToLocal(collectionViewModel: collectionViewModel)
+    }
+
+    func downloadCloudToLocal(collectionViewModel: CollectionViewModelProtocol) async {
+        guard case .authenticated(let token) = authState else { return }
+
+        syncProgress = "Downloading from cloud..."
+
+        do {
+            let cloudCollection: [CloudCollectionManga]
+
+            if let cached = cachedCloudCollection {
+                cloudCollection = cached
+            } else {
+                cloudCollection = try await interactor.getCloudCollection(token: token)
+                cachedCloudCollection = cloudCollection
+                cloudMangaCount = cloudCollection.count
+                cloudMangaIds = Set(cloudCollection.map { $0.manga.id })
+            }
+
+            try collectionViewModel.addCloudMangasToLocal(cloudCollection)
+
+            let localCount = (try? collectionViewModel.getLocalMangaIds())?.count ?? 0
+            let addedCount = cloudCollection.count - localCount
+            if addedCount > 0 {
+                syncProgress = "Downloaded \(addedCount) manga(s)"
+            } else {
+                syncProgress = "All cloud mangas already in local"
+            }
+            try? await Task.sleep(for: .seconds(2))
+            syncProgress = nil
+        } catch {
+            syncProgress = nil
+
+            if let networkError = error as? NetworkError, case .unauthorized = networkError {
+                authState = .unauthenticated
+                showSessionExpiredAlert = true
+                clearForm()
+            } else {
+                errorMessage = "Failed to download cloud collection"
+            }
         }
     }
 
