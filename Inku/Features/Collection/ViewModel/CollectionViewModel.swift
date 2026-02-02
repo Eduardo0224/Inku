@@ -224,15 +224,12 @@ final class CollectionViewModel: CollectionViewModelProtocol {
             throw error
         }
 
-        // Get existing local manga IDs
         let descriptor = FetchDescriptor<CollectionManga>()
         let localMangas = try modelContext.fetch(descriptor)
         let localMangaIds = Set(localMangas.map { $0.mangaId })
 
-        // Filter mangas that are in cloud but not in local
         let mangasToAdd = cloudMangas.filter { !localMangaIds.contains($0.manga.id) }
 
-        // Add each manga to local
         for cloudManga in mangasToAdd {
             let collectionManga = CollectionManga(
                 mangaId: cloudManga.manga.id,
@@ -247,7 +244,6 @@ final class CollectionViewModel: CollectionViewModelProtocol {
             modelContext.insert(collectionManga)
         }
 
-        // Save context
         do {
             if modelContext.hasChanges {
                 try modelContext.save()

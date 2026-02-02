@@ -24,7 +24,6 @@ struct SyncStatusSection<T: AuthViewModelProtocol>: View {
 
     let localMangas: [CollectionManga]
     @Bindable var authViewModel: T
-    let collectionViewModel: CollectionViewModelProtocol
 
     // MARK: - Body
 
@@ -138,7 +137,7 @@ struct SyncStatusSection<T: AuthViewModelProtocol>: View {
     private var syncButton: some View {
         Button {
             Task {
-                await authViewModel.fullSync(collectionViewModel: collectionViewModel)
+                await authViewModel.fullSync()
             }
         } label: {
             HStack {
@@ -169,18 +168,19 @@ struct SyncStatusSection<T: AuthViewModelProtocol>: View {
 ) {
     @Previewable @State var isSyncListExpanded = true
 
+    let collectionViewModel = MockCollectionViewModel()
     let authViewModel: MockAuthViewModel = {
         let viewModel = MockAuthViewModel.authenticated
         viewModel.cloudMangaIds = [2]
         viewModel.cloudMangaCount = 1
+        viewModel.setCollectionViewModel(collectionViewModel)
         return viewModel
     }()
 
     SyncStatusSection(
         isSyncListExpanded: $isSyncListExpanded,
         localMangas: .previewData,
-        authViewModel: authViewModel,
-        collectionViewModel: MockCollectionViewModel()
+        authViewModel: authViewModel
     )
     .padding()
     .background(Color.inkuSurface)

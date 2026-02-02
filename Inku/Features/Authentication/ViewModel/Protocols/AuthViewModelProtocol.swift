@@ -31,6 +31,7 @@ protocol AuthViewModelProtocol: AnyObject, Observable {
     var syncProgress: String? { get }
     var syncStatuses: [Int: SyncStatus] { get }
     var showSessionExpiredAlert: Bool { get set }
+    var collectionViewModel: CollectionViewModelProtocol? { get set }
 
     func checkAuthenticationStatus() async
     func register() async
@@ -38,9 +39,10 @@ protocol AuthViewModelProtocol: AnyObject, Observable {
     func logout() async
     func renewTokenIfNeeded() async
     func fetchCloudCollection() async
-    func syncToCloud(collectionViewModel: CollectionViewModelProtocol) async
-    func downloadCloudToLocal(collectionViewModel: CollectionViewModelProtocol) async
-    func fullSync(collectionViewModel: CollectionViewModelProtocol) async
+    func setCollectionViewModel(_ collectionViewModel: CollectionViewModelProtocol)
+    func syncToCloud() async
+    func downloadCloudToLocal() async
+    func fullSync() async
     func clearForm()
     func clearPassword()
     func clearError()

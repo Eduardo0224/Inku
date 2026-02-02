@@ -26,6 +26,9 @@ final class AuthViewModel: AuthViewModelProtocol {
     @ObservationIgnored
     private var cachedCloudCollection: [CloudCollectionManga]?
 
+    @ObservationIgnored
+    var collectionViewModel: CollectionViewModelProtocol?
+
     // MARK: - Properties
 
     var authState: AuthState = .unauthenticated
@@ -174,6 +177,10 @@ final class AuthViewModel: AuthViewModelProtocol {
         errorMessage = nil
     }
 
+    func setCollectionViewModel(_ collectionViewModel: CollectionViewModelProtocol) {
+        self.collectionViewModel = collectionViewModel
+    }
+
     func fetchCloudCollection() async {
         guard case .authenticated(let token) = authState else {
             cloudMangaCount = 0
@@ -206,8 +213,9 @@ final class AuthViewModel: AuthViewModelProtocol {
         }
     }
 
-    func syncToCloud(collectionViewModel: CollectionViewModelProtocol) async {
-        guard case .authenticated(let token) = authState else {
+    func syncToCloud() async {
+        guard case .authenticated(let token) = authState,
+              let collectionViewModel else {
             errorMessage = L10n.Error.generic
             return
         }
@@ -305,13 +313,16 @@ final class AuthViewModel: AuthViewModelProtocol {
         }
     }
 
-    func fullSync(collectionViewModel: CollectionViewModelProtocol) async {
-        await syncToCloud(collectionViewModel: collectionViewModel)
-        await downloadCloudToLocal(collectionViewModel: collectionViewModel)
+    func fullSync() async {
+        await syncToCloud()
+        await downloadCloudToLocal()
     }
 
-    func downloadCloudToLocal(collectionViewModel: CollectionViewModelProtocol) async {
-        guard case .authenticated(let token) = authState else { return }
+    func downloadCloudToLocal() async {
+        guard case .authenticated(let token) = authState,
+              let collectionViewModel else {
+            return
+        }
 
         syncProgress = L10n.Profile.Sync.downloadingFromCloud
 

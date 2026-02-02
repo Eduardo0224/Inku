@@ -117,13 +117,14 @@ struct ProfileView<T: AuthViewModelProtocol>: View {
         }
         .task {
             collectionViewModel.setModelContext(modelContext)
+            authViewModel.setCollectionViewModel(collectionViewModel)
             await authViewModel.checkAuthenticationStatus()
         }
         .onChange(of: authViewModel.authState) { _, newValue in
             if case .authenticated = newValue {
                 Task {
                     await authViewModel.fetchCloudCollection()
-                    await authViewModel.downloadCloudToLocal(collectionViewModel: collectionViewModel)
+                    await authViewModel.downloadCloudToLocal()
                 }
             } else {
                 authViewModel.cloudMangaCount = 0
@@ -140,8 +141,7 @@ struct ProfileView<T: AuthViewModelProtocol>: View {
             SyncStatusSection(
                 isSyncListExpanded: $isSyncListExpanded,
                 localMangas: localMangas,
-                authViewModel: authViewModel,
-                collectionViewModel: collectionViewModel
+                authViewModel: authViewModel
             )
         }
     }
