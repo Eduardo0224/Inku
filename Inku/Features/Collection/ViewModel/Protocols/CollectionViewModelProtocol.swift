@@ -50,6 +50,7 @@ protocol CollectionViewModelProtocol {
 
     // MARK: - Error Handling
 
+    func setError(_ message: String)
     func clearError()
 
     // MARK: - Model Context

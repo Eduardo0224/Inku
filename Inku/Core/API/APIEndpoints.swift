@@ -71,7 +71,7 @@ enum API {
         static let collectionManga = "/collection/manga"
 
         static func collectionManga(id: Int) -> String {
-            "/collection/manga/\(id)"
+            "\(collectionManga)/\(id)"
         }
     }
 

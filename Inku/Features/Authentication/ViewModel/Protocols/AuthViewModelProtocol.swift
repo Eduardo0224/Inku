@@ -16,6 +16,8 @@ import Foundation
 @MainActor
 protocol AuthViewModelProtocol: AnyObject, Observable {
 
+    // MARK: - Properties
+
     var authState: AuthState { get }
     var isLoading: Bool { get }
     var errorMessage: String? { get }
@@ -33,6 +35,8 @@ protocol AuthViewModelProtocol: AnyObject, Observable {
     var showSessionExpiredAlert: Bool { get set }
     var collectionViewModel: CollectionViewModelProtocol? { get set }
 
+    // MARK: - Functions
+
     func checkAuthenticationStatus() async
     func register() async
     func login() async
@@ -43,6 +47,7 @@ protocol AuthViewModelProtocol: AnyObject, Observable {
     func syncToCloud() async
     func downloadCloudToLocal() async
     func fullSync() async
+    func deleteMangaFromCollection(_ manga: CollectionManga) async throws
     func clearForm()
     func clearPassword()
     func clearError()

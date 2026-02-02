@@ -57,8 +57,6 @@ final class MockAuthViewModel: AuthViewModelProtocol {
 
     func register() async {
         isLoading = true
-        // Simulate network delay
-        try? await Task.sleep(for: .milliseconds(500))
         authState = .authenticated(.init(token: "mock_token_12345"))
         savedEmail = email
         isLoading = false
@@ -66,8 +64,6 @@ final class MockAuthViewModel: AuthViewModelProtocol {
 
     func login() async {
         isLoading = true
-        // Simulate network delay
-        try? await Task.sleep(for: .milliseconds(500))
         authState = .authenticated(.init(token: "mock_token_12345"))
         savedEmail = email
         isLoading = false
@@ -75,8 +71,6 @@ final class MockAuthViewModel: AuthViewModelProtocol {
 
     func logout() async {
         isLoading = true
-        // Simulate network delay
-        try? await Task.sleep(for: .milliseconds(300))
         authState = .unauthenticated
         clearForm()
         isLoading = false
@@ -122,15 +116,24 @@ final class MockAuthViewModel: AuthViewModelProtocol {
 
     func downloadCloudToLocal() async {
         syncProgress = "Downloading from cloud..."
-        try? await Task.sleep(for: .seconds(1))
         syncProgress = "Downloaded successfully"
-        try? await Task.sleep(for: .seconds(1))
         syncProgress = nil
     }
 
     func fullSync() async {
         await syncToCloud()
         await downloadCloudToLocal()
+    }
+
+    func deleteMangaFromCollection(_ manga: CollectionManga) async throws {
+        guard let collectionViewModel else {
+            throw NSError(domain: "MockAuthViewModel", code: -1, userInfo: [
+                NSLocalizedDescriptionKey: "CollectionViewModel not available"
+            ])
+        }
+
+        // Mock: just delete locally
+        try collectionViewModel.removeFromCollection(manga)
     }
 
     // MARK: - Static Factory Methods

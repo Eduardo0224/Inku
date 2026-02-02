@@ -32,6 +32,7 @@ enum L10n {
         static let done = String(localized: .commonDone)
         static let retry = String(localized: .commonRetry)
         static let loading = String(localized: .commonLoading)
+        static let deleting = String(localized: .commonDeleting)
     }
 
     // MARK: - Errors (Localizable.xcstrings)
@@ -452,6 +453,10 @@ enum L10n {
 
             static func downloadedCount(_ count: Int) -> String {
                 String(localized: .ProfileLocalizable.syncDownloadedCount(count))
+            }
+
+            static func deletingCount(_ count: Int) -> String {
+                String(localized: .ProfileLocalizable.syncDeletingCount(count))
             }
         }
 

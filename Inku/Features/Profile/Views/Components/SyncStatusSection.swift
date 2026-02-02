@@ -39,7 +39,7 @@ struct SyncStatusSection<T: AuthViewModelProtocol>: View {
 
                 let mangasToSync = localMangas.filter { !authViewModel.cloudMangaIds.contains($0.mangaId) }
 
-                if !mangasToSync.isEmpty && !authViewModel.cloudMangaIds.isEmpty {
+                if !mangasToSync.isEmpty {
                     mangasToSyncList(mangasToSync)
                 }
 

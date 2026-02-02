@@ -13,8 +13,6 @@
 
 import Foundation
 
-/// Represents a manga in the user's cloud collection
-/// Response from GET /collection/manga
 struct CloudCollectionManga: Codable, Sendable {
 
     // MARK: - Nested Types

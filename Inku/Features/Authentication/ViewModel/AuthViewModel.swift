@@ -24,6 +24,9 @@ final class AuthViewModel: AuthViewModelProtocol {
     private let interactor: AuthInteractorProtocol
 
     @ObservationIgnored
+    private let syncMessageDelay: Duration
+
+    @ObservationIgnored
     private var cachedCloudCollection: [CloudCollectionManga]?
 
     @ObservationIgnored
@@ -59,8 +62,12 @@ final class AuthViewModel: AuthViewModelProtocol {
 
     // MARK: - Initializers
 
-    init(interactor: AuthInteractorProtocol = AuthInteractor()) {
+    init(
+        interactor: AuthInteractorProtocol = AuthInteractor(),
+        syncMessageDelay: Duration = .seconds(0)
+    ) {
         self.interactor = interactor
+        self.syncMessageDelay = syncMessageDelay
     }
 
     // MARK: - Functions
@@ -239,7 +246,7 @@ final class AuthViewModel: AuthViewModelProtocol {
             guard !mangasToUpload.isEmpty else {
                 if mangasToDownload.isEmpty {
                     syncProgress = L10n.Profile.Sync.allSynced
-                    try? await Task.sleep(for: .seconds(2))
+                    try? await Task.sleep(for: syncMessageDelay)
                     syncProgress = nil
                 }
                 isSyncing = false
@@ -295,7 +302,7 @@ final class AuthViewModel: AuthViewModelProtocol {
             syncProgress = L10n.Profile.Sync.successCount(mangasToUpload.count)
             isSyncing = false
 
-            try? await Task.sleep(for: .seconds(2))
+            try? await Task.sleep(for: syncMessageDelay)
             syncProgress = nil
             syncStatuses.removeAll()
         } catch {
@@ -316,6 +323,26 @@ final class AuthViewModel: AuthViewModelProtocol {
     func fullSync() async {
         await syncToCloud()
         await downloadCloudToLocal()
+    }
+
+    func deleteMangaFromCollection(_ manga: CollectionManga) async throws {
+        guard let collectionViewModel else {
+            throw NSError(domain: "AuthViewModel", code: -1, userInfo: [
+                NSLocalizedDescriptionKey: L10n.Error.generic
+            ])
+        }
+
+        if case .authenticated(let token) = authState {
+            if cloudMangaIds.contains(manga.mangaId) {
+                try await interactor.deleteFromCloudCollection(token: token, mangaId: manga.mangaId)
+
+                cloudMangaIds.remove(manga.mangaId)
+                cloudMangaCount = max(0, cloudMangaCount - 1)
+                cachedCloudCollection = nil
+            }
+        }
+
+        try collectionViewModel.removeFromCollection(manga)
     }
 
     func downloadCloudToLocal() async {
@@ -347,7 +374,7 @@ final class AuthViewModel: AuthViewModelProtocol {
             } else {
                 syncProgress = L10n.Profile.Sync.allLocal
             }
-            try? await Task.sleep(for: .seconds(2))
+            try? await Task.sleep(for: syncMessageDelay)
             syncProgress = nil
         } catch {
             syncProgress = nil

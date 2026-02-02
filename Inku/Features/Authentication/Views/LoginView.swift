@@ -35,11 +35,8 @@ struct LoginView<T: AuthViewModelProtocol>: View {
         ScrollView {
             VStack(spacing: InkuSpacing.spacing32) {
                 headerSection
-
                 formSection
-
                 actionButton
-
                 switchPrompt
             }
             .padding(InkuSpacing.spacing24)
@@ -72,7 +69,8 @@ struct LoginView<T: AuthViewModelProtocol>: View {
 
     private var headerSection: some View {
         VStack(spacing: InkuSpacing.spacing12) {
-            Image(systemName: "book.fill")
+            Image(systemName: "book")
+                .symbolVariant(.fill)
                 .font(.system(size: 60))
                 .foregroundStyle(Color.inkuAccent)
                 .padding(.top, InkuSpacing.spacing32)
@@ -152,19 +150,20 @@ struct LoginView<T: AuthViewModelProtocol>: View {
             }
         } label: {
             if viewModel.isLoading {
-                ProgressView()
-                    .tint(.inkuTextOnAccent)
+                InkuLoadingView()
+                    .frame(maxWidth: .infinity)
             } else {
                 Text(L10n.Authentication.Login.button)
                     .font(.inkuBody)
                     .foregroundStyle(Color.inkuTextOnAccent)
                     .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity)
             }
         }
-        .frame(maxWidth: .infinity)
         .frame(height: 50)
         .background(viewModel.isFormValid ? Color.inkuAccent : Color.inkuTextTertiary)
         .clipShape(RoundedRectangle(cornerRadius: InkuRadius.radius12))
+        .contentShape(Rectangle())
         .disabled(!viewModel.isFormValid || viewModel.isLoading)
     }
 

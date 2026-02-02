@@ -55,18 +55,13 @@ final class EmptyCollectionViewModel: CollectionViewModelProtocol {
 
     func getMostRecentlyModified(limit: Int) -> [CollectionManga] { [] }
 
-    func setModelContext(_ modelContext: ModelContext) {
-        // No-op: EmptyCollectionViewModel is a placeholder
-        // This prevents crashes in previews when CollectionViewModel is not provided
-    }
+    func setModelContext(_ modelContext: ModelContext) { }
 
-    func clearError() {
-        // No-op: EmptyCollectionViewModel is a placeholder
-    }
+    func setError(_ message: String) { }
 
-    func loadMangaById(_ id: Int) async {
-        // No-op: EmptyCollectionViewModel is a placeholder
-    }
+    func clearError() { }
+
+    func loadMangaById(_ id: Int) async { }
 
     func getAllLocalMangas() throws -> [CollectionManga] {
         []

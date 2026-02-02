@@ -137,7 +137,6 @@ struct ProfileView<T: AuthViewModelProtocol>: View {
     private var authenticatedContent: some View {
         VStack(spacing: InkuSpacing.spacing24) {
             AuthenticatedHeaderSection(email: authViewModel.email)
-
             SyncStatusSection(
                 isSyncListExpanded: $isSyncListExpanded,
                 localMangas: localMangas,
@@ -171,7 +170,7 @@ struct ProfileView<T: AuthViewModelProtocol>: View {
                 }
                 .buttonStyle(.bordered)
 
-                Text(L10n.Profile.version(appVersion))
+                Text(L10n.Profile.version(Bundle.appVersion))
                     .font(.inkuCaptionSmall)
                     .foregroundStyle(Color.inkuTextSecondary)
             }
@@ -184,14 +183,6 @@ struct ProfileView<T: AuthViewModelProtocol>: View {
         .menuActionDismissBehavior(.enabled)
         .menuStyle(.button)
         .disabled(authViewModel.isSyncing || authViewModel.isLoadingCloud)
-    }
-
-    // MARK: - Computed Properties
-
-    private var appVersion: String {
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
-        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
-        return "\(version) (\(build))"
     }
 }
 

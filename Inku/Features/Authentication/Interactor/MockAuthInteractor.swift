@@ -64,7 +64,7 @@ final class MockAuthInteractor: AuthInteractorProtocol, Sendable {
         ]
     }
 
-    func addToCloudCollection(token: AuthToken, manga: CreateCollectionMangaRequest) async throws {
-        // Mock: API returns 201 Created with empty body
-    }
+    func addToCloudCollection(token: AuthToken, manga: CreateCollectionMangaRequest) async throws { }
+
+    func deleteFromCloudCollection(token: AuthToken, mangaId: Int) async throws { }
 }

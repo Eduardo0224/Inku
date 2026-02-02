@@ -15,7 +15,7 @@ struct InkuApp: App {
     // MARK: - States
 
     @State private var collectionViewModel = CollectionViewModel()
-    @State private var authViewModel = AuthViewModel()
+    @State private var authViewModel = AuthViewModel(syncMessageDelay: .seconds(2))
 
     // MARK: - Body
 
@@ -41,6 +41,7 @@ struct InkuApp: App {
             .tabViewStyle(.sidebarAdaptable)
             .tabBarMinimizeBehaviorOnScrollDown()
             .environment(\.collectionViewModel, collectionViewModel)
+            .environment(authViewModel)
             .inkuTabStyle()
         }
         .modelContainer(for: CollectionManga.self)

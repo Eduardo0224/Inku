@@ -127,6 +127,10 @@ final class MockCollectionViewModel: CollectionViewModelProtocol {
 
     func setModelContext(_ modelContext: ModelContext) { }
 
+    func setError(_ message: String) {
+        errorMessage = message
+    }
+
     func clearError() {
         errorMessage = nil
     }
@@ -138,7 +142,6 @@ final class MockCollectionViewModel: CollectionViewModelProtocol {
     }
 
     func addCloudMangasToLocal(_ cloudMangas: [CloudCollectionManga]) throws {
-        // Mock implementation: Add cloud mangas that aren't already in local
         let localMangaIds = Set(mangas.map { $0.mangaId })
         let mangasToAdd = cloudMangas.filter { !localMangaIds.contains($0.manga.id) }
 

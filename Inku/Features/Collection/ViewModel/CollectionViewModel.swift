@@ -213,6 +213,10 @@ final class CollectionViewModel: CollectionViewModelProtocol {
         self.modelContext = modelContext
     }
 
+    func setError(_ message: String) {
+        errorMessage = message
+    }
+
     func clearError() {
         errorMessage = nil
     }
@@ -266,12 +270,7 @@ final class CollectionViewModel: CollectionViewModelProtocol {
     }
 
     func getLocalMangaIds() throws -> Set<Int> {
-        guard let modelContext else {
-            throw CollectionError.contextNotAvailable
-        }
-
-        let descriptor = FetchDescriptor<CollectionManga>()
-        let localMangas = try modelContext.fetch(descriptor)
+        let localMangas = try getAllLocalMangas()
         return Set(localMangas.map { $0.mangaId })
     }
 

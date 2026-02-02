@@ -442,6 +442,23 @@
           }
         }
       }
+    },
+    "SYNC_DELETING_COUNT" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleting %lld manga(s)..."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminando %lld manga(s)..."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

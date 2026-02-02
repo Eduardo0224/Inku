@@ -35,8 +35,7 @@ final class AuthInteractor: AuthInteractorProtocol, Sendable {
     func register(user: User) async throws {
         let headers = ["App-Token": API.Constants.appToken]
 
-        struct EmptyResponse: Codable {}
-        let _: EmptyResponse = try await networkService.post(
+        try await networkService.post(
             endpoint: API.Endpoints.registerUser,
             body: user,
             headers: headers
@@ -110,6 +109,15 @@ final class AuthInteractor: AuthInteractorProtocol, Sendable {
         try await networkService.post(
             endpoint: API.Endpoints.collectionManga,
             body: manga,
+            headers: headers
+        )
+    }
+
+    func deleteFromCloudCollection(token: AuthToken, mangaId: Int) async throws {
+        let headers = ["Authorization": token.bearerToken]
+
+        try await networkService.delete(
+            endpoint: API.Endpoints.collectionManga(id: mangaId),
             headers: headers
         )
     }
