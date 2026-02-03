@@ -230,22 +230,27 @@ final class CollectionViewModel: CollectionViewModelProtocol {
 
         let descriptor = FetchDescriptor<CollectionManga>()
         let localMangas = try modelContext.fetch(descriptor)
-        let localMangaIds = Set(localMangas.map { $0.mangaId })
+        let localMangaDict = Dictionary(uniqueKeysWithValues: localMangas.map { ($0.mangaId, $0) })
 
-        let mangasToAdd = cloudMangas.filter { !localMangaIds.contains($0.manga.id) }
+        for cloudManga in cloudMangas {
+            if let localManga = localMangaDict[cloudManga.manga.id] {
+                localManga.volumesOwnedCount = cloudManga.volumesOwned.count
+                localManga.currentReadingVolume = cloudManga.readingVolume
+                localManga.hasCompleteCollection = cloudManga.completeCollection
+                localManga.updateModifiedDate()
+            } else {
+                let collectionManga = CollectionManga(
+                    mangaId: cloudManga.manga.id,
+                    title: cloudManga.manga.title,
+                    coverImageURL: cloudManga.manga.mainPicture,
+                    totalVolumes: cloudManga.manga.volumes,
+                    volumesOwnedCount: cloudManga.volumesOwned.count,
+                    currentReadingVolume: cloudManga.readingVolume,
+                    hasCompleteCollection: cloudManga.completeCollection
+                )
 
-        for cloudManga in mangasToAdd {
-            let collectionManga = CollectionManga(
-                mangaId: cloudManga.manga.id,
-                title: cloudManga.manga.title,
-                coverImageURL: cloudManga.manga.mainPicture,
-                totalVolumes: cloudManga.manga.volumes,
-                volumesOwnedCount: cloudManga.volumesOwned.count,
-                currentReadingVolume: cloudManga.readingVolume,
-                hasCompleteCollection: cloudManga.completeCollection
-            )
-
-            modelContext.insert(collectionManga)
+                modelContext.insert(collectionManga)
+            }
         }
 
         do {

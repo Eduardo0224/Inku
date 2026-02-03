@@ -125,6 +125,16 @@ final class MockAuthViewModel: AuthViewModelProtocol {
         await downloadCloudToLocal()
     }
 
+    func updateMangaInCollection(_ manga: CollectionManga) async throws {
+        guard let collectionViewModel else {
+            throw NSError(domain: "MockAuthViewModel", code: -1, userInfo: [
+                NSLocalizedDescriptionKey: "CollectionViewModel not available"
+            ])
+        }
+
+        try collectionViewModel.updateCollection(manga)
+    }
+
     func deleteMangaFromCollection(_ manga: CollectionManga) async throws {
         guard let collectionViewModel else {
             throw NSError(domain: "MockAuthViewModel", code: -1, userInfo: [
@@ -132,7 +142,6 @@ final class MockAuthViewModel: AuthViewModelProtocol {
             ])
         }
 
-        // Mock: just delete locally
         try collectionViewModel.removeFromCollection(manga)
     }
 

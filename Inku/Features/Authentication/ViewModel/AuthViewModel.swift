@@ -294,7 +294,12 @@ final class AuthViewModel: AuthViewModelProtocol {
 
             let failedCount = syncStatuses.values.filter { $0 == .failed }.count
             if failedCount > 0 {
-                throw NSError(domain: "AuthViewModel", code: -1, userInfo: [NSLocalizedDescriptionKey: "\(failedCount) manga(s) failed to upload"])
+                let error = NSError(
+                    domain: "AuthViewModel",
+                    code: -1,
+                    userInfo: [NSLocalizedDescriptionKey: L10n.Error.generic]
+                )
+                throw error
             }
 
             await fetchCloudCollection()
@@ -325,24 +330,66 @@ final class AuthViewModel: AuthViewModelProtocol {
         await downloadCloudToLocal()
     }
 
-    func deleteMangaFromCollection(_ manga: CollectionManga) async throws {
+    func updateMangaInCollection(_ manga: CollectionManga) async throws {
         guard let collectionViewModel else {
-            throw NSError(domain: "AuthViewModel", code: -1, userInfo: [
+            let error = NSError(domain: "AuthViewModel", code: -1, userInfo: [
                 NSLocalizedDescriptionKey: L10n.Error.generic
             ])
+            handleError(error)
+            throw error
         }
 
-        if case .authenticated(let token) = authState {
-            if cloudMangaIds.contains(manga.mangaId) {
-                try await interactor.deleteFromCloudCollection(token: token, mangaId: manga.mangaId)
+        do {
+            try collectionViewModel.updateCollection(manga)
 
-                cloudMangaIds.remove(manga.mangaId)
-                cloudMangaCount = max(0, cloudMangaCount - 1)
-                cachedCloudCollection = nil
+            if case .authenticated(let token) = authState {
+                if cloudMangaIds.contains(manga.mangaId) {
+                    let request = CreateCollectionMangaRequest(from: manga)
+                    try await interactor.addToCloudCollection(token: token, manga: request)
+                    await fetchCloudCollection()
+                }
             }
+        } catch {
+            if let networkError = error as? NetworkError, case .unauthorized = networkError {
+                authState = .unauthenticated
+                showSessionExpiredAlert = true
+                clearForm()
+            }
+            handleError(error)
+            throw error
+        }
+    }
+
+    func deleteMangaFromCollection(_ manga: CollectionManga) async throws {
+        guard let collectionViewModel else {
+            let error = NSError(domain: "AuthViewModel", code: -1, userInfo: [
+                NSLocalizedDescriptionKey: L10n.Error.generic
+            ])
+            handleError(error)
+            throw error
         }
 
-        try collectionViewModel.removeFromCollection(manga)
+        do {
+            if case .authenticated(let token) = authState {
+                if cloudMangaIds.contains(manga.mangaId) {
+                    try await interactor.deleteFromCloudCollection(token: token, mangaId: manga.mangaId)
+
+                    cloudMangaIds.remove(manga.mangaId)
+                    cloudMangaCount = max(0, cloudMangaCount - 1)
+                    cachedCloudCollection = nil
+                }
+            }
+
+            try collectionViewModel.removeFromCollection(manga)
+        } catch {
+            if let networkError = error as? NetworkError, case .unauthorized = networkError {
+                authState = .unauthenticated
+                showSessionExpiredAlert = true
+                clearForm()
+            }
+            handleError(error)
+            throw error
+        }
     }
 
     func downloadCloudToLocal() async {

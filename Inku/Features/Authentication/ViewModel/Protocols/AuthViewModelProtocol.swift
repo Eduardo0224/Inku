@@ -47,6 +47,7 @@ protocol AuthViewModelProtocol: AnyObject, Observable {
     func syncToCloud() async
     func downloadCloudToLocal() async
     func fullSync() async
+    func updateMangaInCollection(_ manga: CollectionManga) async throws
     func deleteMangaFromCollection(_ manga: CollectionManga) async throws
     func clearForm()
     func clearPassword()

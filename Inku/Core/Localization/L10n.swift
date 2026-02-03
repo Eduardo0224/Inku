@@ -33,6 +33,7 @@ enum L10n {
         static let retry = String(localized: .commonRetry)
         static let loading = String(localized: .commonLoading)
         static let deleting = String(localized: .commonDeleting)
+        static let updating = String(localized: .commonUpdating)
     }
 
     // MARK: - Errors (Localizable.xcstrings)
