@@ -45,10 +45,6 @@ final class AuthInteractor: AuthInteractorProtocol, Sendable {
     func login(user: User) async throws -> AuthToken {
         let headers = ["Authorization": user.basicAuthCredentials]
 
-        struct TokenResponse: Codable {
-            let token: String
-        }
-
         let response: TokenResponse = try await networkService.post(
             endpoint: API.Endpoints.loginUser,
             headers: headers
@@ -64,10 +60,6 @@ final class AuthInteractor: AuthInteractorProtocol, Sendable {
 
     func renewToken(_ token: AuthToken) async throws -> AuthToken {
         let headers = ["Authorization": token.bearerToken]
-
-        struct TokenResponse: Codable {
-            let token: String
-        }
 
         let response: TokenResponse = try await networkService.post(
             endpoint: API.Endpoints.renewToken,

@@ -13,7 +13,7 @@
 
 import Foundation
 
-struct AuthToken: Codable, Sendable {
+struct AuthToken: Codable, Equatable, Sendable {
 
     // MARK: - Properties
 

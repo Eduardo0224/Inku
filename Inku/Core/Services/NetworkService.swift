@@ -212,7 +212,7 @@ final class NetworkService: NetworkServiceProtocol, Sendable {
 
 // MARK: - NetworkError
 
-enum NetworkError: LocalizedError {
+enum NetworkError: LocalizedError, Equatable {
     case invalidURL
     case invalidResponse
     case badRequest

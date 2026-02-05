@@ -79,6 +79,16 @@
 - **Fechas de publicación** formateadas
 - **Acciones rápidas**: añadir/gestionar en colección
 
+### 🔐 Autenticación y Sincronización
+
+- **Sistema de autenticación** completo con registro y login
+- **Perfil de usuario** con estadísticas de colección
+- **Sincronización en la nube** bidireccional (local ↔ cloud)
+- **Resolución de conflictos** mediante timestamps
+- **Sincronización automática** tras login/registro
+- **Sincronización manual** desde perfil
+- **Session management** con token persistence
+
 ### 🎨 InkuUI Design System
 
 - **Componentes reutilizables** en Swift Package separado
@@ -187,6 +197,45 @@
     </tr>
 </table>
 
+### v2.0.0 - Authentication & Cloud Sync
+
+<table width="800" align="center">
+    <tr>
+        <th>Login View</th>
+        <th>Sign Up View</th>
+        <th>Profile View</th>
+    </tr>
+    <tr>
+        <td width="266" align="center">
+            <img src="https://github.com/user-attachments/assets/1519510e-a181-47cb-bf85-0624dcf12ec7">
+        </td>
+        <td width="266" align="center">
+            <img src="https://github.com/user-attachments/assets/30e3c597-5ff9-4cda-b964-01aa787ac865">
+        </td>
+        <td width="266" align="center">
+            <img src="https://github.com/user-attachments/assets/1f5ddeb1-a8b8-4b8c-ab00-52113a92b6c4">
+        </td>
+    </tr>
+    <tr>
+        <th>Collection Sync</th>
+        <th>Sync Progress</th>
+        <th>Logout Confirmation</th>
+    </tr>
+    <tr>
+        <td width="266" align="center">
+            <video source src="https://github.com/user-attachments/assets/14b80c6c-d50d-4417-810f-264cef100ed6">
+            </video>
+        </td>
+        <td width="266" align="center">
+            <video source src="https://github.com/user-attachments/assets/15fc651d-235b-49f9-bfc5-944dcc17747f">
+            </video>
+        </td>
+        <td width="266" align="center">
+            <img src="https://github.com/user-attachments/assets/90faa561-0909-468d-87fb-df778488f747">
+        </td>
+    </tr>
+</table>
+
 ---
 
 ## 🎥 Video Demo
@@ -252,6 +301,8 @@ Inku/
 │   ├── Search/
 │   ├── Collection/
 │   ├── MangaDetail/
+│   ├── Auth/
+│   ├── Profile/
 |   └── AdvancedFilters/
 ├── Core/                        # Código compartido
 │   ├── Models/
@@ -295,7 +346,7 @@ Inku/
 
 - **MangaAPI**: https://mymanga-acacademy-5607149ebe3d.herokuapp.com
 - **Base de datos**: 64,000+ títulos de manga
-- **Autenticación**: Ninguna (público en MVP)
+- **Autenticación**: Sistema completo con tokens Bearer (v2.0.0+)
 
 ---
 
@@ -384,6 +435,8 @@ Text(L10n.MangaList.mangaCount(mangas.count))
 - `SearchLocalizable.xcstrings` - Feature Search
 - `CollectionLocalizable.xcstrings` - Feature Collection
 - `MangaDetailLocalizable.xcstrings` - Feature MangaDetail
+- `AuthLocalizable.xcstrings` - Authentication (v2.0.0)
+- `ProfileLocalizable.xcstrings` - Profile (v2.0.0)
 
 ---
 
@@ -399,11 +452,17 @@ Text(L10n.MangaList.mangaCount(mangas.count))
 - [x] Localización español/inglés
 - [x] Design system InkuUI v1.9.1
 
-### ✅ v1.5.0 - Medium Version (Actual)
+### ✅ v1.5.0 - Medium Version (Completado)
 
 - [x] **Advanced Filters** - Búsqueda multi-criterio
 - [x] **Grid View** - Vista de cuadrícula adaptativa
 - [x] Design system InkuUI v1.11.1
+
+### 🚧 v2.0.0 - Advanced Version (Completado)
+
+- [x] **Authentication System** - Registro y login de usuarios
+- [x] **Profile View** - Perfil con estadísticas de colección
+- [x] **Cloud Sync** - Sincronización bidireccional local ↔ nube
 
 ---
 

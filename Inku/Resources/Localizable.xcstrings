@@ -103,6 +103,23 @@
         }
       }
     },
+    "COMMON_UPDATING" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Updating..."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualizando..."
+          }
+        }
+      }
+    },
     "ERROR_GENERIC" : {
       "extractionState" : "manual",
       "localizations" : {

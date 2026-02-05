@@ -11,6 +11,182 @@ Nothing pending for next release.
 
 ---
 
+## [2.0.0] - 2026-02-06
+
+### 🎉 Advanced Version Release - Authentication & Cloud Sync
+
+**Inku v2.0.0** introduces a complete authentication system with user accounts, profile management, and bidirectional cloud synchronization. Users can now create accounts, log in, and automatically sync their manga collections across devices with intelligent conflict resolution.
+
+### Added
+
+#### Authentication System (AuthView + AuthViewModel)
+
+- **Dual-mode authentication UI** - Login and Sign Up tabs with smooth transitions
+- **Form validation** - Real-time validation for email, username, and password
+- **Password requirements** - Minimum 8 characters with visual validation
+- **Secure input** - SecureField with show/hide toggle
+- **Error handling** - Contextual error messages by type (auth, network, validation)
+- **Loading states** - Indicators during async operations
+- **Auto-dismiss** - Sheet closes automatically after successful login/registration
+- **Email validation** - Regex pattern for valid email format
+- **Username validation** - No spaces, limited special characters
+- **Session management** - Token persistence with UserDefaults/Keychain
+- **Logout functionality** - Complete session cleanup and redirection
+- **Clean Architecture** - AuthInteractor (protocol-first) + AuthViewModel (@Observable)
+- **Files**: `AuthView.swift`, `AuthViewModel.swift`, `AuthInteractor.swift`, `AuthInteractorProtocol.swift`
+
+#### Profile View (ProfileView)
+
+- **User information display** - Username, email, registration date
+- **Collection statistics** - Total manga, volumes, chapters in collection
+- **Status breakdown** - Visual breakdown by reading status (Reading, Completed, Plan to Read, etc.)
+- **Sync controls** - Manual sync button with progress indicator
+- **Last sync timestamp** - Shows last successful synchronization
+- **Logout button** - Confirmation alert before closing session
+- **Error alerts** - Specific messages for sync failures
+- **Loading states** - Skeleton views during data loading
+- **Adaptive layout** - Optimized for iPhone and iPad
+- **InkuUI integration** - Uses tokens (spacing, radius, colors) and components
+- **Files**: `ProfileView.swift`
+
+#### Cloud Sync System
+
+- **Automatic sync** - Automatic synchronization after successful login/registration
+- **Manual sync** - Button in ProfileView for on-demand sync
+- **Bidirectional sync** - Local → Cloud and Cloud → Local
+- **Conflict resolution** - Timestamps to determine most recent version
+- **Batch operations** - Efficient loading and sending of complete collections
+- **Incremental updates** - Only syncs changes since last update
+- **Background updates** - Sync when returning to app (scene phase)
+- **Error recovery** - Automatic retries and informative error messages
+- **Local-first** - Full offline functionality, sync when connected
+- **Delete propagation** - Local deletions reflected in cloud
+- **Add propagation** - New local manga uploaded to cloud
+- **Update propagation** - Status/progress changes synchronized
+- **Files**: Updated `CollectionViewModel.swift`, `AuthViewModel.swift`
+
+#### API Integration (AuthInteractor + NetworkService)
+
+- **POST /auth/register** - New user registration (actually POST /users)
+- **POST /auth/login** - Authentication with email/password (actually POST /users/login)
+- **GET /user/profile** - Profile data retrieval
+- **GET /collection** - Download collection from cloud (GET /collection/manga)
+- **POST /collection** - Upload complete collection to cloud (POST /collection/manga)
+- **PUT /collection/:id** - Individual manga update
+- **DELETE /collection/:id** - Delete manga from cloud (DELETE /collection/manga/:id)
+- **Authorization headers** - Bearer token in all authenticated requests
+- **Error mapping** - AuthError with specific cases (invalidCredentials, userExists, etc.)
+- **Timeout handling** - Network timeout management
+- **Decodable models** - UserResponse, AuthResponse, CloudManga with local model mapping
+- **Files**: `AuthInteractor.swift`, `NetworkService.swift`, `APIEndpoints.swift`
+
+#### Code Organization & Architecture
+
+- **Feature-based structure**:
+  - `Features/Auth/` with Models, Interactor (Protocol + Spy), ViewModel, Views
+  - `Features/Profile/` with dedicated View
+  - `Features/Collection/` updated with sync logic
+- **Protocol-first design** - `AuthInteractorProtocol` for testability
+- **Dependency Injection** - Interactor injected into ViewModel, ViewModel into View
+- **@Observable pattern** - ViewModels use Observation framework
+- **@State ownership** - Views own ViewModels via @State
+- **Async/await** - All async operations with async/await (no Combine)
+- **MARK comments** - Strict ordering (Properties → States → Environment → Body → Init → Functions)
+- **Error types** - AuthError, NetworkError enums for typed error handling
+- **Environment Objects** - AuthViewModel in environment for global access
+- **ViewModifier injection** - CollectionViewModel receives AuthViewModel for sync
+
+#### Testing (Swift Testing Framework)
+
+- **Comprehensive test suite** - 15+ tests covering login, register, sync, errors
+- **Spy pattern** - `SpyAuthInteractor` with configurable flags and data
+- **ViewModel tests** - Login, register, logout, validation, error handling
+- **Interactor tests** - API calls, token storage, error mapping
+- **Sync tests** - Conflict resolution, batch operations, error recovery
+- **@MainActor** - ViewModel tests executed on main actor
+- **Async testing** - `@Test func testName() async` pattern
+- **Organized suites** - `@Suite` for Auth, Profile, Sync
+- **Clear assertions** - `#expect()` with descriptive messages
+- **Mock data** - Fixtures for users, tokens, manga collections
+- **Isolated tests** - No dependencies between tests, independent setup
+- **Files**: `AuthTests.swift`, `AuthTests+ViewModel.swift`, `AuthTests+Interactor.swift`
+
+#### Localization
+
+- **AuthLocalizable.xcstrings** - Complete strings for AuthView (login, register, validation)
+- **ProfileLocalizable.xcstrings** - Strings for ProfileView (stats, sync, logout)
+- **Spanish + English** - Full coverage in both languages
+- **Error messages** - Localized messages for all error types
+- **Validation feedback** - Localized validation feedback
+- **Button labels** - Contextual labels (Login/Register, Sync, Logout)
+- **Status descriptions** - Localized reading status names
+- **Type-safe access** - L10n.Auth and L10n.Profile enums
+- **Files**: `AuthLocalizable.xcstrings`, `ProfileLocalizable.xcstrings`
+
+#### UX/UI Improvements
+
+- **Onboarding flow** - First-time automatically shows AuthView
+- **Tab bar integration** - ProfileView in 3rd tab with person.circle icon
+- **Sheet presentation** - AuthView as sheet with `.presentationDetents([.large])`
+- **Form sections** - Visual grouping of inputs by function
+- **Visual feedback** - Checkmarks, error icons, loading spinners
+- **Keyboard handling** - Submit buttons and keyboard dismissal
+- **Secure by default** - Hidden passwords, show/hide options
+- **Confirmation alerts** - Confirmation before logout
+- **Success feedback** - Toast/alert after successful operations
+- **Adaptive colors** - Uses `.inkuText`, `.inkuSurface` from InkuUI
+- **Spacing tokens** - `InkuSpacing` for visual consistency
+- **Glass effects** - InkuGlass for buttons and surfaces
+
+### Changed
+
+#### User Experience Improvements
+
+- **Session persistence** - Users stay logged in between app launches
+- **Automatic sync** - Collections sync automatically after authentication
+- **Smart error messages** - Context-aware error messages for different failure scenarios
+- **Loading overlays** - Non-intrusive loading indicators during sync
+- **Logout confirmation** - Prevents accidental session termination
+
+#### Collection Management
+
+- **Cloud backup** - All collection data backed up to cloud
+- **Cross-device sync** - Access collection from any device
+- **Conflict resolution** - Automatic resolution using timestamps (most recent wins)
+- **Sync status tracking** - Visual indication of last sync time
+
+### Fixed
+
+- **Token expiration handling** - Graceful handling of expired tokens
+- **Network error recovery** - Better error messages and retry logic
+- **Form validation edge cases** - Improved validation for special characters
+- **Sync race conditions** - Proper handling of concurrent sync operations
+
+### Testing
+
+- ✅ 15+ comprehensive tests for Authentication and Sync
+- ✅ ViewModel tests with Spy interactors
+- ✅ Interactor tests with SpyNetworkService
+- ✅ Sync logic integration tests
+- ✅ All existing tests passing
+
+### Documentation
+
+- ✅ README.md updated for v2.0.0
+- ✅ Added Authentication & Cloud Sync features section
+- ✅ Updated API section (authentication with Bearer tokens)
+- ✅ Added AuthLocalizable.xcstrings and ProfileLocalizable.xcstrings to localization files
+- ✅ Updated roadmap with v2.0.0 progress
+- ✅ Added placeholders for v2.0.0 screenshots
+
+### Notes
+
+- **Breaking Changes**: Users must create accounts to use cloud features
+- **Backward Compatible**: Local-only functionality still works without authentication
+- **Migration Path**: Existing local collections automatically sync on first login
+
+---
+
 ## [1.5.0] - 2026-01-29
 
 ### 🎉 Medium Version Release - Advanced Filters & Grid View
