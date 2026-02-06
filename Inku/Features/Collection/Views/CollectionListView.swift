@@ -26,12 +26,14 @@ struct CollectionListView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.collectionViewModel) private var viewModel
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(AuthViewModel.self) private var authViewModel
 
     // MARK: - States
 
     @State private var searchText = ""
     @State private var mangaToEdit: CollectionManga?
     @State private var mangaToDelete: CollectionManga?
+    @State private var isDeleting = false
 
     // MARK: - Properties
 
@@ -131,9 +133,29 @@ struct CollectionListView: View {
         } message: { errorMessage in
             Text(errorMessage)
         }
+        .overlay {
+            if isDeleting {
+                loadingOverlay
+            }
+        }
     }
 
     // MARK: - Private Views
+
+    private var loadingOverlay: some View {
+        ZStack {
+            Color.black.opacity(0.4)
+                .ignoresSafeArea()
+
+            InkuLoadingView(message: L10n.Common.deleting)
+                .padding(InkuSpacing.spacing32)
+                .background {
+                    RoundedRectangle(cornerRadius: InkuRadius.radius16)
+                        .fill(.regularMaterial)
+                }
+                .frame(width: 150, height: 150)
+        }
+    }
 
     private var collectionList: some View {
         GeometryReader { geometry in
@@ -266,8 +288,17 @@ struct CollectionListView: View {
     }
 
     private func confirmDelete(_ manga: CollectionManga) {
-        try? viewModel.removeFromCollection(manga)
         mangaToDelete = nil
+        isDeleting = true
+
+        Task {
+            do {
+                try await authViewModel.deleteMangaFromCollection(manga)
+            } catch {
+                viewModel.setError(error.localizedDescription)
+            }
+            isDeleting = false
+        }
     }
 }
 
@@ -277,6 +308,7 @@ struct CollectionListView: View {
     "Collection List - Empty All",
     traits: .previewContainer(.empty)
 ) {
+    @Previewable @State var authViewModel = AuthViewModel()
     NavigationStack {
         CollectionListView(
             filter: .all,
@@ -285,12 +317,14 @@ struct CollectionListView: View {
         .navigationTitle("My Collection")
     }
     .environment(\.collectionViewModel, MockCollectionViewModel.empty)
+    .environment(authViewModel)
 }
 
 #Preview(
     "Collection List - With Data",
     traits: .previewContainer(.withData)
 ) {
+    @Previewable @State var authViewModel = AuthViewModel()
     NavigationStack {
         CollectionListView(
             filter: .all,
@@ -299,12 +333,14 @@ struct CollectionListView: View {
         .navigationTitle("My Collection")
     }
     .environment(\.collectionViewModel, MockCollectionViewModel.empty)
+    .environment(authViewModel)
 }
 
 #Preview(
     "Collection List - Reading Filter",
     traits: .previewContainer(.withData)
 ) {
+    @Previewable @State var authViewModel = AuthViewModel()
     NavigationStack {
         CollectionListView(
             filter: .reading,
@@ -313,12 +349,14 @@ struct CollectionListView: View {
         .navigationTitle("Currently Reading")
     }
     .environment(\.collectionViewModel, MockCollectionViewModel.empty)
+    .environment(authViewModel)
 }
 
 #Preview(
     "Collection List - Complete Filter",
     traits: .previewContainer(.withData)
 ) {
+    @Previewable @State var authViewModel = AuthViewModel()
     NavigationStack {
         CollectionListView(
             filter: .complete,
@@ -327,4 +365,5 @@ struct CollectionListView: View {
         .navigationTitle("Complete")
     }
     .environment(\.collectionViewModel, MockCollectionViewModel.empty)
+    .environment(authViewModel)
 }

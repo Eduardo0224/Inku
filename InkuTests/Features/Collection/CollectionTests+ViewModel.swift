@@ -860,6 +860,61 @@ extension CollectionTests {
             // Then - error message should be nil
             #expect(sut.errorMessage == nil)
         }
+
+        // MARK: - Cloud Sync Tests
+
+        @Test("Add cloud mangas to local - new mangas")
+        func addCloudMangasToLocalNew() throws {
+            // Given
+            try sut.addCloudMangasToLocal([Self.cloudManga1])
+            #expect(sut.totalMangas == 1)
+            // When
+            let addedManga = sut.getCollectionManga(mangaId: Manga.testData.id)
+            // Then
+            #expect(addedManga != nil)
+            #expect(addedManga?.volumesOwnedCount == 3)
+        }
+
+        @Test("Add cloud mangas to local - update existing")
+        func addCloudMangasToLocalUpdate() throws {
+            // Given
+            let manga: Manga = .testData
+            try sut.addToCollection(manga)
+            let localManga = sut.getCollectionManga(mangaId: manga.id)
+            #expect(localManga?.volumesOwnedCount == 0)
+            try sut.addCloudMangasToLocal([Self.cloudManga(basedOn: manga)])
+            #expect(sut.totalMangas == 1)
+            // When
+            let updatedManga = sut.getCollectionManga(mangaId: manga.id)
+            // Then
+            #expect(updatedManga?.volumesOwnedCount == 5)
+            #expect(updatedManga?.currentReadingVolume == 5)
+            #expect(updatedManga?.hasCompleteCollection == true)
+        }
+
+        @Test("Get all local mangas returns correct count")
+        func getAllLocalMangas() throws {
+            // Given
+            try sut.addToCollection(.testData)
+            try sut.addToCollection(.emptyData)
+            // When
+            let localMangas = try sut.getAllLocalMangas()
+            // Then
+            #expect(localMangas.count == 2)
+        }
+
+        @Test("Get local manga IDs returns correct set")
+        func getLocalMangaIds() throws {
+            // Given
+            try sut.addToCollection(.testData)
+            try sut.addToCollection(.emptyData)
+            // When
+            let ids = try sut.getLocalMangaIds()
+            // Then
+            #expect(ids.count == 2)
+            #expect(ids.contains(Manga.testData.id))
+            #expect(ids.contains(Manga.emptyData.id))
+        }
     }
 }
 
@@ -908,6 +963,26 @@ private extension CollectionTests.ViewModelTests {
         demographics: [],
         themes: []
     )
+
+    static let cloudManga1 = CloudCollectionManga(
+        id: "cloud_1",
+        manga: .testData,
+        user: .init(id: "user_1"),
+        completeCollection: false,
+        volumesOwned: [1, 2, 3],
+        readingVolume: 3
+    )
+
+    static func cloudManga(basedOn manga: Manga) -> CloudCollectionManga {
+        .init(
+            id: "cloud_1",
+            manga: manga,
+            user: CloudCollectionManga.UserInfo(id: "user_1"),
+            completeCollection: true,
+            volumesOwned: [1, 2, 3, 4, 5],
+            readingVolume: 5
+        )
+    }
 }
 
 // MARK: - Arguments
@@ -961,5 +1036,4 @@ private extension CollectionTests.ViewModelTests {
             self.expectedAverage = expectedAverage
         }
     }
-
 }

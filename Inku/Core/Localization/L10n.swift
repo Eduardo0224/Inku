@@ -21,6 +21,7 @@ enum L10n {
         static let browse = String(localized: .tabBrowse)
         static let collection = String(localized: .tabCollection)
         static let search = String(localized: .tabSearch)
+        static let profile = String(localized: .tabProfile)
     }
 
     // MARK: - Common (Localizable.xcstrings)
@@ -31,6 +32,8 @@ enum L10n {
         static let done = String(localized: .commonDone)
         static let retry = String(localized: .commonRetry)
         static let loading = String(localized: .commonLoading)
+        static let deleting = String(localized: .commonDeleting)
+        static let updating = String(localized: .commonUpdating)
     }
 
     // MARK: - Errors (Localizable.xcstrings)
@@ -366,6 +369,119 @@ enum L10n {
             static let saveFailed = String(localized: .CollectionLocalizable.errorSaveFailed)
             static let updateFailed = String(localized: .CollectionLocalizable.errorUpdateFailed)
             static let deleteFailed = String(localized: .CollectionLocalizable.errorDeleteFailed)
+        }
+    }
+
+    // MARK: - Authentication (AuthenticationLocalizable.xcstrings)
+
+    enum Authentication {
+
+        static let emailLabel = String(localized: .AuthenticationLocalizable.emailLabel)
+        static let passwordLabel = String(localized: .AuthenticationLocalizable.passwordLabel)
+
+        enum Login {
+            static let title = String(localized: .AuthenticationLocalizable.loginTitle)
+            static let subtitle = String(localized: .AuthenticationLocalizable.loginSubtitle)
+            static let button = String(localized: .AuthenticationLocalizable.loginButton)
+        }
+
+        enum Register {
+            static let title = String(localized: .AuthenticationLocalizable.registerTitle)
+            static let subtitle = String(localized: .AuthenticationLocalizable.registerSubtitle)
+            static let button = String(localized: .AuthenticationLocalizable.registerButton)
+        }
+
+        enum Prompt {
+            static let noAccount = String(localized: .AuthenticationLocalizable.noAccount)
+            static let hasAccount = String(localized: .AuthenticationLocalizable.hasAccount)
+            static let signUp = String(localized: .AuthenticationLocalizable.signUp)
+            static let signIn = String(localized: .AuthenticationLocalizable.signIn)
+        }
+
+        enum Validation {
+            static let passwordRequirement = String(localized: .AuthenticationLocalizable.passwordRequirement)
+        }
+
+        enum Actions {
+            static let logout = String(localized: .AuthenticationLocalizable.logoutButton)
+        }
+
+        enum Error {
+            static let userExists = String(localized: .AuthenticationLocalizable.errorUserExists)
+            static let invalidCredentials = String(localized: .AuthenticationLocalizable.errorInvalidCredentials)
+        }
+    }
+
+    // MARK: - Profile (ProfileLocalizable.xcstrings)
+
+    enum Profile {
+
+        enum Unauthenticated {
+            static let title = String(localized: .ProfileLocalizable.unauthenticatedTitle)
+            static let subtitle = String(localized: .ProfileLocalizable.unauthenticatedSubtitle)
+        }
+
+        enum LocalCollection {
+            static let title = String(localized: .ProfileLocalizable.localCollectionTitle)
+            static let saved = String(localized: .ProfileLocalizable.localCollectionSaved)
+        }
+
+        enum Authenticated {
+            static let welcome = String(localized: .ProfileLocalizable.authenticatedWelcome)
+        }
+
+        enum Sync {
+            static let title = String(localized: .ProfileLocalizable.syncStatusTitle)
+            static let button = String(localized: .ProfileLocalizable.syncButton)
+            static let mangasToSync = String(localized: .ProfileLocalizable.mangasToSync)
+            static let fetchingCloud = String(localized: .ProfileLocalizable.syncFetchingCloud)
+            static let allSynced = String(localized: .ProfileLocalizable.syncAllSynced)
+            static let downloadingFromCloud = String(localized: .ProfileLocalizable.syncDownloadingFromCloud)
+            static let allLocal = String(localized: .ProfileLocalizable.syncAllLocal)
+            static let errorDownload = String(localized: .ProfileLocalizable.syncErrorDownload)
+
+            static func mangasCount(_ count: Int) -> String {
+                String(localized: .ProfileLocalizable.mangasCount(count))
+            }
+
+            static func uploadingCount(_ count: Int) -> String {
+                String(localized: .ProfileLocalizable.syncUploadingCount(count))
+            }
+
+            static func successCount(_ count: Int) -> String {
+                String(localized: .ProfileLocalizable.syncSuccessCount(count))
+            }
+
+            static func downloadedCount(_ count: Int) -> String {
+                String(localized: .ProfileLocalizable.syncDownloadedCount(count))
+            }
+
+            static func deletingCount(_ count: Int) -> String {
+                String(localized: .ProfileLocalizable.syncDeletingCount(count))
+            }
+        }
+
+        enum Section {
+            static let account = String(localized: .ProfileLocalizable.accountSection)
+        }
+
+        enum Labels {
+            static let local = String(localized: .ProfileLocalizable.localLabel)
+            static let cloud = String(localized: .ProfileLocalizable.cloudLabel)
+        }
+
+        enum SessionExpired {
+            static let title = String(localized: .ProfileLocalizable.sessionExpiredTitle)
+            static let message = String(localized: .ProfileLocalizable.sessionExpiredMessage)
+            static let okButton = String(localized: .ProfileLocalizable.okButton)
+        }
+
+        enum Loading {
+            static let cloudCollection = String(localized: .ProfileLocalizable.loadingCloudCollection)
+        }
+
+        static func version(_ version: String) -> String {
+            String(localized: .ProfileLocalizable.versionLabel(version))
         }
     }
 }

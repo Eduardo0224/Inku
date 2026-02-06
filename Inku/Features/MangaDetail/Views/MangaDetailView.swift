@@ -23,6 +23,7 @@ struct MangaDetailView: View {
     @Environment(\.collectionViewModel) private var collectionViewModel
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.tabBarPlacement) private var tabBarPlacement
+    @Environment(AuthViewModel.self) private var authViewModel
 
     // MARK: - States
 
@@ -31,6 +32,7 @@ struct MangaDetailView: View {
     @State private var mangaToDelete: CollectionManga?
     @State private var errorMessage: String?
     @State private var showErrorAlert: Bool = false
+    @State private var isDeleting: Bool = false
 
     // MARK: - Properties
 
@@ -92,6 +94,11 @@ struct MangaDetailView: View {
                 }
             }
         }
+        .overlay {
+            if isDeleting {
+                loadingOverlay
+            }
+        }
         .background(Color.inkuSurface)
         .navigationTitle(tabBarPlacement == .topBar ? "" : L10n.MangaDetail.Screen.title)
         .navigationBarTitleDisplayMode(.inline)
@@ -141,6 +148,21 @@ struct MangaDetailView: View {
     }
 
     // MARK: - Private Views
+
+    private var loadingOverlay: some View {
+        ZStack {
+            Color.black.opacity(0.4)
+                .ignoresSafeArea()
+
+            InkuLoadingView(message: L10n.Common.deleting)
+                .padding(InkuSpacing.spacing32)
+                .background {
+                    RoundedRectangle(cornerRadius: InkuRadius.radius16)
+                        .fill(.regularMaterial)
+                }
+                .frame(width: 150, height: 150)
+        }
+    }
 
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
@@ -308,13 +330,18 @@ struct MangaDetailView: View {
     }
 
     private func removeFromCollection(_ manga: CollectionManga) {
-        do {
-            try collectionViewModel.removeFromCollection(manga)
-            collectionManga = nil
-            mangaToDelete = nil
-        } catch {
-            errorMessage = error.localizedDescription
-            showErrorAlert = true
+        mangaToDelete = nil
+        isDeleting = true
+
+        Task {
+            do {
+                try await authViewModel.deleteMangaFromCollection(manga)
+                collectionManga = nil
+            } catch {
+                errorMessage = error.localizedDescription
+                showErrorAlert = true
+            }
+            isDeleting = false
         }
     }
 }
@@ -322,15 +349,19 @@ struct MangaDetailView: View {
 // MARK: - Previews
 
 #Preview("Manga Detail - Full Data") {
+    @Previewable @State var authViewModel = AuthViewModel()
     NavigationStack {
         MangaDetailView(manga: .testData)
             .environment(\.collectionViewModel, MockCollectionViewModel.empty)
+            .environment(authViewModel)
     }
 }
 
 #Preview("Manga Detail - Minimal Data") {
+    @Previewable @State var authViewModel = AuthViewModel()
     NavigationStack {
         MangaDetailView(manga: .emptyData)
             .environment(\.collectionViewModel, MockCollectionViewModel.empty)
+            .environment(authViewModel)
     }
 }
