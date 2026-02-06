@@ -50,9 +50,16 @@ protocol CollectionViewModelProtocol {
 
     // MARK: - Error Handling
 
+    func setError(_ message: String)
     func clearError()
 
     // MARK: - Model Context
 
     func setModelContext(_ modelContext: ModelContext)
+
+    // MARK: - Cloud Sync
+
+    func getAllLocalMangas() throws -> [CollectionManga]
+    func addCloudMangasToLocal(_ cloudMangas: [CloudCollectionManga]) throws
+    func getLocalMangaIds() throws -> Set<Int>
 }

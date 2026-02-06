@@ -127,8 +127,40 @@ final class MockCollectionViewModel: CollectionViewModelProtocol {
 
     func setModelContext(_ modelContext: ModelContext) { }
 
+    func setError(_ message: String) {
+        errorMessage = message
+    }
+
     func clearError() {
         errorMessage = nil
+    }
+
+    // MARK: - Cloud Sync
+
+    func getAllLocalMangas() throws -> [CollectionManga] {
+        mangas
+    }
+
+    func addCloudMangasToLocal(_ cloudMangas: [CloudCollectionManga]) throws {
+        let localMangaIds = Set(mangas.map { $0.mangaId })
+        let mangasToAdd = cloudMangas.filter { !localMangaIds.contains($0.manga.id) }
+
+        for cloudManga in mangasToAdd {
+            let collectionManga = CollectionManga(
+                mangaId: cloudManga.manga.id,
+                title: cloudManga.manga.title,
+                coverImageURL: cloudManga.manga.mainPicture,
+                totalVolumes: cloudManga.manga.volumes,
+                volumesOwnedCount: cloudManga.volumesOwned.count,
+                currentReadingVolume: cloudManga.readingVolume,
+                hasCompleteCollection: cloudManga.completeCollection
+            )
+            mangas.append(collectionManga)
+        }
+    }
+
+    func getLocalMangaIds() throws -> Set<Int> {
+        Set(mangas.map { $0.mangaId })
     }
 }
 

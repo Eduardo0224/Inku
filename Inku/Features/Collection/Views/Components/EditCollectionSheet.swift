@@ -20,6 +20,7 @@ struct EditCollectionSheet: View {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.collectionViewModel) private var viewModel
+    @Environment(AuthViewModel.self) private var authViewModel
 
     // MARK: - Properties
 
@@ -30,6 +31,7 @@ struct EditCollectionSheet: View {
     @State private var volumesOwnedCount: Int
     @State private var currentReadingVolume: String
     @State private var hasCompleteCollection: Bool
+    @State private var isUpdating: Bool = false
 
     // MARK: - Initializers
 
@@ -66,6 +68,11 @@ struct EditCollectionSheet: View {
                 }
             } message: { errorMessage in
                 Text(errorMessage)
+            }
+            .overlay {
+                if isUpdating {
+                    loadingOverlay
+                }
             }
         }
     }
@@ -151,6 +158,23 @@ struct EditCollectionSheet: View {
         }
     }
 
+    // MARK: - Private Views
+
+    private var loadingOverlay: some View {
+        ZStack {
+            Color.black.opacity(0.4)
+                .ignoresSafeArea()
+
+            InkuLoadingView(message: L10n.Common.updating)
+                .padding(InkuSpacing.spacing32)
+                .background {
+                    RoundedRectangle(cornerRadius: InkuRadius.radius16)
+                        .fill(.regularMaterial)
+                }
+                .frame(width: 150, height: 150)
+        }
+    }
+
     // MARK: - Private Functions
 
     private func saveChanges() {
@@ -158,14 +182,24 @@ struct EditCollectionSheet: View {
         collectionManga.currentReadingVolume = Int(currentReadingVolume)
         collectionManga.hasCompleteCollection = hasCompleteCollection
 
-        try? viewModel.updateCollection(collectionManga)
-        dismiss()
+        isUpdating = true
+
+        Task {
+            do {
+                try await authViewModel.updateMangaInCollection(collectionManga)
+                dismiss()
+            } catch {
+                viewModel.setError(error.localizedDescription)
+            }
+            isUpdating = false
+        }
     }
 }
 
 // MARK: - Previews
 
 #Preview("Edit Collection - Reading") {
+    @Previewable @State var authViewModel = AuthViewModel()
     EditCollectionSheet(
         collectionManga: CollectionManga(
             mangaId: 1,
@@ -178,9 +212,11 @@ struct EditCollectionSheet: View {
         )
     )
     .environment(\.collectionViewModel, MockCollectionViewModel.empty)
+    .environment(authViewModel)
 }
 
 #Preview("Edit Collection - Complete") {
+    @Previewable @State var authViewModel = AuthViewModel()
     EditCollectionSheet(
         collectionManga: CollectionManga(
             mangaId: 2,
@@ -193,9 +229,11 @@ struct EditCollectionSheet: View {
         )
     )
     .environment(\.collectionViewModel, MockCollectionViewModel.empty)
+    .environment(authViewModel)
 }
 
 #Preview("Edit Collection - No Image") {
+    @Previewable @State var authViewModel = AuthViewModel()
     EditCollectionSheet(
         collectionManga: CollectionManga(
             mangaId: 3,
@@ -208,4 +246,5 @@ struct EditCollectionSheet: View {
         )
     )
     .environment(\.collectionViewModel, MockCollectionViewModel.empty)
+    .environment(authViewModel)
 }

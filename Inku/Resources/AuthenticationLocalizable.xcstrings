@@ -1,264 +1,278 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "COMMON_CANCEL" : {
+    "EMAIL_LABEL" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cancel"
+            "value" : "Email"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cancelar"
+            "value" : "Correo electrónico"
           }
         }
       }
     },
-    "COMMON_DELETING" : {
+    "PASSWORD_LABEL" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Deleting"
+            "value" : "Password"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Eliminando"
+            "value" : "Contraseña"
           }
         }
       }
     },
-    "COMMON_DONE" : {
+    "LOGIN_TITLE" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Done"
+            "value" : "Welcome Back"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Listo"
+            "value" : "Bienvenido de nuevo"
           }
         }
       }
     },
-    "COMMON_LOADING" : {
+    "LOGIN_SUBTITLE" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Loading..."
+            "value" : "Sign in to sync your collection"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cargando..."
+            "value" : "Inicia sesión para sincronizar tu colección"
           }
         }
       }
     },
-    "COMMON_OK" : {
+    "LOGIN_BUTTON" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OK"
+            "value" : "Sign In"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aceptar"
+            "value" : "Iniciar sesión"
           }
         }
       }
     },
-    "COMMON_RETRY" : {
+    "REGISTER_TITLE" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Retry"
+            "value" : "Create Account"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reintentar"
+            "value" : "Crear cuenta"
           }
         }
       }
     },
-    "COMMON_UPDATING" : {
+    "REGISTER_SUBTITLE" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Updating..."
+            "value" : "Join Inku to manage your manga collection"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Actualizando..."
+            "value" : "Únete a Inku para gestionar tu colección de manga"
           }
         }
       }
     },
-    "ERROR_GENERIC" : {
+    "REGISTER_BUTTON" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Something went wrong"
+            "value" : "Create Account"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Algo salió mal"
+            "value" : "Crear cuenta"
           }
         }
       }
     },
-    "ERROR_NETWORK" : {
+    "NO_ACCOUNT" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No internet connection"
+            "value" : "Don't have an account?"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sin conexión a internet"
+            "value" : "¿No tienes cuenta?"
           }
         }
       }
     },
-    "ERROR_TIMEOUT" : {
+    "HAS_ACCOUNT" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Request timed out"
+            "value" : "Already have an account?"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tiempo de espera agotado"
+            "value" : "¿Ya tienes cuenta?"
           }
         }
       }
     },
-    "ERROR_TITLE" : {
+    "SIGN_UP" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Error"
+            "value" : "Sign up"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Error"
+            "value" : "Regístrate"
           }
         }
       }
     },
-    "TAB_BROWSE" : {
-      "comment" : "Title of the Browse tab in the main tab view.",
+    "SIGN_IN" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Browse"
+            "value" : "Sign in"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Explorar"
+            "value" : "Inicia sesión"
           }
         }
       }
     },
-    "TAB_COLLECTION" : {
+    "PASSWORD_REQUIREMENT" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Collection"
+            "value" : "At least 8 characters"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Colección"
+            "value" : "Mínimo 8 caracteres"
           }
         }
       }
     },
-    "TAB_PROFILE" : {
-      "comment" : "Title of the Profile tab in the main tab view.",
+    "LOGOUT_BUTTON" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Profile"
+            "value" : "Sign Out"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Perfil"
+            "value" : "Cerrar sesión"
           }
         }
       }
     },
-    "TAB_SEARCH" : {
-      "comment" : "Title of the Search tab in the main tab view.",
+    "ERROR_USER_EXISTS" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Search"
+            "value" : "This email is already registered"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Buscar"
+            "value" : "Este correo ya está registrado"
+          }
+        }
+      }
+    },
+    "ERROR_INVALID_CREDENTIALS" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid email or password"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Correo o contraseña incorrectos"
           }
         }
       }
     }
   },
-  "version" : "1.1"
+  "version" : "1.0"
 }
