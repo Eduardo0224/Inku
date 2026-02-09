@@ -69,7 +69,9 @@ struct AdvancedFilterView: View {
                 .padding(InkuSpacing.spacing16)
             }
             .navigationTitle(L10n.AdvancedFilters.Screen.title)
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.large)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     if onSearch != nil {
@@ -193,6 +195,7 @@ struct AdvancedFilterView: View {
                 Text(L10n.AdvancedFilters.SearchMode.contains).tag(true)
             }
             .pickerStyle(.segmented)
+            .tint(Color.inkuAccentStrong)
         }
         .padding(InkuSpacing.spacing16)
         .inkuCard()
@@ -245,7 +248,17 @@ struct AdvancedFilterView: View {
     }
 
     private var searchButton: some View {
-        Button {
+        InkuButton(
+            L10n.AdvancedFilters.Button.search,
+            icon: "magnifyingglass",
+            style: .primary,
+            isFullWidth: true,
+            isLoading: viewModel.isLoading,
+            isDisabled: !viewModel.hasActiveFilters,
+            badge: viewModel.activeFilterCount > 0 ? "\(viewModel.activeFilterCount)" : nil,
+            backgroundColor: Color.inkuAccentStrong,
+            cornerRadius: InkuRadius.radius12
+        ) {
             if let onSearch {
                 onSearch(viewModel.currentSearch, viewModel.sortOption)
                 dismiss()
@@ -254,25 +267,7 @@ struct AdvancedFilterView: View {
                     await viewModel.performSearch()
                 }
             }
-        } label: {
-            HStack {
-                Image(systemName: "magnifyingglass")
-                Text(L10n.AdvancedFilters.Button.search)
-                    .fontWeight(.semibold)
-
-                if viewModel.activeFilterCount > 0 {
-                    Text("(\(viewModel.activeFilterCount))")
-                        .fontWeight(.medium)
-                }
-            }
-            .frame(maxWidth: .infinity)
-            .padding(InkuSpacing.spacing12)
-            .background(Color.inkuAccentStrong)
-            .foregroundStyle(.white)
-            .cornerRadius(InkuRadius.radius12)
         }
-        .disabled(viewModel.isLoading || !viewModel.hasActiveFilters)
-        .opacity((viewModel.isLoading || !viewModel.hasActiveFilters) ? 0.6 : 1.0)
     }
 }
 

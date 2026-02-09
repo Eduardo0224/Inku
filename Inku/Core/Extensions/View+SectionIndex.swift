@@ -28,7 +28,7 @@ private struct SectionIndexModifier: ViewModifier {
     let label: String
 
     func body(content: Content) -> some View {
-        if #available(iOS 26, *) {
+        if #available(iOS 26, macOS 26, *) {
             content.sectionIndexLabel(label)
         } else {
             content

@@ -85,12 +85,16 @@ struct AuthorResultsView: View {
                             .font(.inkuHeadline)
                             .foregroundStyle(Color.inkuAccent)
                     }
+                    #if os(iOS)
                     .listSectionSpacing(InkuSpacing.spacing2)
+                    #endif
                     .sectionIndexWith(label: section.key)
                 }
             }
             .listStyle(.plain)
+            #if os(iOS)
             .scrollDismissesKeyboard(.immediately)
+            #endif
             .scrollContentBackground(.hidden)
             .background(Color.inkuSurface)
         }

@@ -22,7 +22,9 @@ struct MangaDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.collectionViewModel) private var collectionViewModel
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    #if os(iOS)
     @Environment(\.tabBarPlacement) private var tabBarPlacement
+    #endif
     @Environment(AuthViewModel.self) private var authViewModel
 
     // MARK: - States
@@ -51,37 +53,62 @@ struct MangaDetailView: View {
     // MARK: - Body
 
     var body: some View {
-        ZStack(alignment: .top) {
-            // Background Image with Glass Effect
-            AsyncImage(url: manga.coverImageURL) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(maxWidth: .infinity, maxHeight: 350)
-                    .blur(radius: 30)
-                    .clipped()
-            } placeholder: {
-                Color.inkuSurface
-                    .frame(maxWidth: .infinity, maxHeight: 350)
-            }
+        contentView
             .overlay {
-                Rectangle()
-                    .fill(.thinMaterial)
-                    .frame(maxWidth: .infinity, maxHeight: 350)
+                if isDeleting {
+                    loadingOverlay
+                }
             }
-            .overlay(alignment: .bottom) {
-                LinearGradient(
-                    gradient: Gradient(
-                        colors: [.clear, Color.inkuSurface]
-                    ),
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .frame(height: 100)
+            .background(Color.inkuSurface)
+            .adaptiveNavigationTitle(L10n.MangaDetail.Screen.title)
+            .toolbar {
+                toolbarContent
             }
-            .frame(height: 350)
-            .ignoresSafeArea(edges: .horizontal)
-            .liquidGlassBackground()
+            .sheet(item: $mangaToEdit) { manga in
+                EditCollectionSheet(collectionManga: manga)
+            }
+            .onChange(of: mangaToEdit) { _, _ in
+                if mangaToEdit == nil {
+                    // Sheet closed, refresh collection status
+                    checkIfInCollection()
+                }
+            }
+            .alert(
+                L10n.Collection.Delete.title,
+                isPresented: .constant(mangaToDelete != nil),
+                presenting: mangaToDelete
+            ) { manga in
+                Button(L10n.Common.cancel, role: .cancel) {
+                    mangaToDelete = nil
+                }
+                Button(L10n.Collection.Delete.confirm, role: .destructive) {
+                    removeFromCollection(manga)
+                }
+            } message: { manga in
+                Text(L10n.Collection.Delete.message(manga.title))
+            }
+            .alert(
+                L10n.Error.title,
+                isPresented: $showErrorAlert
+            ) {
+                Button(L10n.Common.ok, role: .cancel) {
+                    showErrorAlert = false
+                    errorMessage = nil
+                }
+            } message: {
+                if let errorMessage = errorMessage {
+                    Text(errorMessage)
+                }
+            }
+            .task {
+                collectionViewModel.setModelContext(modelContext)
+                checkIfInCollection()
+            }
+    }
+
+    private var contentView: some View {
+        ZStack(alignment: .top) {
+            backgroundImageView
 
             // Content
             GeometryReader { geometry in
@@ -94,57 +121,40 @@ struct MangaDetailView: View {
                 }
             }
         }
+    }
+
+    private var backgroundImageView: some View {
+        AsyncImage(url: manga.coverImageURL) { image in
+            image
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(maxWidth: .infinity, maxHeight: 350)
+                .blur(radius: 30)
+                .clipped()
+        } placeholder: {
+            Color.inkuSurface
+                .frame(maxWidth: .infinity, maxHeight: 350)
+        }
         .overlay {
-            if isDeleting {
-                loadingOverlay
-            }
+            Rectangle()
+                .fill(.thinMaterial)
+                .frame(maxWidth: .infinity, maxHeight: 350)
         }
-        .background(Color.inkuSurface)
-        .navigationTitle(tabBarPlacement == .topBar ? "" : L10n.MangaDetail.Screen.title)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            toolbarContent
+        .overlay(alignment: .bottom) {
+            LinearGradient(
+                gradient: Gradient(
+                    colors: [.clear, Color.inkuSurface]
+                ),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .frame(height: 100)
         }
-        .sheet(item: $mangaToEdit) { manga in
-            EditCollectionSheet(collectionManga: manga)
-        }
-        .onChange(of: mangaToEdit) { _, _ in
-            if mangaToEdit == nil {
-                // Sheet closed, refresh collection status
-                checkIfInCollection()
-            }
-        }
-        .alert(
-            L10n.Collection.Delete.title,
-            isPresented: .constant(mangaToDelete != nil),
-            presenting: mangaToDelete
-        ) { manga in
-            Button(L10n.Common.cancel, role: .cancel) {
-                mangaToDelete = nil
-            }
-            Button(L10n.Collection.Delete.confirm, role: .destructive) {
-                removeFromCollection(manga)
-            }
-        } message: { manga in
-            Text(L10n.Collection.Delete.message(manga.title))
-        }
-        .alert(
-            L10n.Error.title,
-            isPresented: $showErrorAlert
-        ) {
-            Button(L10n.Common.ok, role: .cancel) {
-                showErrorAlert = false
-                errorMessage = nil
-            }
-        } message: {
-            if let errorMessage = errorMessage {
-                Text(errorMessage)
-            }
-        }
-        .task {
-            collectionViewModel.setModelContext(modelContext)
-            checkIfInCollection()
-        }
+        .frame(height: 350)
+        .ignoresSafeArea(edges: .horizontal)
+        #if os(iOS)
+        .liquidGlassBackground()
+        #endif
     }
 
     // MARK: - Private Views
@@ -166,6 +176,7 @@ struct MangaDetailView: View {
 
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
+        #if os(iOS)
         if isInCollection {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
@@ -190,6 +201,32 @@ struct MangaDetailView: View {
                 addToCollectionButton
             }
         }
+        #else
+        if isInCollection {
+            ToolbarItem(placement: .automatic) {
+                Menu {
+                    Button {
+                        mangaToEdit = collectionManga
+                    } label: {
+                        Label(L10n.Collection.Card.edit, systemImage: "pencil")
+                    }
+
+                    Button(role: .destructive) {
+                        mangaToDelete = collectionManga
+                    } label: {
+                        Label(L10n.Collection.Card.delete, systemImage: "trash")
+                    }
+                } label: {
+                    Label(L10n.Collection.Actions.manage, systemImage: "bookmark.fill")
+                        .symbolRenderingMode(.multicolor)
+                }
+            }
+        } else {
+            ToolbarItem(placement: .automatic) {
+                addToCollectionButton
+            }
+        }
+        #endif
     }
 
     private var addToCollectionButton: some View {

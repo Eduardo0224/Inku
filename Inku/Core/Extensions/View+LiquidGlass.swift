@@ -28,10 +28,10 @@ extension View {
 
 // MARK: - View Modifier
 
-/// ViewModifier to apply backgroundExtensionEffect only on iOS 26+
+/// ViewModifier to apply backgroundExtensionEffect only on iOS 26+, macOS 16+
 private struct LiquidGlassBackgroundModifier: ViewModifier {
     func body(content: Content) -> some View {
-        if #available(iOS 26, *) {
+        if #available(iOS 26, macOS 16, *) {
             content.backgroundExtensionEffect()
         } else {
             content

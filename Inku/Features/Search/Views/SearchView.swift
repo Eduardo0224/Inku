@@ -64,11 +64,18 @@ struct SearchView: View {
                 }
             }
             .navigationTitle(L10n.Search.Screen.title)
+            #if os(iOS)
             .searchable(
                 text: $viewModel.searchText,
                 placement: .navigationBarDrawer(displayMode: .always),
                 prompt: searchPlaceholder
             )
+            #else
+            .searchable(
+                text: $viewModel.searchText,
+                prompt: searchPlaceholder
+            )
+            #endif
             .searchScopes($viewModel.searchScope, activation: .onTextEntry) {
                 ForEach(SearchScope.allCases) { scope in
                     Text(scope.displayText)

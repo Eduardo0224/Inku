@@ -38,7 +38,8 @@ protocol MangaListViewModelProtocol: Observable {
 
     // MARK: - Functions
 
-    func loadInitialDataIfNeeded() async
+    @discardableResult
+    func loadInitialDataIfNeeded() -> Task<Void, Never>
     func loadMangas() async
     func loadMoreMangas() async
     func loadFilterOptions() async

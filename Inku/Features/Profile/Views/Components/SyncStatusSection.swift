@@ -135,28 +135,20 @@ struct SyncStatusSection<T: AuthViewModelProtocol>: View {
     }
 
     private var syncButton: some View {
-        Button {
+        InkuButton(
+            L10n.Profile.Sync.button,
+            style: .primary,
+            isFullWidth: true,
+            isLoading: authViewModel.isSyncing,
+            loadingText: L10n.Common.loading,
+            isDisabled: authViewModel.isLoadingCloud,
+            height: 50,
+            cornerRadius: InkuRadius.radius12
+        ) {
             Task {
                 await authViewModel.fullSync()
             }
-        } label: {
-            HStack {
-                if authViewModel.isSyncing {
-                    ProgressView()
-                        .tint(Color.inkuTextOnAccent)
-                }
-
-                Text(authViewModel.isSyncing ? L10n.Common.loading : L10n.Profile.Sync.button)
-                    .font(.inkuBody)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(Color.inkuTextOnAccent)
-            }
-            .frame(maxWidth: .infinity)
-            .frame(height: 50)
-            .background(authViewModel.isSyncing ? Color.inkuAccent.opacity(0.6) : Color.inkuAccent)
-            .clipShape(RoundedRectangle(cornerRadius: InkuRadius.radius12))
         }
-        .disabled(authViewModel.isSyncing || authViewModel.isLoadingCloud)
     }
 }
 

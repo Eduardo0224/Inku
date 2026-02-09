@@ -122,7 +122,7 @@ struct MangaHeaderSection: View {
         .padding(.horizontal, InkuSpacing.spacing8)
         .padding(.vertical, InkuSpacing.spacing4)
         .background {
-            if #available(iOS 26, *) {
+            if #available(iOS 26, macOS 26, *) {
                 RoundedRectangle(cornerRadius: InkuRadius.radius12)
                     .glassEffect(.regular)
             } else {

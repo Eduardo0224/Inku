@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		D5A7EB122F0163DA001B368C /* InkuUI in Frameworks */ = {isa = PBXBuildFile; productRef = D5A7EB112F0163DA001B368C /* InkuUI */; };
+		D5EFEFA62F364EA8006F3603 /* InkuUI in Frameworks */ = {isa = PBXBuildFile; productRef = D5EFEFA52F364EA8006F3603 /* InkuUI */; };
+		D5EFEFA82F364EB7006F3603 /* SwiftData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5EFEFA72F364EB7006F3603 /* SwiftData.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,7 +25,124 @@
 /* Begin PBXFileReference section */
 		D575EC052EFC8A9B00F99309 /* InkuTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InkuTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5A761502EF6DBB70043DFF3 /* Inku.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inku.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5EFEF992F364E60006F3603 /* Inku.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inku.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5EFEFA72F364EB7006F3603 /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk/System/Library/Frameworks/SwiftData.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		D5EFF0882F365148006F3603 /* Exceptions for "Inku" folder in "InkuMac" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				Core/API/APIEndpoints.swift,
+				"Core/Extensions/Bundle+AppVersion.swift",
+				"Core/Extensions/View+SectionIndex.swift",
+				Core/Localization/L10n.swift,
+				Core/Models/Author.swift,
+				Core/Models/AuthState.swift,
+				Core/Models/AuthToken.swift,
+				Core/Models/CloudCollectionManga.swift,
+				Core/Models/CreateCollectionMangaRequest.swift,
+				Core/Models/CustomSearch.swift,
+				Core/Models/Demographic.swift,
+				Core/Models/Genre.swift,
+				Core/Models/Manga.swift,
+				Core/Models/MangaListResponse.swift,
+				Core/Models/MangaPresentationMode.swift,
+				Core/Models/PaginationMetadata.swift,
+				Core/Models/SearchSortOption.swift,
+				Core/Models/SyncStatus.swift,
+				Core/Models/Theme.swift,
+				Core/Models/TokenResponse.swift,
+				Core/Models/User.swift,
+				Core/Preview/PreviewContainer.swift,
+				Core/Services/KeychainService.swift,
+				Core/Services/NetworkService.swift,
+				Core/Services/Protocols/KeychainServiceProtocol.swift,
+				Core/Services/Protocols/NetworkServiceProtocol.swift,
+				Features/AdvancedFilters/Interactor/AdvancedFiltersInteractor.swift,
+				Features/AdvancedFilters/Interactor/MockAdvancedFiltersInteractor.swift,
+				Features/AdvancedFilters/Interactor/Protocols/AdvancedFiltersInteractorProtocol.swift,
+				Features/AdvancedFilters/ViewModel/AdvancedFiltersViewModel.swift,
+				Features/AdvancedFilters/ViewModel/Protocols/AdvancedFiltersViewModelProtocol.swift,
+				Features/AdvancedFilters/Views/AdvancedFilterView.swift,
+				Features/AdvancedFilters/Views/Components/FilterDisclosureSection.swift,
+				Features/Authentication/Interactor/AuthInteractor.swift,
+				Features/Authentication/Interactor/MockAuthInteractor.swift,
+				Features/Authentication/Interactor/Protocols/AuthInteractorProtocol.swift,
+				Features/Authentication/ViewModel/AuthViewModel.swift,
+				Features/Authentication/ViewModel/MockAuthViewModel.swift,
+				Features/Authentication/ViewModel/Protocols/AuthViewModelProtocol.swift,
+				Features/Authentication/Views/LoginView.swift,
+				Features/Authentication/Views/RegistrationView.swift,
+				Features/Collection/Environment/CollectionViewModelEnvironment.swift,
+				Features/Collection/Environment/EmptyCollectionViewModel.swift,
+				Features/Collection/Interactor/CollectionInteractor.swift,
+				Features/Collection/Interactor/MockCollectionInteractor.swift,
+				Features/Collection/Interactor/Protocols/CollectionInteractorProtocol.swift,
+				Features/Collection/Models/CollectionFilter.swift,
+				Features/Collection/Models/CollectionManga.swift,
+				Features/Collection/Models/CollectionSortOption.swift,
+				Features/Collection/ViewModel/CollectionViewModel.swift,
+				Features/Collection/ViewModel/MockCollectionViewModel.swift,
+				Features/Collection/ViewModel/Protocols/CollectionViewModelProtocol.swift,
+				Features/Collection/Views/CollectionListView.swift,
+				Features/Collection/Views/CollectionView.swift,
+				Features/Collection/Views/Components/CollectionItemCard.swift,
+				Features/Collection/Views/Components/CollectionStatsView.swift,
+				Features/Collection/Views/Components/EditCollectionSheet.swift,
+				Features/MangaDetail/Views/Components/MangaAuthorsSection.swift,
+				Features/MangaDetail/Views/Components/MangaBackgroundSection.swift,
+				Features/MangaDetail/Views/Components/MangaBackgroundSheet.swift,
+				Features/MangaDetail/Views/Components/MangaHeaderSection.swift,
+				Features/MangaDetail/Views/Components/MangaPublicationSection.swift,
+				Features/MangaDetail/Views/Components/MangaStatsSection.swift,
+				Features/MangaDetail/Views/Components/MangaSynopsisSection.swift,
+				Features/MangaDetail/Views/Components/MangaTagsSection.swift,
+				Features/MangaDetail/Views/MangaDetailView.swift,
+				Features/MangaList/Interactor/MangaListInteractor.swift,
+				Features/MangaList/Interactor/MockMangaListInteractor.swift,
+				Features/MangaList/Interactor/Protocols/MangaListInteractorProtocol.swift,
+				Features/MangaList/Models/MangaFilter.swift,
+				Features/MangaList/ViewModel/MangaListViewModel.swift,
+				Features/MangaList/ViewModel/MockMangaListViewModel.swift,
+				Features/MangaList/ViewModel/Protocols/MangaListViewModelProtocol.swift,
+				Features/MangaList/Views/Components/EmptyStateView.swift,
+				Features/MangaList/Views/Components/LoadingStateView.swift,
+				Features/MangaList/Views/Components/MangaCardView.swift,
+				Features/MangaList/Views/Components/MangaGridSkeletonView.swift,
+				Features/MangaList/Views/Components/MangaGridView.swift,
+				Features/MangaList/Views/Components/MangaRowView.swift,
+				Features/MangaList/Views/MangaListView.swift,
+				Features/Profile/Views/Components/AuthenticatedHeaderSection.swift,
+				Features/Profile/Views/Components/ProfileLoadingOverlay.swift,
+				Features/Profile/Views/Components/SyncMangaRow.swift,
+				Features/Profile/Views/Components/SyncStatusSection.swift,
+				Features/Profile/Views/Components/UnauthenticatedSection.swift,
+				Features/Profile/Views/ProfileView.swift,
+				Features/Search/Interactor/MockSearchInteractor.swift,
+				Features/Search/Interactor/Protocols/SearchInteractorProtocol.swift,
+				Features/Search/Interactor/SearchInteractor.swift,
+				Features/Search/Models/MangaSearchMode.swift,
+				Features/Search/Models/SearchScope.swift,
+				Features/Search/ViewModel/MockSearchViewModel.swift,
+				Features/Search/ViewModel/Protocols/SearchViewModelProtocol.swift,
+				Features/Search/ViewModel/SearchViewModel.swift,
+				Features/Search/Views/Components/AuthorResultsView.swift,
+				Features/Search/Views/Components/MangaResultsView.swift,
+				Features/Search/Views/SearchView.swift,
+				Resources/AdvancedFiltersLocalizable.xcstrings,
+				Resources/AuthenticationLocalizable.xcstrings,
+				Resources/CollectionLocalizable.xcstrings,
+				Resources/Localizable.xcstrings,
+				Resources/MangaDetailLocalizable.xcstrings,
+				Resources/MangaListLocalizable.xcstrings,
+				Resources/ProfileLocalizable.xcstrings,
+				Resources/SearchLocalizable.xcstrings,
+			);
+			target = D5EFEF982F364E60006F3603 /* InkuMac */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D575EC062EFC8A9B00F99309 /* InkuTests */ = {
@@ -33,7 +152,15 @@
 		};
 		D5A761522EF6DBB70043DFF3 /* Inku */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D5EFF0882F365148006F3603 /* Exceptions for "Inku" folder in "InkuMac" target */,
+			);
 			path = Inku;
+			sourceTree = "<group>";
+		};
+		D5EFEF9A2F364E60006F3603 /* InkuMac */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = InkuMac;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -54,6 +181,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D5EFEF962F364E60006F3603 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D5EFEFA82F364EB7006F3603 /* SwiftData.framework in Frameworks */,
+				D5EFEFA62F364EA8006F3603 /* InkuUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -62,6 +198,8 @@
 			children = (
 				D5A761522EF6DBB70043DFF3 /* Inku */,
 				D575EC062EFC8A9B00F99309 /* InkuTests */,
+				D5EFEF9A2F364E60006F3603 /* InkuMac */,
+				D5EFEFA42F364EA8006F3603 /* Frameworks */,
 				D5A761512EF6DBB70043DFF3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -71,8 +209,17 @@
 			children = (
 				D5A761502EF6DBB70043DFF3 /* Inku.app */,
 				D575EC052EFC8A9B00F99309 /* InkuTests.xctest */,
+				D5EFEF992F364E60006F3603 /* Inku.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D5EFEFA42F364EA8006F3603 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D5EFEFA72F364EB7006F3603 /* SwiftData.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -124,6 +271,29 @@
 			productReference = D5A761502EF6DBB70043DFF3 /* Inku.app */;
 			productType = "com.apple.product-type.application";
 		};
+		D5EFEF982F364E60006F3603 /* InkuMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D5EFEFA32F364E62006F3603 /* Build configuration list for PBXNativeTarget "InkuMac" */;
+			buildPhases = (
+				D5EFEF952F364E60006F3603 /* Sources */,
+				D5EFEF962F364E60006F3603 /* Frameworks */,
+				D5EFEF972F364E60006F3603 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				D5EFEF9A2F364E60006F3603 /* InkuMac */,
+			);
+			name = InkuMac;
+			packageProductDependencies = (
+				D5EFEFA52F364EA8006F3603 /* InkuUI */,
+			);
+			productName = InkuMac;
+			productReference = D5EFEF992F364E60006F3603 /* Inku.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -131,7 +301,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2620;
+				LastSwiftUpdateCheck = 2630;
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					D575EC042EFC8A9B00F99309 = {
@@ -140,6 +310,9 @@
 					};
 					D5A7614F2EF6DBB70043DFF3 = {
 						CreatedOnToolsVersion = 26.2;
+					};
+					D5EFEF982F364E60006F3603 = {
+						CreatedOnToolsVersion = 26.3;
 					};
 				};
 			};
@@ -161,6 +334,7 @@
 			projectRoot = "";
 			targets = (
 				D5A7614F2EF6DBB70043DFF3 /* Inku */,
+				D5EFEF982F364E60006F3603 /* InkuMac */,
 				D575EC042EFC8A9B00F99309 /* InkuTests */,
 			);
 		};
@@ -181,6 +355,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D5EFEF972F364E60006F3603 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -192,6 +373,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		D5A7614C2EF6DBB70043DFF3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D5EFEF952F364E60006F3603 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -397,6 +585,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sdp26.Inku;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = NO;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -431,12 +622,113 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sdp26.Inku;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = NO;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D5EFEFA12F364E62006F3603 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/InkuMac/InkuMac.entitlements";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V8BCKJ57FF;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PRINTING = NO;
+				ENABLE_RESOURCE_ACCESS_USB = NO;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Inku;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
+				MARKETING_VERSION = 2.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sdp26.InkuMac;
+				PRODUCT_NAME = Inku;
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = NO;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		D5EFEFA22F364E62006F3603 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/InkuMac/InkuMac.entitlements";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V8BCKJ57FF;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PRINTING = NO;
+				ENABLE_RESOURCE_ACCESS_USB = NO;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Inku;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
+				MARKETING_VERSION = 2.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sdp26.InkuMac;
+				PRODUCT_NAME = Inku;
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = NO;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -470,6 +762,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		D5EFEFA32F364E62006F3603 /* Build configuration list for PBXNativeTarget "InkuMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D5EFEFA12F364E62006F3603 /* Debug */,
+				D5EFEFA22F364E62006F3603 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -485,6 +786,11 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		D5A7EB112F0163DA001B368C /* InkuUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D5A7EB102F0163DA001B368C /* XCRemoteSwiftPackageReference "InkuUI" */;
+			productName = InkuUI;
+		};
+		D5EFEFA52F364EA8006F3603 /* InkuUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D5A7EB102F0163DA001B368C /* XCRemoteSwiftPackageReference "InkuUI" */;
 			productName = InkuUI;

@@ -99,12 +99,19 @@ struct CollectionListView: View {
                 collectionList
             }
         }
+        #if os(iOS)
         .searchable(
             text: $searchText,
             placement: .navigationBarDrawer(displayMode: .always),
             prompt: L10n.Collection.Search.placeholder
         )
         .scrollDismissesKeyboard(.interactively)
+        #else
+        .searchable(
+            text: $searchText,
+            prompt: L10n.Collection.Search.placeholder
+        )
+        #endif
         .sheet(item: $mangaToEdit) { manga in
             EditCollectionSheet(collectionManga: manga)
         }
