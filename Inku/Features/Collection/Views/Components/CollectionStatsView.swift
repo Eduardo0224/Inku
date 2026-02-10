@@ -39,7 +39,7 @@ struct CollectionStatsView: View {
                     }
                     #else
                     largeStatsView
-                        .fixedSize()
+                        .frame(maxWidth: .infinity)
                     #endif
                 }
             }

@@ -41,7 +41,17 @@ struct RegistrationView<T: AuthViewModelProtocol>: View {
             }
             .padding(InkuSpacing.spacing24)
         }
+        #if os(visionOS)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button(L10n.Common.cancel) {
+                    dismiss()
+                }
+            }
+        }
+        #else
         .scrollDismissesKeyboard(.interactively)
+        #endif
         .background(Color.inkuSurface)
         .alert(
             L10n.Error.title,

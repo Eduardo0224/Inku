@@ -200,6 +200,11 @@ struct MangaListView: View {
                 MangaRowView(manga: manga)
             }
             .buttonStyle(.plain)
+            #if os(visionOS)
+            .buttonBorderShape(
+                .roundedRectangle(radius: InkuRadius.radius12)
+            )
+            #endif
             .task {
                 if manga == viewModel.mangas.last {
                     Task {

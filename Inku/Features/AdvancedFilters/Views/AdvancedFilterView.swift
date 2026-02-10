@@ -194,7 +194,11 @@ struct AdvancedFilterView: View {
                 Text(L10n.AdvancedFilters.SearchMode.beginsWith).tag(false)
                 Text(L10n.AdvancedFilters.SearchMode.contains).tag(true)
             }
+            #if os(visionOS)
+            .pickerStyle(.palette)
+            #else
             .pickerStyle(.segmented)
+            #endif
             .tint(Color.inkuAccentStrong)
         }
         .padding(InkuSpacing.spacing16)
@@ -235,12 +239,16 @@ struct AdvancedFilterView: View {
                         .foregroundStyle(Color.inkuAccentSoft)
                 }
                 .padding(InkuSpacing.spacing12)
+                #if !os(visionOS)
                 .background(Color.inkuSurface)
+                #endif
                 .cornerRadius(InkuRadius.radius8)
+                #if !os(visionOS)
                 .overlay(
                     RoundedRectangle(cornerRadius: InkuRadius.radius8)
                         .stroke(Color.inkuAccent, lineWidth: 1)
                 )
+                #endif
             }
         }
         .padding(InkuSpacing.spacing16)

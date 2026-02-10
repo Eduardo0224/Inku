@@ -109,6 +109,7 @@ struct MangaDetailView: View {
     private var contentView: some View {
         ZStack(alignment: .top) {
             backgroundImageView
+                .ignoresSafeArea()
 
             // Content
             GeometryReader { geometry in

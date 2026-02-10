@@ -105,7 +105,9 @@ struct CollectionListView: View {
             placement: .navigationBarDrawer(displayMode: .always),
             prompt: L10n.Collection.Search.placeholder
         )
+        #if !os(visionOS)
         .scrollDismissesKeyboard(.interactively)
+        #endif
         #else
         .searchable(
             text: $searchText,

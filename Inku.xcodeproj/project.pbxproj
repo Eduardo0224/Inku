@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D5A2CBC22F3A30EA00D279BA /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = D5A2CBC12F3A30EA00D279BA /* RealityKitContent */; };
 		D5A7EB122F0163DA001B368C /* InkuUI in Frameworks */ = {isa = PBXBuildFile; productRef = D5A7EB112F0163DA001B368C /* InkuUI */; };
+		D5DDE43E2F3A3AAD00E8CB32 /* InkuUI in Frameworks */ = {isa = PBXBuildFile; productRef = D5DDE43D2F3A3AAD00E8CB32 /* InkuUI */; };
 		D5EFEFA62F364EA8006F3603 /* InkuUI in Frameworks */ = {isa = PBXBuildFile; productRef = D5EFEFA52F364EA8006F3603 /* InkuUI */; };
 		D5EFEFA82F364EB7006F3603 /* SwiftData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5EFEFA72F364EB7006F3603 /* SwiftData.framework */; };
 /* End PBXBuildFile section */
@@ -24,18 +26,143 @@
 
 /* Begin PBXFileReference section */
 		D575EC052EFC8A9B00F99309 /* InkuTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InkuTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5A2CBBD2F3A30EA00D279BA /* Inku.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inku.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5A2CBC02F3A30EA00D279BA /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
 		D5A761502EF6DBB70043DFF3 /* Inku.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inku.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5EFEF992F364E60006F3603 /* Inku.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inku.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5EFEFA72F364EB7006F3603 /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk/System/Library/Frameworks/SwiftData.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		D5A2CBCA2F3A30EB00D279BA /* Exceptions for "InkuVision" folder in "InkuVision" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = D5A2CBBC2F3A30EA00D279BA /* InkuVision */;
+		};
+		D5A2CC3A2F3A32A500D279BA /* Exceptions for "Inku" folder in "InkuVision" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				Core/API/APIEndpoints.swift,
+				"Core/Extensions/Bundle+AppVersion.swift",
+				"Core/Extensions/View+AdaptiveNavigationTitle.swift",
+				"Core/Extensions/View+LiquidGlass.swift",
+				"Core/Extensions/View+SectionIndex.swift",
+				"Core/Extensions/View+TabBarMinimizeBehavior.swift",
+				Core/Localization/L10n.swift,
+				Core/Models/Author.swift,
+				Core/Models/AuthState.swift,
+				Core/Models/AuthToken.swift,
+				Core/Models/CloudCollectionManga.swift,
+				Core/Models/CreateCollectionMangaRequest.swift,
+				Core/Models/CustomSearch.swift,
+				Core/Models/Demographic.swift,
+				Core/Models/Genre.swift,
+				Core/Models/Manga.swift,
+				Core/Models/MangaListResponse.swift,
+				Core/Models/MangaPresentationMode.swift,
+				Core/Models/PaginationMetadata.swift,
+				Core/Models/SearchSortOption.swift,
+				Core/Models/SyncStatus.swift,
+				Core/Models/Theme.swift,
+				Core/Models/TokenResponse.swift,
+				Core/Models/User.swift,
+				Core/Preview/PreviewContainer.swift,
+				Core/Services/KeychainService.swift,
+				Core/Services/NetworkService.swift,
+				Core/Services/Protocols/KeychainServiceProtocol.swift,
+				Core/Services/Protocols/NetworkServiceProtocol.swift,
+				Features/AdvancedFilters/Interactor/AdvancedFiltersInteractor.swift,
+				Features/AdvancedFilters/Interactor/MockAdvancedFiltersInteractor.swift,
+				Features/AdvancedFilters/Interactor/Protocols/AdvancedFiltersInteractorProtocol.swift,
+				Features/AdvancedFilters/ViewModel/AdvancedFiltersViewModel.swift,
+				Features/AdvancedFilters/ViewModel/Protocols/AdvancedFiltersViewModelProtocol.swift,
+				Features/AdvancedFilters/Views/AdvancedFilterView.swift,
+				Features/AdvancedFilters/Views/Components/FilterDisclosureSection.swift,
+				Features/Authentication/Interactor/AuthInteractor.swift,
+				Features/Authentication/Interactor/MockAuthInteractor.swift,
+				Features/Authentication/Interactor/Protocols/AuthInteractorProtocol.swift,
+				Features/Authentication/ViewModel/AuthViewModel.swift,
+				Features/Authentication/ViewModel/MockAuthViewModel.swift,
+				Features/Authentication/ViewModel/Protocols/AuthViewModelProtocol.swift,
+				Features/Authentication/Views/LoginView.swift,
+				Features/Authentication/Views/RegistrationView.swift,
+				Features/Collection/Environment/CollectionViewModelEnvironment.swift,
+				Features/Collection/Environment/EmptyCollectionViewModel.swift,
+				Features/Collection/Interactor/CollectionInteractor.swift,
+				Features/Collection/Interactor/MockCollectionInteractor.swift,
+				Features/Collection/Interactor/Protocols/CollectionInteractorProtocol.swift,
+				Features/Collection/Models/CollectionFilter.swift,
+				Features/Collection/Models/CollectionManga.swift,
+				Features/Collection/Models/CollectionSortOption.swift,
+				Features/Collection/ViewModel/CollectionViewModel.swift,
+				Features/Collection/ViewModel/MockCollectionViewModel.swift,
+				Features/Collection/ViewModel/Protocols/CollectionViewModelProtocol.swift,
+				Features/Collection/Views/CollectionListView.swift,
+				Features/Collection/Views/CollectionView.swift,
+				Features/Collection/Views/Components/CollectionItemCard.swift,
+				Features/Collection/Views/Components/CollectionStatsView.swift,
+				Features/Collection/Views/Components/EditCollectionSheet.swift,
+				Features/MangaDetail/Views/Components/MangaAuthorsSection.swift,
+				Features/MangaDetail/Views/Components/MangaBackgroundSection.swift,
+				Features/MangaDetail/Views/Components/MangaBackgroundSheet.swift,
+				Features/MangaDetail/Views/Components/MangaHeaderSection.swift,
+				Features/MangaDetail/Views/Components/MangaPublicationSection.swift,
+				Features/MangaDetail/Views/Components/MangaStatsSection.swift,
+				Features/MangaDetail/Views/Components/MangaSynopsisSection.swift,
+				Features/MangaDetail/Views/Components/MangaTagsSection.swift,
+				Features/MangaDetail/Views/MangaDetailView.swift,
+				Features/MangaList/Interactor/MangaListInteractor.swift,
+				Features/MangaList/Interactor/MockMangaListInteractor.swift,
+				Features/MangaList/Interactor/Protocols/MangaListInteractorProtocol.swift,
+				Features/MangaList/Models/MangaFilter.swift,
+				Features/MangaList/ViewModel/MangaListViewModel.swift,
+				Features/MangaList/ViewModel/MockMangaListViewModel.swift,
+				Features/MangaList/ViewModel/Protocols/MangaListViewModelProtocol.swift,
+				Features/MangaList/Views/Components/EmptyStateView.swift,
+				Features/MangaList/Views/Components/LoadingStateView.swift,
+				Features/MangaList/Views/Components/MangaCardView.swift,
+				Features/MangaList/Views/Components/MangaGridSkeletonView.swift,
+				Features/MangaList/Views/Components/MangaGridView.swift,
+				Features/MangaList/Views/Components/MangaRowView.swift,
+				Features/MangaList/Views/MangaListView.swift,
+				Features/Profile/Views/Components/AuthenticatedHeaderSection.swift,
+				Features/Profile/Views/Components/ProfileLoadingOverlay.swift,
+				Features/Profile/Views/Components/SyncMangaRow.swift,
+				Features/Profile/Views/Components/SyncStatusSection.swift,
+				Features/Profile/Views/Components/UnauthenticatedSection.swift,
+				Features/Profile/Views/ProfileView.swift,
+				Features/Search/Interactor/MockSearchInteractor.swift,
+				Features/Search/Interactor/Protocols/SearchInteractorProtocol.swift,
+				Features/Search/Interactor/SearchInteractor.swift,
+				Features/Search/Models/MangaSearchMode.swift,
+				Features/Search/Models/SearchScope.swift,
+				Features/Search/ViewModel/MockSearchViewModel.swift,
+				Features/Search/ViewModel/Protocols/SearchViewModelProtocol.swift,
+				Features/Search/ViewModel/SearchViewModel.swift,
+				Features/Search/Views/Components/AuthorResultsView.swift,
+				Features/Search/Views/Components/MangaResultsView.swift,
+				Features/Search/Views/SearchView.swift,
+				Resources/AdvancedFiltersLocalizable.xcstrings,
+				Resources/AuthenticationLocalizable.xcstrings,
+				Resources/CollectionLocalizable.xcstrings,
+				Resources/Localizable.xcstrings,
+				Resources/MangaDetailLocalizable.xcstrings,
+				Resources/MangaListLocalizable.xcstrings,
+				Resources/ProfileLocalizable.xcstrings,
+				Resources/SearchLocalizable.xcstrings,
+			);
+			target = D5A2CBBC2F3A30EA00D279BA /* InkuVision */;
+		};
 		D5EFF0882F365148006F3603 /* Exceptions for "Inku" folder in "InkuMac" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Assets.xcassets,
 				Core/API/APIEndpoints.swift,
 				"Core/Extensions/Bundle+AppVersion.swift",
+				"Core/Extensions/View+AdaptiveNavigationTitle.swift",
 				"Core/Extensions/View+SectionIndex.swift",
 				Core/Localization/L10n.swift,
 				Core/Models/Author.swift,
@@ -150,10 +277,19 @@
 			path = InkuTests;
 			sourceTree = "<group>";
 		};
+		D5A2CBBE2F3A30EA00D279BA /* InkuVision */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D5A2CBCA2F3A30EB00D279BA /* Exceptions for "InkuVision" folder in "InkuVision" target */,
+			);
+			path = InkuVision;
+			sourceTree = "<group>";
+		};
 		D5A761522EF6DBB70043DFF3 /* Inku */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				D5EFF0882F365148006F3603 /* Exceptions for "Inku" folder in "InkuMac" target */,
+				D5A2CC3A2F3A32A500D279BA /* Exceptions for "Inku" folder in "InkuVision" target */,
 			);
 			path = Inku;
 			sourceTree = "<group>";
@@ -170,6 +306,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D5A2CBBA2F3A30EA00D279BA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D5A2CBC22F3A30EA00D279BA /* RealityKitContent in Frameworks */,
+				D5DDE43E2F3A3AAD00E8CB32 /* InkuUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,13 +338,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D5A2CBBF2F3A30EA00D279BA /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				D5A2CBC02F3A30EA00D279BA /* RealityKitContent */,
+			);
+			path = Packages;
+			sourceTree = "<group>";
+		};
 		D5A761472EF6DBB70043DFF3 = {
 			isa = PBXGroup;
 			children = (
 				D5A761522EF6DBB70043DFF3 /* Inku */,
 				D575EC062EFC8A9B00F99309 /* InkuTests */,
 				D5EFEF9A2F364E60006F3603 /* InkuMac */,
+				D5A2CBBE2F3A30EA00D279BA /* InkuVision */,
 				D5EFEFA42F364EA8006F3603 /* Frameworks */,
+				D5A2CBBF2F3A30EA00D279BA /* Packages */,
 				D5A761512EF6DBB70043DFF3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -210,6 +365,7 @@
 				D5A761502EF6DBB70043DFF3 /* Inku.app */,
 				D575EC052EFC8A9B00F99309 /* InkuTests.xctest */,
 				D5EFEF992F364E60006F3603 /* Inku.app */,
+				D5A2CBBD2F3A30EA00D279BA /* Inku.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -247,6 +403,30 @@
 			productName = InkuTests;
 			productReference = D575EC052EFC8A9B00F99309 /* InkuTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		D5A2CBBC2F3A30EA00D279BA /* InkuVision */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D5A2CBCB2F3A30EB00D279BA /* Build configuration list for PBXNativeTarget "InkuVision" */;
+			buildPhases = (
+				D5A2CBB92F3A30EA00D279BA /* Sources */,
+				D5A2CBBA2F3A30EA00D279BA /* Frameworks */,
+				D5A2CBBB2F3A30EA00D279BA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				D5A2CBBE2F3A30EA00D279BA /* InkuVision */,
+			);
+			name = InkuVision;
+			packageProductDependencies = (
+				D5A2CBC12F3A30EA00D279BA /* RealityKitContent */,
+				D5DDE43D2F3A3AAD00E8CB32 /* InkuUI */,
+			);
+			productName = InkuVision;
+			productReference = D5A2CBBD2F3A30EA00D279BA /* Inku.app */;
+			productType = "com.apple.product-type.application";
 		};
 		D5A7614F2EF6DBB70043DFF3 /* Inku */ = {
 			isa = PBXNativeTarget;
@@ -308,6 +488,9 @@
 						CreatedOnToolsVersion = 26.2;
 						TestTargetID = D5A7614F2EF6DBB70043DFF3;
 					};
+					D5A2CBBC2F3A30EA00D279BA = {
+						CreatedOnToolsVersion = 26.3;
+					};
 					D5A7614F2EF6DBB70043DFF3 = {
 						CreatedOnToolsVersion = 26.2;
 					};
@@ -336,12 +519,20 @@
 				D5A7614F2EF6DBB70043DFF3 /* Inku */,
 				D5EFEF982F364E60006F3603 /* InkuMac */,
 				D575EC042EFC8A9B00F99309 /* InkuTests */,
+				D5A2CBBC2F3A30EA00D279BA /* InkuVision */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		D575EC032EFC8A9B00F99309 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D5A2CBBB2F3A30EA00D279BA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -366,6 +557,13 @@
 
 /* Begin PBXSourcesBuildPhase section */
 		D575EC012EFC8A9B00F99309 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D5A2CBB92F3A30EA00D279BA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -436,6 +634,72 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Inku.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Inku";
+			};
+			name = Release;
+		};
+		D5A2CBCC2F3A30EB00D279BA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V8BCKJ57FF;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "$(TARGET_NAME)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Inku;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sdp26.InkuVision;
+				PRODUCT_NAME = Inku;
+				SDKROOT = xros;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = NO;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 7;
+				XROS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		D5A2CBCD2F3A30EB00D279BA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V8BCKJ57FF;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "$(TARGET_NAME)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Inku;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sdp26.InkuVision;
+				PRODUCT_NAME = Inku;
+				SDKROOT = xros;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = NO;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 7;
+				XROS_DEPLOYMENT_TARGET = 26.2;
 			};
 			name = Release;
 		};
@@ -585,15 +849,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sdp26.Inku;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = NO;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Debug;
 		};
@@ -622,15 +887,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sdp26.Inku;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = NO;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Release;
 		};
@@ -744,6 +1010,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		D5A2CBCB2F3A30EB00D279BA /* Build configuration list for PBXNativeTarget "InkuVision" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D5A2CBCC2F3A30EB00D279BA /* Debug */,
+				D5A2CBCD2F3A30EB00D279BA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D5A7614B2EF6DBB70043DFF3 /* Build configuration list for PBXProject "Inku" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -785,7 +1060,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		D5A2CBC12F3A30EA00D279BA /* RealityKitContent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RealityKitContent;
+		};
 		D5A7EB112F0163DA001B368C /* InkuUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D5A7EB102F0163DA001B368C /* XCRemoteSwiftPackageReference "InkuUI" */;
+			productName = InkuUI;
+		};
+		D5DDE43D2F3A3AAD00E8CB32 /* InkuUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D5A7EB102F0163DA001B368C /* XCRemoteSwiftPackageReference "InkuUI" */;
 			productName = InkuUI;

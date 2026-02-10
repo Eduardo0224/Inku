@@ -2,15 +2,16 @@
 
 ## Overview
 
-Inku v3.0.0 extends the app to **macOS**, **tvOS**, and adds **iOS Widgets**, maintaining Clean Architecture principles and code reusability across platforms.
+Inku v3.0.0 extends the app to **macOS**, **visionOS**, and adds **iOS Widgets**, maintaining Clean Architecture principles and code reusability across platforms.
 
 ## Platform Support
 
 | Platform | Version | Features |
 |----------|---------|----------|
 | **iOS** | 18.6+ | Original app with widgets |
+| **iPadOS** | 18.6+ | Adaptive layouts, multitasking |
 | **macOS** | 15.0+ | Multi-column layout, keyboard shortcuts, menu bar |
-| **tvOS** | 18.0+ | Focus-based navigation, remote control |
+| **visionOS** | 2.0+ | Spatial interface, hover effects, ornaments |
 
 ## Project Structure
 
@@ -26,12 +27,10 @@ Inku/
 │   │   ├── MacSidebarView.swift
 │   │   └── MacToolbar.swift
 │   └── Info.plist
-├── InkuTV/                         # tvOS App Target
-│   ├── InkuTVApp.swift             # tvOS entry point
-│   ├── tvOS/                       # tvOS-specific views
-│   │   ├── TVMainView.swift
-│   │   ├── TVCardView.swift
-│   │   └── TVFocusGuide.swift
+├── InkuVision/                     # visionOS App Target
+│   ├── InkuVisionApp.swift         # visionOS entry point
+│   ├── InkuVision.entitlements     # visionOS capabilities
+│   ├── Assets.xcassets/            # visionOS app icons (solid image stack)
 │   └── Info.plist
 ├── InkuWidget/                     # Widget Extension
 │   ├── InkuWidget.swift            # Widget main file
@@ -87,12 +86,12 @@ Each platform has its own entry point and UI adaptations:
 - Multi-window support
 - Toolbar items
 
-#### tvOS-Specific
-- `InkuTVApp.swift` - Focus-based TabView
-- Large text and spacing for TV viewing distance
-- Remote control navigation
-- Focus guides for complex layouts
-- Simplified UI (no forms, no keyboards)
+#### visionOS-Specific
+- `InkuVisionApp.swift` - TabView with spatial adaptations
+- Window configuration (.plain style, default size)
+- Hover effects for spatial feedback
+- Platform-specific UI adjustments (picker styles, keyboard dismissal)
+- Sheet dismissal buttons (no swipe gestures)
 
 #### Widget Extension
 - Timeline Provider for data updates
@@ -113,10 +112,10 @@ Use compiler directives for platform-specific code:
 // macOS-only code
 .navigationSplitViewStyle(.balanced)
 .toolbar { /* macOS toolbar */ }
-#elseif os(tvOS)
-// tvOS-only code
-.focusSection()
-.padding(.horizontal, 90)
+#elseif os(visionOS)
+// visionOS-only code
+.windowStyle(.plain)
+.defaultSize(width: 1200, height: 800)
 #endif
 ```
 
@@ -130,13 +129,18 @@ InkuUI package is shared across all platforms with platform-specific adaptations
 - ✅ `InkuEmptyView` - Platform-agnostic empty state
 - ✅ `InkuLoadingView` - Progress indicators on all platforms
 
-### Platform-Specific Tokens
+### Platform-Specific Adaptations
 ```swift
-// Spacing adapts to platform
-#if os(tvOS)
-InkuSpacing.spacing32  // Larger for TV
+// Hover effects for visionOS
+#if os(visionOS)
+.inkuHoverCard(scale: 1.05)
 #else
-InkuSpacing.spacing16  // Standard for iOS/macOS
+.inkuCard()
+#endif
+
+// Keyboard dismissal (unavailable on visionOS)
+#if !os(visionOS)
+.scrollDismissesKeyboard(.interactively)
 #endif
 ```
 
@@ -190,15 +194,17 @@ NavigationSplitView {
 }
 ```
 
-### tvOS (Focus-Based TabView)
+### visionOS (Spatial TabView)
 ```swift
 TabView {
-    MangaListView()
-        .tabItem { Label("Browse", systemImage: "books.vertical") }
-    CollectionView()
-        .tabItem { Label("Collection", systemImage: "bookmark") }
+    Tab("Browse", systemImage: "books.vertical") {
+        MangaListView()
+    }
+    Tab("Collection", systemImage: "bookmark") {
+        CollectionView()
+    }
 }
-.focusSection()  // tvOS focus container
+// TabView automatically displays as sidebar on visionOS
 ```
 
 ## Widget Architecture
@@ -268,7 +274,7 @@ All platforms use the same String Catalog files:
 ### Xcode Targets
 1. **Inku (iOS)** - iPhone & iPad
 2. **InkuMac** - macOS
-3. **InkuTV** - tvOS (Apple TV)
+3. **InkuVision** - visionOS (Apple Vision Pro)
 4. **InkuWidget** - iOS Widget Extension
 
 ### Shared Framework (Alternative)
@@ -285,11 +291,11 @@ For better code organization, consider creating a shared framework:
 - Keyboard navigation built-in
 - Resizable sidebars
 
-### Why Simplified UI for tvOS?
-- Viewing distance (10ft rule)
-- Limited input (remote control)
-- Focus-based navigation only
-- No text input (search via voice/keyboard)
+### Why Spatial Adaptations for visionOS?
+- Spatial computing interface
+- Hover effects for depth perception
+- No swipe gestures (explicit buttons needed)
+- Window management vs fullscreen
 
 ### Why Separate App Targets?
 - Clear separation of concerns
@@ -310,11 +316,11 @@ For better code organization, consider creating a shared framework:
 3. Implement sidebar navigation
 4. Add keyboard shortcuts
 
-### Phase 3: tvOS Target
-1. Create tvOS target
-2. Create InkuTVApp.swift
-3. Implement focus navigation
-4. Simplify UI for TV
+### Phase 3: visionOS Target
+1. ✅ Create visionOS target
+2. ✅ Create InkuVisionApp.swift
+3. ✅ Implement platform adaptations
+4. ✅ Add hover effects and spatial UI
 
 ### Phase 4: Widget Extension
 1. Create Widget Extension target
@@ -329,10 +335,10 @@ For better code organization, consider creating a shared framework:
 - Optimize image caching for larger screens
 - Keyboard shortcuts should be instant
 
-### tvOS
-- Lazy loading for large grids
-- Focus engine optimization
-- Preload adjacent content
+### visionOS
+- Optimize for spatial interactions
+- Hover effect performance
+- Window state management
 
 ### Widgets
 - Minimize timeline updates (battery)
@@ -342,22 +348,22 @@ For better code organization, consider creating a shared framework:
 ## Accessibility
 
 All platforms must maintain accessibility:
-- **VoiceOver**: iOS, macOS, tvOS
+- **VoiceOver**: iOS, macOS, visionOS
 - **Dynamic Type**: All platforms
-- **Keyboard Navigation**: macOS, tvOS
-- **Focus Indicators**: tvOS critical
+- **Keyboard Navigation**: macOS, visionOS
+- **Spatial Audio**: visionOS
 
 ## Next Steps
 
 1. ✅ Create this architecture document
-2. ⏳ Add macOS target to Xcode
-3. ⏳ Add tvOS target to Xcode
+2. ✅ Add macOS target to Xcode
+3. ✅ Add visionOS target to Xcode
 4. ⏳ Create Widget Extension
-5. ⏳ Implement platform-specific entry points
+5. ✅ Implement platform-specific entry points
 6. ⏳ Test on all platforms
 
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2026-02-06
-**Status**: Planning Phase
+**Last Updated**: 2026-02-10
+**Status**: In Progress (macOS ✅, visionOS ✅, Widget ⏳)
