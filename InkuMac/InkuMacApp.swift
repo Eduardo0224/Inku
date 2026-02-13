@@ -29,13 +29,18 @@ struct InkuMacApp: App {
             MacOSRootView()
                 .environment(\.collectionViewModel, collectionViewModel)
                 .environment(authViewModel)
+                .onAppear {
+                    setupViewModels()
+                }
         }
-        .modelContainer(for: CollectionManga.self)
+        .modelContainer(SharedModelContainer.shared)
         .commands {
             // Add macOS-specific menu commands
             CommandGroup(replacing: .sidebar) {
-                Button("Toggle Sidebar") {
+                Button {
                     NSApp.keyWindow?.firstResponder?.tryToPerform(#selector(NSSplitViewController.toggleSidebar(_:)), with: nil)
+                } label: {
+                    Label(L10n.Commands.toggleSidebar, systemImage: "sidebar.left")
                 }
                 .keyboardShortcut("s", modifiers: [.command, .option])
             }
@@ -62,6 +67,12 @@ struct InkuMacApp: App {
                 .keyboardShortcut("4", modifiers: .command)
             }
         }
+    }
+
+    // MARK: - Private Functions
+
+    private func setupViewModels() {
+        authViewModel.setCollectionViewModel(collectionViewModel)
     }
 }
 

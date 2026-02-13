@@ -14,6 +14,7 @@
 import SwiftUI
 
 extension View {
+
     /// Applies an adaptive navigation title that hides on iOS when the tab bar is in top placement
     /// and always shows on other platforms.
     ///

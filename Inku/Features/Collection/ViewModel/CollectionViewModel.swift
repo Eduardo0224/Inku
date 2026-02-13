@@ -26,14 +26,21 @@ final class CollectionViewModel: CollectionViewModelProtocol {
     @ObservationIgnored
     private let interactor: CollectionInteractorProtocol
 
+    @ObservationIgnored
+    private let widgetCenter: WidgetCenterProtocol
+
     var errorMessage: String?
     var isLoadingManga: Bool = false
     var loadedManga: Manga?
 
     // MARK: - Initializers
 
-    init(interactor: CollectionInteractorProtocol = CollectionInteractor()) {
+    init(
+        interactor: CollectionInteractorProtocol = CollectionInteractor(),
+        widgetCenter: WidgetCenterProtocol = WidgetCenterWrapper()
+    ) {
         self.interactor = interactor
+        self.widgetCenter = widgetCenter
     }
 
     // MARK: - CRUD Operations
@@ -58,6 +65,7 @@ final class CollectionViewModel: CollectionViewModelProtocol {
             if modelContext.hasChanges {
                 try modelContext.save()
                 errorMessage = nil
+                widgetCenter.refreshInkuWidgets()
             }
         } catch {
             let collectionError = CollectionError.saveFailed(error)
@@ -79,6 +87,7 @@ final class CollectionViewModel: CollectionViewModelProtocol {
             if modelContext.hasChanges {
                 try modelContext.save()
                 errorMessage = nil
+                widgetCenter.refreshInkuWidgets()
             }
         } catch {
             let collectionError = CollectionError.updateFailed(error)
@@ -100,6 +109,7 @@ final class CollectionViewModel: CollectionViewModelProtocol {
             if modelContext.hasChanges {
                 try modelContext.save()
                 errorMessage = nil
+                widgetCenter.refreshInkuWidgets()
             }
         } catch {
             let collectionError = CollectionError.deleteFailed(error)
@@ -257,6 +267,7 @@ final class CollectionViewModel: CollectionViewModelProtocol {
             if modelContext.hasChanges {
                 try modelContext.save()
                 errorMessage = nil
+                widgetCenter.refreshInkuWidgets()
             }
         } catch {
             let collectionError = CollectionError.saveFailed(error)

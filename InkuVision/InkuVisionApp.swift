@@ -46,10 +46,19 @@ struct InkuVisionApp: App {
             .frame(minWidth: 800, minHeight: 600)
             .environment(\.collectionViewModel, collectionViewModel)
             .environment(authViewModel)
+            .onAppear {
+                setupViewModels()
+            }
         }
-        .windowStyle(.plain)
+        .windowStyle(.automatic)
         .windowResizability(.contentSize)
         .defaultSize(width: 1200, height: 800)
-        .modelContainer(for: CollectionManga.self)
+        .modelContainer(SharedModelContainer.shared)
+    }
+
+    // MARK: - Private Functions
+
+    private func setupViewModels() {
+        authViewModel.setCollectionViewModel(collectionViewModel)
     }
 }
