@@ -122,13 +122,18 @@ struct MangaHeaderSection: View {
         .padding(.horizontal, InkuSpacing.spacing8)
         .padding(.vertical, InkuSpacing.spacing4)
         .background {
-            if #available(iOS 26, *) {
+            #if os(visionOS)
+            Capsule()
+                .fill(.thinMaterial)
+            #else
+            if #available(iOS 26, macOS 26, *) {
                 RoundedRectangle(cornerRadius: InkuRadius.radius12)
                     .glassEffect(.regular)
             } else {
                 Capsule()
                     .fill(.thinMaterial)
             }
+            #endif
         }
         .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
     }

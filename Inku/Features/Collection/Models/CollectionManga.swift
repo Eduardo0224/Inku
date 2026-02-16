@@ -25,6 +25,7 @@ final class CollectionManga: Identifiable {
 
     @Attribute(.unique) var mangaId: Int
     var title: String
+    var japaneseTitle: String?
     var coverImageURL: String?
     var totalVolumes: Int?
 
@@ -88,6 +89,7 @@ final class CollectionManga: Identifiable {
     init(
         mangaId: Int,
         title: String,
+        japaneseTitle: String? = nil,
         coverImageURL: String? = nil,
         totalVolumes: Int? = nil,
         volumesOwnedCount: Int = 0,
@@ -96,6 +98,7 @@ final class CollectionManga: Identifiable {
     ) {
         self.mangaId = mangaId
         self.title = title
+        self.japaneseTitle = japaneseTitle
         self.coverImageURL = coverImageURL
         self.totalVolumes = totalVolumes
         self.volumesOwnedCount = volumesOwnedCount
@@ -114,6 +117,7 @@ extension CollectionManga {
         self.init(
             mangaId: manga.id,
             title: manga.title,
+            japaneseTitle: manga.titleJapanese,
             coverImageURL: manga.mainPicture?.replacingOccurrences(of: "\"", with: ""),
             totalVolumes: manga.volumes
         )

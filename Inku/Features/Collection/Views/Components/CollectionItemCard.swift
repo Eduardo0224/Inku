@@ -63,7 +63,7 @@ struct CollectionItemCard: View {
             actionsMenu
         }
         .padding(InkuSpacing.spacing12)
-        .inkuCard()
+        .inkuHoverCard(scale: 1.02)
         .onAppear {
             imageKey = UUID()
         }

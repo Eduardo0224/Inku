@@ -53,6 +53,11 @@ struct MangaGridView: View {
                             MangaCardView(manga: manga)
                         }
                         .buttonStyle(.plain)
+                        #if os(visionOS)
+                        .buttonBorderShape(
+                            .roundedRectangle(radius: InkuRadius.radius12)
+                        )
+                        #endif
                         .task {
                             if manga == mangas.last {
                                 onMangaAppear(manga)
@@ -68,7 +73,9 @@ struct MangaGridView: View {
                         .padding(.vertical, InkuSpacing.spacing16)
                 }
             }
+            #if !os(visionOS)
             .scrollDismissesKeyboard(.immediately)
+            #endif
         }
         .background(Color.inkuSurface)
     }

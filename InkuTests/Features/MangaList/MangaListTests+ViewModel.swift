@@ -46,10 +46,9 @@ extension MangaListTests {
             spyInteractor.demographicsToReturn = Self.sampleDemographics
             spyInteractor.themesToReturn = Self.sampleThemes
             #expect(sut.hasLoadedInitialData == false)
-
             // When
-            await sut.loadInitialDataIfNeeded()
-
+            let task = sut.loadInitialDataIfNeeded()
+            await task.value
             // Then
             #expect(sut.hasLoadedInitialData == true)
             #expect(sut.mangas == Self.sampleMangas)
@@ -69,14 +68,14 @@ extension MangaListTests {
             spyInteractor.genresToReturn = Self.sampleGenres
             spyInteractor.demographicsToReturn = Self.sampleDemographics
             spyInteractor.themesToReturn = Self.sampleThemes
-            await sut.loadInitialDataIfNeeded()
-
+            // When
+            let task = sut.loadInitialDataIfNeeded()
+            await task.value
             // Reset spy flags
             spyInteractor.reset()
-
             // When - second call
-            await sut.loadInitialDataIfNeeded()
-
+            let secondTask = sut.loadInitialDataIfNeeded()
+            await secondTask.value
             // Then - should NOT call interactor again
             #expect(sut.hasLoadedInitialData == true)
             #expect(spyInteractor.fetchMangasWasCalled == false)

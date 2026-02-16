@@ -69,13 +69,23 @@ struct ProfileView<T: AuthViewModelProtocol>: View {
                 }
                 .scrollIndicators(.hidden)
                 .navigationTitle(L10n.Tabs.profile)
+                #if os(iOS)
                 .navigationBarTitleDisplayMode(.large)
+                #endif
                 .toolbar {
+                    #if os(iOS)
                     if case .authenticated = authViewModel.authState {
                         ToolbarItem(placement: .topBarTrailing) {
                             accountMenu
                         }
                     }
+                    #else
+                    if case .authenticated = authViewModel.authState {
+                        ToolbarItem(placement: .automatic) {
+                            accountMenu
+                        }
+                    }
+                    #endif
                 }
             }
         }

@@ -41,7 +41,17 @@ struct RegistrationView<T: AuthViewModelProtocol>: View {
             }
             .padding(InkuSpacing.spacing24)
         }
+        #if os(visionOS)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button(L10n.Common.cancel) {
+                    dismiss()
+                }
+            }
+        }
+        #else
         .scrollDismissesKeyboard(.interactively)
+        #endif
         .background(Color.inkuSurface)
         .alert(
             L10n.Error.title,
@@ -94,12 +104,16 @@ struct RegistrationView<T: AuthViewModelProtocol>: View {
                     .fontWeight(.medium)
 
                 TextField(L10n.Authentication.emailLabel, text: $viewModel.email)
+                    #if os(iOS)
                     .textContentType(.emailAddress)
                     .keyboardType(.emailAddress)
                     .textInputAutocapitalization(.never)
+                    #endif
                     .autocorrectionDisabled()
                     .focused($focusedField, equals: .email)
+                    #if os(iOS)
                     .submitLabel(.next)
+                    #endif
                     .onSubmit {
                         focusedField = .password
                     }
@@ -144,27 +158,20 @@ struct RegistrationView<T: AuthViewModelProtocol>: View {
     }
 
     private var actionButton: some View {
-        Button {
+        InkuButton(
+            L10n.Authentication.Register.button,
+            style: .primary,
+            isFullWidth: true,
+            isLoading: viewModel.isLoading,
+            isDisabled: !viewModel.isFormValid,
+            height: 50,
+            backgroundColor: viewModel.isFormValid ? Color.inkuAccent : Color.inkuTextTertiary,
+            cornerRadius: InkuRadius.radius12
+        ) {
             Task {
                 await viewModel.register()
             }
-        } label: {
-            if viewModel.isLoading {
-                InkuLoadingView()
-                    .frame(maxWidth: .infinity)
-            } else {
-                Text(L10n.Authentication.Register.button)
-                    .font(.inkuBody)
-                    .foregroundStyle(Color.inkuTextOnAccent)
-                    .fontWeight(.semibold)
-                    .frame(maxWidth: .infinity)
-            }
         }
-        .frame(height: 50)
-        .background(viewModel.isFormValid ? Color.inkuAccent : Color.inkuTextTertiary)
-        .clipShape(RoundedRectangle(cornerRadius: InkuRadius.radius12))
-        .contentShape(Rectangle())
-        .disabled(!viewModel.isFormValid || viewModel.isLoading)
     }
 
     private var switchPrompt: some View {

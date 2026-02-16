@@ -38,12 +38,15 @@ struct FilterDisclosureSection: View {
                                 style: selectedItems.contains(option) ? .accent : .secondary,
                                 size: .medium
                             )
+                            #if os(visionOS)
+                            .scaleHoverEffect(value: 1.13)
+                            #endif
                             .onTapGesture {
                                 toggleSelection(for: option)
                             }
                         }
                     }
-                    .padding(.top, InkuSpacing.spacing8)
+                    .padding(.vertical, InkuSpacing.spacing8)
                 },
                 label: {
                     HStack {

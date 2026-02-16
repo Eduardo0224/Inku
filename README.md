@@ -6,12 +6,12 @@
   <div>
 
 ![Swift](https://img.shields.io/badge/Swift-6.0-orange.svg)
-![Platform](https://img.shields.io/badge/Platform-iOS%2018.6%2B%20%7C%20iPadOS%2018.6%2B-lightgrey.svg)
+![Platform](https://img.shields.io/badge/Platform-iOS%2018.6%2B%20%7C%20iPadOS%2018.6%2B%20%7C%20macOS%2015%2B%20%7C%20visionOS%202%2B-lightgrey.svg)
 ![SwiftUI](https://img.shields.io/badge/SwiftUI-Observation-blue.svg)
 ![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-green.svg)
 ![License](https://img.shields.io/badge/License-MIT-purple.svg)
 
-**Aplicación nativa iOS/iPadOS para gestión de colecciones de manga**
+**Aplicación nativa multi-plataforma para gestión de colecciones de manga**
 
 [Características](#-características) • [Capturas](#-capturas-de-pantalla) • [Arquitectura](#-arquitectura) • [Tecnologías](#-tecnologías-utilizadas) • [Instalación](#-instalación) • [Roadmap](#-roadmap)
 
@@ -24,12 +24,13 @@
 
 ## 📖 Descripción
 
-**Inku** es una aplicación nativa para iOS y iPadOS que permite explorar, buscar y gestionar tu colección personal de manga. Con acceso a una base de datos de más de 64,000 títulos, Inku ofrece una experiencia visual distintiva optimizada para iPad, con soporte completo para español e inglés.
+**Inku** es una aplicación nativa multi-plataforma para iOS, iPadOS, macOS y visionOS que permite explorar, buscar y gestionar tu colección personal de manga. Con acceso a una base de datos de más de 64,000 títulos, Inku ofrece una experiencia visual distintiva optimizada para cada plataforma, con soporte completo para español e inglés y widgets nativos para acceso rápido.
 
 ### ✨ Puntos Destacados
 
 - 🎨 **Diseño Visual Distintivo**: Interfaz moderna con énfasis en portadas de manga
-- 📱 **Optimización iPad**: Layouts adaptativos con soporte completo para iPad
+- 🖥️ **Multi-Plataforma**: iOS, iPadOS, macOS y visionOS con optimizaciones nativas
+- 📱 **Widgets Nativos**: Acceso rápido a tu colección desde home screen, lock screen y desktop
 - 🌐 **Bilingüe**: Español e inglés con String Catalog
 - 💾 **Persistencia Local**: SwiftData para gestión de colección offline
 - 🧪 **Clean Architecture**: Código mantenible con separación de responsabilidades
@@ -88,6 +89,19 @@
 - **Sincronización automática** tras login/registro
 - **Sincronización manual** desde perfil
 - **Session management** con token persistence
+
+### 🖥️ Multi-Plataforma (v3.0.0)
+
+- **iOS/iPadOS** - Experiencia optimizada para iPhone y iPad
+- **macOS** - App nativa con NavigationSplitView y atajos de teclado
+- **visionOS** - Optimizado para Apple Vision Pro
+- **Sincronización entre dispositivos** - Colección compartida vía App Group
+- **Widgets nativos** - Disponibles en todas las plataformas:
+  - **Small**: 1 manga con progreso
+  - **Medium**: 2 mangas horizontalmente
+  - **Large**: 4 mangas en grid 2x2
+  - **Extra Large**: 6 mangas en grid 2x3
+- **Localización multiplataforma** - Español/inglés en todos los dispositivos
 
 ### 🎨 InkuUI Design System
 
@@ -236,6 +250,35 @@
     </tr>
 </table>
 
+### v3.0.0 - Multi-Platform & Widgets
+
+<table width="800" align="center">
+    <tr>
+        <th colspan="3">Inku macOS + Widgets</th>
+    </tr>
+    <tr>
+        <td width="400" align="center">
+            <img src="https://github.com/user-attachments/assets/f03ae5f7-edfb-40e1-87fb-3760852d52a2">
+        </td>
+        <td width="400" align="center">
+            <img src="https://github.com/user-attachments/assets/700de7bf-4f27-4d85-a09f-31ed8a19596b">
+        </td>
+    </tr>
+    <tr>
+        <th colspan="3">visionOS + iPadOS Widgets</th>
+    </tr>
+    <tr>
+        <td width="400" align="center">
+            <video source src="https://github.com/user-attachments/assets/aa73da56-8b1a-4589-8594-a3bb4cfd7e71">
+            </video>
+        </td>
+        <td width="400" align="center">
+            <video source src="https://github.com/user-attachments/assets/ddf10ca9-4108-4c01-9cc8-645fba3d9570">
+            </video>
+        </td>
+    </tr>
+</table>
+
 ---
 
 ## 🎥 Video Demo
@@ -275,43 +318,78 @@ Inku implementa **Clean Architecture** con 4 capas claramente separadas:
 └─────────────────────────────────────────┘
 ```
 
+<table align="center">
+    <tr>
+        <th>Clean Architecture Diagram</th>
+    </tr>
+    <tr>
+        <td align="center">
+            <img src="https://github.com/user-attachments/assets/b85cbd15-d75d-4007-be48-26621eb81b48" alt="Inku Clean Architecture">
+            <p><i>Arquitectura de 4 capas con flujo unidireccional de dependencias</i></p>
+        </td>
+    </tr>
+</table>
+
 ### Organización de Código
 
 ```
-Inku/
-├── Features/                    # Organización por feature
-│   ├── MangaList/
+Inku.xcodeproj/
+├── Inku/                        # iOS/iPadOS Target
+│   ├── InkuApp.swift            # iOS/iPadOS entry point
+│   ├── Features/                # Organización por feature
+│   │   ├── MangaList/
+│   │   │   ├── Models/
+│   │   │   │   ├── AdvancedSearch.swift
+│   │   │   │   ├── MangaSortOption.swift
+│   │   │   │   └── MangaFilter.swift
+│   │   │   ├── Interactor/
+│   │   │   │   ├── Protocols/
+│   │   │   │   ├── MangaListInteractor.swift       # Producción
+│   │   │   │   └── MockMangaListInteractor.swift   # Previews
+│   │   │   ├── ViewModel/
+│   │   │   │   └── MangaListViewModel.swift
+│   │   │   └── Views/
+│   │   │       ├── MangaListView.swift
+│   │   │       ├── AdvancedFilterView.swift
+│   │   │       └── Components/
+│   │   ├── Search/
+│   │   ├── Collection/
+│   │   ├── MangaDetail/
+│   │   ├── Auth/
+│   │   ├── Profile/
+│   │   └── AdvancedFilters/
+│   ├── Core/                    # Código compartido (todos los targets)
 │   │   ├── Models/
-│   │   │   ├── AdvancedSearch.swift
-│   │   │   ├── MangaSortOption.swift
-│   │   │   └── MangaFilter.swift
-│   │   ├── Interactor/
-│   │   │   ├── Protocols/
-│   │   │   ├── MangaListInteractor.swift       # Producción
-│   │   │   └── MockMangaListInteractor.swift   # Previews
-│   │   ├── ViewModel/
-│   │   │   └── MangaListViewModel.swift
-│   │   └── Views/
-│   │       ├── MangaListView.swift
-│   │       ├── AdvancedFilterView.swift
-│   │       └── Components/
-│   │           ├── MangaGridView.swift
-│   │           ├── MangaCardView.swift
-│   │           └── FilterDisclosureSection.swift
-│   ├── Search/
-│   ├── Collection/
-│   ├── MangaDetail/
-│   ├── Auth/
-│   ├── Profile/
-|   └── AdvancedFilters/
-├── Core/                        # Código compartido
+│   │   ├── Services/
+│   │   │   └── SharedModelContainer.swift  # Multi-platform storage
+│   │   ├── Extensions/
+│   │   └── Components/
+│   └── Resources/
+│       ├── Assets.xcassets
+│       └── *.xcstrings          # Localización
+├── InkuMac/                     # macOS Target
+│   ├── InkuMacApp.swift         # macOS entry point
+│   └── MacOSRootView.swift      # NavigationSplitView
+├── InkuVision/                  # visionOS Target
+│   └── InkuVisionApp.swift      # visionOS entry point
+├── InkuWidget/                  # Widget Extension (todas las plataformas)
+│   ├── InkuWidget.swift         # Widget provider y entry
+│   ├── Views/
+│   │   ├── SmallWidgetView.swift
+│   │   ├── MediumWidgetView.swift
+│   │   ├── LargeWidgetView.swift
+│   │   └── ExtraLargeWidgetView.swift
 │   ├── Models/
-│   ├── Services/
-│   ├── Extensions/
-│   └── Components/
-└── Resources/
-    ├── Assets.xcassets
-    └── *.xcstrings              # Localización
+│   │   └── WidgetMangaData.swift
+│   └── Assets.xcassets          # Widget assets
+├── InkuTests/                   # Test Target
+│   └── Features/
+└── InkuUI/                      # Swift Package (Design System)
+    ├── Package.swift
+    └── Sources/InkuUI/
+        ├── Tokens/
+        ├── Components/
+        └── Modifiers/
 ```
 
 ### Patrones Clave
@@ -340,6 +418,8 @@ Inku/
 
 - **iOS**: 18.6+
 - **iPadOS**: 18.6+
+- **macOS**: 15.0+ (Sequoia)
+- **visionOS**: 2.0+
 - **Xcode**: 15.0+
 
 ### API Externa
@@ -463,6 +543,14 @@ Text(L10n.MangaList.mangaCount(mangas.count))
 - [x] **Authentication System** - Registro y login de usuarios
 - [x] **Profile View** - Perfil con estadísticas de colección
 - [x] **Cloud Sync** - Sincronización bidireccional local ↔ nube
+
+### ✅ v3.0.0 - Deluxe Version (Completado)
+
+- [x] **macOS Support** - App nativa con NavigationSplitView y atajos de teclado
+- [x] **visionOS Support** - Optimización para Apple Vision Pro
+- [x] **Widgets** - Small, Medium, Large, Extra Large en todas las plataformas
+- [x] **Multi-Platform Storage** - SharedModelContainer con App Groups
+- [x] **Platform-Specific Optimizations** - Layouts y controles nativos por plataforma
 
 ---
 

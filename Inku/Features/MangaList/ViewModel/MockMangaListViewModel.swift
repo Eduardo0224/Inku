@@ -67,8 +67,9 @@ final class MockMangaListViewModel: MangaListViewModelProtocol {
 
     // MARK: - Functions
 
-    func loadInitialDataIfNeeded() async {
+    func loadInitialDataIfNeeded() -> Task<Void, Never> {
         // Mock implementation - no operation
+        Task { }
     }
 
     func loadMangas() async {

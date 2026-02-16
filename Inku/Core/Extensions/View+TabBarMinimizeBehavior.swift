@@ -31,10 +31,14 @@ extension View {
 /// ViewModifier to apply tabBarMinimizeBehavior only on iOS 26+
 private struct TabBarMinimizeBehaviorOnScrollDownModifier: ViewModifier {
     func body(content: Content) -> some View {
+        #if os(visionOS)
+        content
+        #else
         if #available(iOS 26, *) {
             content.tabBarMinimizeBehavior(.onScrollDown)
         } else {
             content
         }
+        #endif
     }
 }
