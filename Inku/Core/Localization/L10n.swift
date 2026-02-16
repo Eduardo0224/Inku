@@ -36,6 +36,12 @@ enum L10n {
         static let updating = String(localized: .commonUpdating)
     }
 
+    // MARK: - Commands (Localizable.xcstrings)
+
+    enum Commands {
+        static let toggleSidebar = String(localized: .commandToggleSidebar)
+    }
+
     // MARK: - Errors (Localizable.xcstrings)
 
     enum Error {
@@ -43,6 +49,17 @@ enum L10n {
         static let generic = String(localized: .errorGeneric)
         static let network = String(localized: .errorNetwork)
         static let timeout = String(localized: .errorTimeout)
+    }
+
+    // MARK: - Widget (Localizable.xcstrings)
+
+    enum Widget {
+        static let collection = String(localized: .widgetCollection)
+        static let description = String(localized: .widgetDescription)
+        static let emptyTitle = String(localized: .widgetEmptyTitle)
+        static let emptyTitleCompact = String(localized: .widgetEmptyTitleCompact)
+        static let emptyMessage = String(localized: .widgetEmptyMessage)
+        static let emptyHint = String(localized: .widgetEmptyHint)
     }
 
     // MARK: - Manga List (MangaListLocalizable.xcstrings)

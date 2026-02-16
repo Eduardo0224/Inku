@@ -51,10 +51,15 @@ struct EditCollectionSheet: View {
                 mangaInfoSection
                 collectionDataSection
             }
+            #if os(macOS)
+            .formStyle(.grouped)
+            #endif
             .scrollContentBackground(.hidden)
             .background(Color.inkuSurface)
             .navigationTitle(L10n.Collection.Edit.title)
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 toolbarContent
             }
@@ -127,7 +132,9 @@ struct EditCollectionSheet: View {
                     L10n.Collection.Edit.volumePlaceholder,
                     text: $currentReadingVolume
                 )
+                #if os(iOS)
                 .keyboardType(.numberPad)
+                #endif
                 .multilineTextAlignment(.trailing)
                 .frame(maxWidth: 100)
             }
@@ -155,6 +162,8 @@ struct EditCollectionSheet: View {
             Button(L10n.Common.done) {
                 saveChanges()
             }
+            .fontWeight(.medium)
+            .tint(Color.inkuAccentStrong)
         }
     }
 

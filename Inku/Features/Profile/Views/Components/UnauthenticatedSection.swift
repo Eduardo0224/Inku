@@ -90,31 +90,23 @@ struct UnauthenticatedSection: View {
 
     private var authButtonsSection: some View {
         VStack(spacing: InkuSpacing.spacing12) {
-            Button(action: onLoginTapped) {
-                Text(L10n.Authentication.Login.button)
-                    .font(.inkuBody)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(Color.inkuTextOnAccent)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 50)
-                    .background(Color.inkuAccent)
-                    .clipShape(RoundedRectangle(cornerRadius: InkuRadius.radius12))
-            }
+            InkuButton(
+                L10n.Authentication.Login.button,
+                style: .primary,
+                isFullWidth: true,
+                height: 50,
+                cornerRadius: InkuRadius.radius12,
+                action: onLoginTapped
+            )
 
-            Button(action: onRegisterTapped) {
-                Text(L10n.Authentication.Register.button)
-                    .font(.inkuBody)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(Color.inkuAccent)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 50)
-                    .background(Color.inkuSurfaceSecondary)
-                    .clipShape(RoundedRectangle(cornerRadius: InkuRadius.radius12))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: InkuRadius.radius12)
-                            .stroke(Color.inkuAccent, lineWidth: 2)
-                    }
-            }
+            InkuButton(
+                L10n.Authentication.Register.button,
+                style: .outlined,
+                isFullWidth: true,
+                height: 50,
+                cornerRadius: InkuRadius.radius12,
+                action: onRegisterTapped
+            )
         }
     }
 }

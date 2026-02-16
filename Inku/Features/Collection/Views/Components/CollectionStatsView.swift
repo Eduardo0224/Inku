@@ -31,17 +31,25 @@ struct CollectionStatsView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: InkuSpacing.spacing24) {
+                    #if os(iOS)
                     if statsDetent == .medium {
                         mediumStatsView
                     } else {
                         largeStatsView
                     }
+                    #else
+                    largeStatsView
+                        .frame(maxWidth: .infinity)
+                    #endif
                 }
             }
             .background(Color.inkuSurface)
             .navigationTitle(L10n.Collection.Stats.title)
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
+                #if os(iOS)
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         dismiss()
@@ -51,12 +59,21 @@ struct CollectionStatsView: View {
                             .foregroundStyle(Color.inkuTextSecondary)
                     }
                 }
+                #else
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(L10n.Common.cancel) {
+                        dismiss()
+                    }
+                }
+                #endif
             }
         }
+        #if os(iOS)
         .presentationDetents(
             [.medium, .large],
             selection: $statsDetent
         )
+        #endif
     }
 
     // MARK: - Private Views
@@ -107,14 +124,14 @@ struct CollectionStatsView: View {
                     .padding(.vertical, InkuSpacing.spacing16)
             }
 
-            Text(L10n.Collection.Stats.recentlyAdded)
-                .font(.inkuDisplayMedium)
-                .foregroundStyle(Color.inkuText)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, InkuSpacing.spacing16)
-
             let recentlyAdded = viewModel.getMostRecentlyAdded(limit: 6)
             if !recentlyAdded.isEmpty {
+                Text(L10n.Collection.Stats.recentlyAdded)
+                    .font(.inkuDisplayMedium)
+                    .foregroundStyle(Color.inkuText)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, InkuSpacing.spacing16)
+
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: InkuSpacing.spacing16) {
                         ForEach(recentlyAdded) { manga in

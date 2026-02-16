@@ -51,6 +51,7 @@ struct MangaListView: View {
             }
             .navigationTitle(L10n.MangaList.Screen.title)
             .toolbar {
+                #if os(iOS)
                 ToolbarItem(placement: .topBarLeading) {
                     presentationModeToggle
                 }
@@ -73,6 +74,30 @@ struct MangaListView: View {
                     filterMenu
                         .disabled(viewModel.errorMessage != nil)
                 }
+                #else
+                ToolbarItem(placement: .automatic) {
+                    presentationModeToggle
+                }
+
+                ToolbarItem(placement: .automatic) {
+                    if viewModel.isAdvancedFilterActive {
+                        Menu {
+                            clearFiltersButton
+                            Divider()
+                            advancedFiltersButton
+                        } label: {
+                            Image(systemName: "slider.horizontal.2.square.on.square")
+                        }
+                    } else {
+                        advancedFiltersButton
+                    }
+                }
+
+                ToolbarItem(placement: .automatic) {
+                    filterMenu
+                        .disabled(viewModel.errorMessage != nil)
+                }
+                #endif
             }
             .sheet(isPresented: $showingAdvancedFilters) {
                 AdvancedFilterView(
@@ -111,7 +136,7 @@ struct MangaListView: View {
                 }
             }
             .task {
-                await viewModel.loadInitialDataIfNeeded()
+                viewModel.loadInitialDataIfNeeded()
             }
             .navigationDestination(for: Manga.self) { manga in
                 MangaDetailView(manga: manga)
@@ -175,6 +200,11 @@ struct MangaListView: View {
                 MangaRowView(manga: manga)
             }
             .buttonStyle(.plain)
+            #if os(visionOS)
+            .buttonBorderShape(
+                .roundedRectangle(radius: InkuRadius.radius12)
+            )
+            #endif
             .task {
                 if manga == viewModel.mangas.last {
                     Task {

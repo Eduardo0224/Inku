@@ -56,10 +56,12 @@ struct CollectionView: View {
                 loadingOverlay
             }
         }
+        #if os(iOS)
         .toolbar(
             viewModel.isLoadingManga ? .hidden : .visible,
             for: .tabBar
         )
+        #endif
         .task {
             viewModel.setModelContext(modelContext)
         }
@@ -91,6 +93,7 @@ struct CollectionView: View {
 
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
+        #if os(iOS)
         ToolbarItem(placement: .topBarTrailing) {
             Button {
                 showingStats = true
@@ -109,6 +112,26 @@ struct CollectionView: View {
                     .symbolVariant(.circle)
             }
         }
+        #else
+        ToolbarItem(placement: .automatic) {
+            Button {
+                showingStats = true
+            } label: {
+                Label(L10n.Collection.Stats.title, systemImage: "chart.bar")
+            }
+        }
+
+        ToolbarItem(placement: .automatic) {
+            Menu {
+                filterMenu
+                Divider()
+                sortMenu
+            } label: {
+                Label(L10n.Collection.Filter.title, systemImage: "line.3.horizontal.decrease")
+                    .symbolVariant(.circle)
+            }
+        }
+        #endif
     }
 
     private var filterMenu: some View {

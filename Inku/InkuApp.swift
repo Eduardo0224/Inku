@@ -16,25 +16,26 @@ struct InkuApp: App {
 
     @State private var collectionViewModel = CollectionViewModel()
     @State private var authViewModel = AuthViewModel(syncMessageDelay: .seconds(2))
+    @State private var selectedTab: AppTab = .browse
 
     // MARK: - Body
 
     var body: some Scene {
         WindowGroup {
-            TabView {
-                Tab(L10n.Tabs.browse, systemImage: "books.vertical") {
+            TabView(selection: $selectedTab) {
+                Tab(L10n.Tabs.browse, systemImage: "books.vertical", value: .browse) {
                     MangaListView()
                 }
 
-                Tab(L10n.Tabs.collection, systemImage: "bookmark") {
+                Tab(L10n.Tabs.collection, systemImage: "bookmark", value: .collection) {
                     CollectionView()
                 }
 
-                Tab(L10n.Tabs.search, systemImage: "magnifyingglass", role: .search) {
+                Tab(L10n.Tabs.search, systemImage: "magnifyingglass", value: .search, role: .search) {
                     SearchView()
                 }
 
-                Tab(L10n.Tabs.profile, systemImage: "person.circle") {
+                Tab(L10n.Tabs.profile, systemImage: "person.circle", value: .profile) {
                     ProfileView(authViewModel: authViewModel)
                 }
             }
@@ -43,7 +44,45 @@ struct InkuApp: App {
             .environment(\.collectionViewModel, collectionViewModel)
             .environment(authViewModel)
             .inkuTabStyle()
+            .onOpenURL { url in
+                handleDeepLink(url)
+            }
+            .onAppear {
+                setupViewModels()
+            }
         }
-        .modelContainer(for: CollectionManga.self)
+        .modelContainer(SharedModelContainer.shared)
     }
+
+    // MARK: - Private Functions
+
+    private func setupViewModels() {
+        authViewModel.setCollectionViewModel(collectionViewModel)
+    }
+
+    private func handleDeepLink(_ url: URL) {
+        guard url.scheme == "inku" else { return }
+
+        switch url.host {
+        case "collection":
+            selectedTab = .collection
+        case "browse":
+            selectedTab = .browse
+        case "search":
+            selectedTab = .search
+        case "profile":
+            selectedTab = .profile
+        default:
+            break
+        }
+    }
+}
+
+// MARK: - App Tab
+
+enum AppTab: String, Hashable {
+    case browse
+    case collection
+    case search
+    case profile
 }

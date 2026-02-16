@@ -11,6 +11,183 @@ Nothing pending for next release.
 
 ---
 
+## [3.0.0] - 2026-02-15
+
+### 🎉 Deluxe Version Release - Multi-Platform Support & Static Widgets
+
+**Inku v3.0.0** introduces comprehensive multi-platform support across iOS, iPadOS, macOS, and visionOS, along with native widgets for all platforms. Users can now access their manga collection from any Apple device with a consistent, platform-optimized experience. The new widget system allows quick access to collection progress directly from the home screen, lock screen, or desktop.
+
+### Added
+
+#### Multi-Platform Support (macOS + visionOS)
+
+- **macOS Native App** - Full-featured desktop experience
+  - NavigationSplitView with collapsible sidebar
+  - 4 navigation sections: Browse, Collection, Search, Profile
+  - Keyboard shortcuts for navigation (⌘1-4)
+  - Toggle sidebar command (⌘⌥S) with localized menu and icon
+  - Native macOS menu commands with SF Symbol icons
+  - Minimum window size: 800x600
+  - Application Support directory for data storage
+  - All features from iOS version fully functional
+  - Files: `InkuMacApp.swift`, `MacOSRootView.swift`
+
+- **visionOS Native App** - Spatial computing optimized
+  - Tab-based navigation optimized for visionOS
+  - Adaptive layouts for immersive environment
+  - All core features available in spatial interface
+  - App Group shared storage with iOS/iPadOS
+  - Files: `InkuVisionApp.swift`
+
+- **Platform-Specific Optimizations**
+  - SharedModelContainer with platform-specific storage paths
+  - iOS/visionOS: App Group for widget data sharing
+  - macOS: Application Support directory for user data
+  - DRY refactoring with reusable configuration methods
+  - Files: `SharedModelContainer.swift`
+
+#### Widget Support (All Platforms)
+
+- **InkuCollectionWidget** - Multi-size widget family
+  - **Small Widget**: Single manga card with progress
+  - **Medium Widget**: 2 manga cards horizontally
+  - **Large Widget**: 4 manga cards in 2x2 grid
+  - **Extra Large Widget**: 6 manga cards in 2x3 grid
+  - Live data from SwiftData with automatic updates
+  - Empty state with localized messages
+  - Adaptive layouts per widget size
+  - Files: `InkuWidget.swift`, `SmallWidgetView.swift`, `MediumWidgetView.swift`, `LargeWidgetView.swift`, `ExtraLargeWidgetView.swift`
+
+- **Widget Data Provider**
+  - InkuWidgetProvider with timeline updates
+  - Fetches up to 6 manga from collection
+  - Sort order: Date Added (desc) → Last Modified (desc)
+  - Filters for reading + collection manga
+  - Snapshot support for widget gallery
+  - App Group shared ModelContainer
+  - Files: `InkuWidget.swift`
+
+- **Widget Models**
+  - WidgetMangaData for efficient data transfer
+  - Cover image data caching
+  - Volume and progress tracking
+  - Lightweight model optimized for widgets
+  - Files: `WidgetMangaData.swift`
+
+- **Widget Localization**
+  - Complete Spanish/English support
+  - Localized widget configuration description
+  - Empty state messages (title, message, hint)
+  - "Collection" section title
+  - Files: `Localizable.xcstrings` with WIDGET_* keys
+
+#### Architecture Improvements
+
+- **Dependency Injection Fix**
+  - Fixed critical bug where CollectionViewModel wasn't injected into AuthViewModel
+  - Added `setupViewModels()` pattern in all app entry points
+  - Ensures `authViewModel.setCollectionViewModel()` called on launch
+  - Fixes CRUD operations (delete, edit) that depend on CollectionViewModel
+  - Applied to: InkuApp, InkuMacApp, InkuVisionApp
+  - Files: `InkuApp.swift:32-36`, `InkuMacApp.swift:32-36`, `InkuVisionApp.swift`
+
+- **SharedModelContainer DRY Refactoring**
+  - Extracted repeated configuration code into reusable methods
+  - `createModelConfiguration(for:)` - Platform decision logic
+  - `appGroupStoreURL()` - App Group URL helper
+  - `applicationSupportStoreURL()` - macOS Application Support helper
+  - `createConfiguration(for:at:)` - ModelConfiguration creation
+  - `createDefaultConfiguration(for:)` - Fallback configuration
+  - Platform-specific methods: `createIOSConfiguration`, `createMacOSConfiguration`, `createVisionOSConfiguration`
+  - Better maintainability and clarity
+  - Files: `SharedModelContainer.swift`
+
+#### Localization Enhancements
+
+- **macOS Command Localization**
+  - Added `COMMAND_TOGGLE_SIDEBAR` key
+  - English: "Toggle Sidebar"
+  - Spanish: "Alternar Barra Lateral"
+  - L10n.Commands enum for type-safe access
+  - SF Symbol icon: "sidebar.left"
+  - Files: `Localizable.xcstrings`, `L10n.swift`
+
+### Changed
+
+#### User Experience Improvements
+
+- **Widget Sort Order**
+  - Changed from prioritizing currently reading manga
+  - Now shows most recently added/modified manga first
+  - Sort: dateAdded (desc) → lastModified (desc)
+  - Better reflects user's active collection
+  - Files: `InkuWidget.swift`
+
+- **Widget Preview Data**
+  - Updated with real manga information
+  - 6 featured manga: Monster, Berserk, 20th Century Boys, Yokohama Kaidashi Kikou, Hajime no Ippo, Full Moon wo Sagashite
+  - Avoided code duplication by extracting coverURL variables
+  - Safe URL handling with flatMap (no force unwrapping)
+  - Files: `SmallWidgetView.swift`, `MediumWidgetView.swift`, `LargeWidgetView.swift`, `ExtraLargeWidgetView.swift`
+
+#### Version Management
+
+- **Version Synchronization**
+  - Fixed CFBundleShortVersionString mismatch warning
+  - All targets now synchronized at 3.0.0:
+    - Inku (main app)
+    - InkuWidget (widget extension)
+    - InkuTests (test target)
+  - MARKETING_VERSION updated across project
+  - Files: `Inku.xcodeproj/project.pbxproj`
+
+### Fixed
+
+- **Critical CRUD Bug**
+  - **Issue**: "Attempt to present alert while presentation is in progress" when editing/deleting manga
+  - **Root Cause**: CollectionViewModel not available in AuthViewModel (guard failed at AuthViewModel:368)
+  - **Solution**: Injected CollectionViewModel at app initialization for all platforms
+  - Now deleteMangaFromCollection and other collection operations work properly
+  - Files: `InkuApp.swift`, `InkuMacApp.swift`, `InkuVisionApp.swift`
+
+- **Version Mismatch Warning**
+  - Fixed: "CFBundleShortVersionString of app extension ('1.0') must match parent app ('2.0.0')"
+  - All targets now have matching version numbers
+  - Prevents App Store validation issues
+  - Files: `Inku.xcodeproj/project.pbxproj`
+
+### Platform Support
+
+- **Supported Platforms**:
+  - iOS 18.6+ (iPhone)
+  - iPadOS 18.6+ (iPad)
+  - macOS 15.0+ (Mac)
+  - visionOS 2.0+ (Apple Vision Pro)
+
+- **Widget Availability**:
+  - iOS: Home Screen, Lock Screen, StandBy
+  - iPadOS: Home Screen, Lock Screen
+  - macOS: Notification Center, Desktop
+  - All sizes available on all platforms
+
+### Documentation
+
+- ✅ CHANGELOG.md updated for v3.0.0
+- ✅ Version bumped to 3.0.0 in project file
+- ✅ Widget localization keys added
+- ✅ macOS command localization added
+- ✅ Platform-specific storage documented
+- ✅ Dependency injection pattern documented
+
+### Notes
+
+- **Multi-Platform Ready**: All core features work seamlessly across iOS, iPadOS, macOS, and visionOS
+- **Widget Extensions**: Separate widget extension target shares data via App Group
+- **Backward Compatible**: Existing iOS/iPadOS users can upgrade without data loss
+- **Migration Path**: macOS and visionOS automatically access shared collection when installed
+
+---
+
 ## [2.0.0] - 2026-02-06
 
 ### 🎉 Advanced Version Release - Authentication & Cloud Sync

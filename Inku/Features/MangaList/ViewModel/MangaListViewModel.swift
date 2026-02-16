@@ -31,6 +31,9 @@ final class MangaListViewModel: MangaListViewModelProtocol {
 
     @ObservationIgnored
     private let itemsPerPage = API.Constants.defaultPageSize
+    
+    @ObservationIgnored
+    private var loadInitialTask: Task<Void, Never>?
 
     // MARK: - Properties
 
@@ -91,15 +94,29 @@ final class MangaListViewModel: MangaListViewModelProtocol {
 
     // MARK: - Functions
 
-    func loadInitialDataIfNeeded() async {
-        guard !hasLoadedInitialData else { return }
+    @discardableResult
+    func loadInitialDataIfNeeded() -> Task<Void, Never> {
+        guard !hasLoadedInitialData else {
+            return Task { }
+        }
 
-        async let mangasTask: Void = loadMangas()
-        async let filtersTask: Void = loadFilterOptions()
+        loadInitialTask?.cancel()
 
-        _ = await (mangasTask, filtersTask)
+        let task = Task { @MainActor in
+            guard !Task.isCancelled else { return }
 
-        hasLoadedInitialData = true
+            async let mangasTask: Void = loadMangas()
+            async let filtersTask: Void = loadFilterOptions()
+
+            _ = await (mangasTask, filtersTask)
+
+            guard !Task.isCancelled else { return }
+
+            hasLoadedInitialData = true
+        }
+
+        loadInitialTask = task
+        return task
     }
 
     func loadMangas() async {

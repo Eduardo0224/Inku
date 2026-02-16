@@ -67,6 +67,9 @@ struct MangaRowView: View {
             status: status,
             isLoading: isLoading
         )
+        #if os(visionOS)
+        .hoverEffectDisabled()
+        #endif
     }
 }
 

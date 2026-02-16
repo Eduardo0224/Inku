@@ -45,7 +45,9 @@ struct MangaBackgroundSheet: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color.inkuSurface)
             .navigationTitle(L10n.MangaDetail.Background.title)
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(L10n.Common.done, systemImage: "checkmark") {

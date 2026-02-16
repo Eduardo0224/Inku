@@ -1,6 +1,23 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "COMMAND_TOGGLE_SIDEBAR" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toggle Sidebar"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alternar Barra Lateral"
+          }
+        }
+      }
+    },
     "COMMON_CANCEL" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -255,6 +272,114 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Buscar"
+          }
+        }
+      }
+    },
+    "WIDGET_COLLECTION" : {
+      "comment" : "Identifier for the \"Collection\" section in the widget.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Collection"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Colección"
+          }
+        }
+      }
+    },
+    "WIDGET_DESCRIPTION" : {
+      "comment" : "Configuration description for the Inku collection widget.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shows your reading and collection mangas"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muestra tus mangas en lectura y colección"
+          }
+        }
+      }
+    },
+    "WIDGET_EMPTY_HINT" : {
+      "comment" : "Hint to be displayed when the widget is empty.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "They will appear here automatically"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aparecerán aquí automáticamente"
+          }
+        }
+      }
+    },
+    "WIDGET_EMPTY_MESSAGE" : {
+      "comment" : "Message to show when the manga collection widget is empty.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add mangas from the app"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrega mangas desde la app"
+          }
+        }
+      }
+    },
+    "WIDGET_EMPTY_TITLE" : {
+      "comment" : "Title text for the empty state of the manga collection widget.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empty collection"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Colección vacía"
+          }
+        }
+      }
+    },
+    "WIDGET_EMPTY_TITLE_COMPACT" : {
+      "comment" : "Title to be displayed in a compact version of the empty state message in the widget.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empty\ncollection"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Colección\nvacía"
           }
         }
       }
