@@ -13,6 +13,7 @@
 
 import Foundation
 import Observation
+import os
 
 @Observable
 @MainActor
@@ -252,10 +253,10 @@ final class SearchViewModel: SearchViewModelProtocol {
 
     private func handleError(_ error: Error) {
         if let networkError = error as? NetworkError {
-            print("[SearchViewModel] NetworkError: \(networkError)")
+            Logger.search.error("NetworkError: \(networkError, privacy: .private)")
             errorMessage = L10n.Error.generic
         } else if let urlError = error as? URLError {
-            print("[SearchViewModel] URLError: \(urlError.code)")
+            Logger.search.error("URLError: \(urlError.code.rawValue, privacy: .public)")
 
             switch urlError.code {
             case .notConnectedToInternet:
@@ -268,7 +269,7 @@ final class SearchViewModel: SearchViewModelProtocol {
                 errorMessage = L10n.Error.generic
             }
         } else {
-            print("[SearchViewModel] Unknown error: \(error)")
+            Logger.search.error("Unknown error: \(error, privacy: .private)")
             errorMessage = L10n.Error.generic
         }
     }

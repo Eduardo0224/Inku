@@ -101,7 +101,7 @@ struct MangaDetailView: View {
                 }
             }
             .task {
-                collectionViewModel.setModelContext(modelContext)
+                collectionViewModel?.setModelContext(modelContext)
                 checkIfInCollection()
             }
     }
@@ -354,12 +354,12 @@ struct MangaDetailView: View {
     // MARK: - Private Functions
 
     private func checkIfInCollection() {
-        collectionManga = collectionViewModel.getCollectionManga(mangaId: manga.id)
+        collectionManga = collectionViewModel?.getCollectionManga(mangaId: manga.id)
     }
 
     private func addToCollection() {
         do {
-            try collectionViewModel.addToCollection(manga)
+            try collectionViewModel?.addToCollection(manga)
             checkIfInCollection()
         } catch {
             errorMessage = error.localizedDescription

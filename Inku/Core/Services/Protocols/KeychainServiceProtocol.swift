@@ -20,5 +20,7 @@ protocol KeychainServiceProtocol: Sendable {
     func save(email: String) throws
     func getEmail() throws -> String?
     func deleteEmail() throws
+    func save(appToken: String) throws
+    func getAppToken() throws -> String?
     func deleteAll() throws
 }

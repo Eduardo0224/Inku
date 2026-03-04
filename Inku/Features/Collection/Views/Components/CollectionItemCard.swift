@@ -72,7 +72,7 @@ struct CollectionItemCard: View {
     @ViewBuilder
     private var coverImage: some View {
         if let url = collectionManga.coverURL {
-            InkuCoverImage(url: url, cornerRadius: InkuRadius.radius8)
+            InkuCoverImage(url: url, cornerRadius: InkuRadius.radius8, maxWidth: 60)
                 .frame(width: 60, height: 90)
                 .id(imageKey)
         } else {
@@ -164,9 +164,9 @@ struct CollectionItemCard: View {
             currentReadingVolume: 51,
             hasCompleteCollection: false
         ),
-        onEdit: { print("Edit") },
-        onDelete: { print("Delete") },
-        onTap: { print("Tap") }
+        onEdit: { },
+        onDelete: { },
+        onTap: { }
     )
     .padding()
     .background(Color.inkuSurface)
@@ -183,9 +183,9 @@ struct CollectionItemCard: View {
             currentReadingVolume: nil,
             hasCompleteCollection: true
         ),
-        onEdit: { print("Edit") },
-        onDelete: { print("Delete") },
-        onTap: { print("Tap") }
+        onEdit: { },
+        onDelete: { },
+        onTap: { }
     )
     .padding()
     .background(Color.inkuSurface)
@@ -202,9 +202,9 @@ struct CollectionItemCard: View {
             currentReadingVolume: nil,
             hasCompleteCollection: false
         ),
-        onEdit: { print("Edit") },
-        onDelete: { print("Delete") },
-        onTap: { print("Tap") }
+        onEdit: { },
+        onDelete: { },
+        onTap: { }
     )
     .padding()
     .background(Color.inkuSurface)
@@ -221,9 +221,9 @@ struct CollectionItemCard: View {
             currentReadingVolume: 16,
             hasCompleteCollection: false
         ),
-        onEdit: { print("Edit") },
-        onDelete: { print("Delete") },
-        onTap: { print("Tap") }
+        onEdit: { },
+        onDelete: { },
+        onTap: { }
     )
     .padding()
     .background(Color.inkuSurface)

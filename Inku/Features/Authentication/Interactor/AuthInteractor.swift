@@ -33,7 +33,11 @@ final class AuthInteractor: AuthInteractorProtocol, Sendable {
     // MARK: - Functions
 
     func register(user: User) async throws {
-        let headers = ["App-Token": API.Constants.appToken]
+        guard let appToken = try keychainService.getAppToken() else {
+            throw NetworkError.unauthorized
+        }
+
+        let headers = ["App-Token": appToken]
 
         try await networkService.post(
             endpoint: API.Endpoints.registerUser,

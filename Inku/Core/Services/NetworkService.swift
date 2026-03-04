@@ -21,14 +21,35 @@ final class NetworkService: NetworkServiceProtocol, Sendable {
     private let session: URLSession
     private let decoder: JSONDecoder
 
+    /// SSL Pinning delegate (retained by URLSession)
+    private let pinningDelegate: SSLPinningDelegate?
+
     // MARK: - Initializers
 
     init(
         baseURL: URL = URL(string: API.baseURL)!,
-        session: URLSession = .shared
+        session: URLSession? = nil,
+        enableSSLPinning: Bool = true
     ) {
         self.baseURL = baseURL
-        self.session = session
+
+        // SSL Pinning is disabled for test server — enable for production
+        let delegate = enableSSLPinning ? SSLPinningDelegate(
+            pinnedHashes: [],
+            isPinningEnabled: false
+        ) : nil
+
+        self.pinningDelegate = delegate
+
+        if let session {
+            self.session = session
+        } else {
+            self.session = URLSession(
+                configuration: .default,
+                delegate: delegate,
+                delegateQueue: nil
+            )
+        }
 
         self.decoder = JSONDecoder()
         self.decoder.keyDecodingStrategy = .convertFromSnakeCase

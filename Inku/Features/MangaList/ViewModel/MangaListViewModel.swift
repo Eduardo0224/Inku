@@ -13,6 +13,7 @@
 
 import Foundation
 import Observation
+import os
 
 @Observable
 @MainActor
@@ -209,17 +210,12 @@ final class MangaListViewModel: MangaListViewModelProtocol {
     }
 
     private func handleError(_ error: Error) {
-        // Log detailed error for debugging
         if let networkError = error as? NetworkError {
-            // TODO: Use swift-log or OSLog for production logging
-            print("[MangaListViewModel] NetworkError: \(networkError)")
-
-            // Generic message to user (security)
+            Logger.mangaList.error("NetworkError: \(networkError, privacy: .private)")
             errorMessage = L10n.Error.generic
         } else if let urlError = error as? URLError {
-            print("[MangaListViewModel] URLError: \(urlError.code)")
+            Logger.mangaList.error("URLError: \(urlError.code.rawValue, privacy: .public)")
 
-            // Specific messages only for connectivity issues
             switch urlError.code {
             case .notConnectedToInternet:
                 errorMessage = L10n.Error.network
@@ -231,7 +227,7 @@ final class MangaListViewModel: MangaListViewModelProtocol {
                 errorMessage = L10n.Error.generic
             }
         } else {
-            print("[MangaListViewModel] Unknown error: \(error)")
+            Logger.mangaList.error("Unknown error: \(error, privacy: .private)")
             errorMessage = L10n.Error.generic
         }
     }
