@@ -16,7 +16,7 @@ import Foundation
 @testable import Inku
 
 extension AuthenticationTests {
-    
+
     @Suite("AuthInteractor Tests")
     struct InteractorTests {
 
@@ -41,7 +41,7 @@ extension AuthenticationTests {
         }
 
         // MARK: - Register Tests
-        
+
         @Test("Register user successfully")
         func registerSuccess() async throws {
             // Given
@@ -51,8 +51,9 @@ extension AuthenticationTests {
             // Then
             #expect(spyNetworkService.postWasCalled)
             #expect(spyNetworkService.lastEndpoint == API.Endpoints.registerUser)
+            #expect(spyKeychainService.getAppTokenWasCalled)
         }
-        
+
         @Test("Register user fails with bad request")
         func registerFailure() async throws {
             // Given
@@ -69,9 +70,36 @@ extension AuthenticationTests {
                 #expect(error is NetworkError)
             }
         }
-        
+
+        @Test("Register user fails when app token is not found")
+        func registerFailsWithoutAppToken() async throws {
+            // Given
+            spyKeychainService.shouldThrowError = true
+            spyKeychainService.errorToThrow = KeychainError.retrievalFailed(errSecItemNotFound)
+            let user = User(email: "test@inku.com", password: "password123")
+            do {
+                // When
+                try await sut.register(user: user)
+                // Then
+                Issue.record("Expected error to be thrown")
+            } catch {
+                #expect(spyKeychainService.getAppTokenWasCalled)
+            }
+        }
+
+        @Test("Register user sends app token successfully")
+        func registerSendsAppTokenInHeaders() async throws {
+            // Given
+            let user = User(email: "test@inku.com", password: "password123")
+            // When
+            try await sut.register(user: user)
+            // Then
+            #expect(spyKeychainService.getAppTokenWasCalled)
+            #expect(spyNetworkService.postWasCalled)
+        }
+
         // MARK: - Login Tests
-        
+
         @Test("Login successfully returns auth token")
         func loginSuccess() async throws {
             // Given
@@ -90,14 +118,14 @@ extension AuthenticationTests {
             let email = try #require(spyKeychainService.savedEmail)
             #expect(email == "test@inku.com")
         }
-        
+
         @Test("Login fails with unauthorized error")
         func loginUnauthorized() async throws {
             // Given
             spyNetworkService.shouldThrowError = true
             spyNetworkService.errorToThrow = NetworkError.unauthorized
             let user = User(email: "test@inku.com", password: "wrongpassword")
-            
+
             do {
                 // When
                 _ = try await sut.login(user: user)
@@ -107,9 +135,9 @@ extension AuthenticationTests {
                 #expect(error as? NetworkError == .unauthorized)
             }
         }
-        
+
         // MARK: - Token Renewal Tests
-        
+
         @Test("Renew token successfully")
         func renewTokenSuccess() async throws {
             // Given
@@ -125,14 +153,14 @@ extension AuthenticationTests {
             let authToken = try #require(spyKeychainService.savedAuthToken)
             #expect(authToken.token == "new_refreshed_token")
         }
-        
+
         @Test("Renew token fails with expired token")
         func renewTokenExpired() async throws {
             // Given
             spyNetworkService.shouldThrowError = true
             spyNetworkService.errorToThrow = NetworkError.unauthorized
             let expiredToken = AuthToken(token: "expired_token")
-            
+
             do {
                 // When
                 _ = try await sut.renewToken(expiredToken)
@@ -142,9 +170,9 @@ extension AuthenticationTests {
                 #expect(error as? NetworkError == .unauthorized)
             }
         }
-        
+
         // MARK: - Logout Tests
-        
+
         @Test("Logout successfully clears keychain")
         func logoutSuccess() async throws {
             // When
@@ -152,9 +180,9 @@ extension AuthenticationTests {
             // Then
             #expect(spyKeychainService.deleteAllWasCalled)
         }
-        
+
         // MARK: - Keychain Tests
-        
+
         @Test("Get saved token from keychain")
         func getSavedToken() async throws {
             // Given
@@ -165,7 +193,7 @@ extension AuthenticationTests {
             #expect(spyKeychainService.getTokenWasCalled)
             #expect(tokenResponse.token == "saved_token")
         }
-        
+
         @Test("Get saved token returns nil when not found")
         func getSavedTokenNil() async throws {
             // Given
@@ -176,7 +204,7 @@ extension AuthenticationTests {
             #expect(spyKeychainService.getTokenWasCalled)
             #expect(tokenResponse == nil)
         }
-        
+
         @Test("Get saved email from keychain")
         func getSavedEmail() async throws {
             // Given
@@ -187,9 +215,9 @@ extension AuthenticationTests {
             #expect(spyKeychainService.getEmailWasCalled)
             #expect(email == "saved@inku.com")
         }
-        
+
         // MARK: - Cloud Collection Tests
-        
+
         @Test("Get cloud collection successfully")
         func getCloudCollectionSuccess() async throws {
             // Given
@@ -202,14 +230,14 @@ extension AuthenticationTests {
             #expect(spyNetworkService.lastEndpoint == API.Endpoints.collectionManga)
             #expect(collection.count == 1)
         }
-        
+
         @Test("Get cloud collection fails with unauthorized")
         func getCloudCollectionUnauthorized() async throws {
             // Given
             spyNetworkService.shouldThrowError = true
             spyNetworkService.errorToThrow = NetworkError.unauthorized
             let token = AuthToken(token: "invalid_token")
-            
+
             do {
                 // When
                 _ = try await sut.getCloudCollection(token: token)
@@ -219,9 +247,9 @@ extension AuthenticationTests {
                 #expect(error as? NetworkError == .unauthorized)
             }
         }
-        
+
         // MARK: - Add to Cloud Collection Tests
-        
+
         @Test("Add manga to cloud collection successfully")
         func addToCloudSuccess() async throws {
             // Given
@@ -233,7 +261,7 @@ extension AuthenticationTests {
             #expect(spyNetworkService.postWasCalled)
             #expect(spyNetworkService.lastEndpoint == API.Endpoints.collectionManga)
         }
-        
+
         @Test("Add to cloud collection fails with network error")
         func addToCloudFailure() async throws {
             // Given
@@ -241,7 +269,7 @@ extension AuthenticationTests {
             spyNetworkService.errorToThrow = NetworkError.serverError(500)
             let token = AuthToken(token: "valid_token")
             let request = CreateCollectionMangaRequest(from: Self.mockCollectionManga)
-            
+
             do {
                 // When
                 try await sut.addToCloudCollection(token: token, manga: request)
@@ -251,9 +279,9 @@ extension AuthenticationTests {
                 #expect(error is NetworkError)
             }
         }
-        
+
         // MARK: - Delete from Cloud Collection Tests
-        
+
         @Test("Delete manga from cloud collection successfully")
         func deleteFromCloudSuccess() async throws {
             // Given
@@ -265,7 +293,7 @@ extension AuthenticationTests {
             #expect(spyNetworkService.deleteWasCalled)
             #expect(spyNetworkService.lastEndpoint == API.Endpoints.collectionManga(id: mangaId))
         }
-        
+
         @Test("Delete from cloud collection fails with not found")
         func deleteFromCloudNotFound() async throws {
             // Given
@@ -273,7 +301,7 @@ extension AuthenticationTests {
             spyNetworkService.errorToThrow = NetworkError.notFound
             let token = AuthToken(token: "valid_token")
             let mangaId = 999
-            
+
             do {
                 // When
                 try await sut.deleteFromCloudCollection(token: token, mangaId: mangaId)

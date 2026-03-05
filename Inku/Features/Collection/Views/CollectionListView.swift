@@ -133,11 +133,11 @@ struct CollectionListView: View {
         }
         .alert(
             L10n.Error.title,
-            isPresented: .constant(viewModel.errorMessage != nil),
-            presenting: viewModel.errorMessage
+            isPresented: .constant(viewModel?.errorMessage != nil),
+            presenting: viewModel?.errorMessage
         ) { _ in
             Button(L10n.Common.ok, role: .cancel) {
-                viewModel.clearError()
+                viewModel?.clearError()
             }
         } message: { errorMessage in
             Text(errorMessage)
@@ -199,7 +199,7 @@ struct CollectionListView: View {
                 onDelete: { deleteManga(manga) },
                 onTap: {
                     Task {
-                        await viewModel.loadMangaById(manga.mangaId)
+                        await viewModel?.loadMangaById(manga.mangaId)
                     }
                 }
             )
@@ -304,7 +304,7 @@ struct CollectionListView: View {
             do {
                 try await authViewModel.deleteMangaFromCollection(manga)
             } catch {
-                viewModel.setError(error.localizedDescription)
+                viewModel?.setError(error.localizedDescription)
             }
             isDeleting = false
         }

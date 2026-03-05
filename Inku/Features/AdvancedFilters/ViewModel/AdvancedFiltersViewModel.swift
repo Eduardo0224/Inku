@@ -13,6 +13,7 @@
 
 import Foundation
 import Observation
+import os
 
 @Observable
 @MainActor
@@ -240,10 +241,10 @@ final class AdvancedFiltersViewModel: AdvancedFiltersViewModelProtocol {
 
     private func handleError(_ error: Error) {
         if let networkError = error as? NetworkError {
-            print("[AdvancedFiltersViewModel] NetworkError: \(networkError)")
+            Logger.advancedFilters.error("NetworkError: \(networkError, privacy: .private)")
             errorMessage = L10n.Error.generic
         } else if let urlError = error as? URLError {
-            print("[AdvancedFiltersViewModel] URLError: \(urlError.code)")
+            Logger.advancedFilters.error("URLError: \(urlError.code.rawValue, privacy: .public)")
 
             switch urlError.code {
             case .notConnectedToInternet:
@@ -256,7 +257,7 @@ final class AdvancedFiltersViewModel: AdvancedFiltersViewModelProtocol {
                 errorMessage = L10n.Error.generic
             }
         } else {
-            print("[AdvancedFiltersViewModel] Unknown error: \(error)")
+            Logger.advancedFilters.error("Unknown error: \(error, privacy: .private)")
             errorMessage = L10n.Error.generic
         }
     }

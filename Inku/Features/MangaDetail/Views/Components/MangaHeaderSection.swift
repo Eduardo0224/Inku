@@ -86,6 +86,7 @@ struct MangaHeaderSection: View {
         InkuCoverImage(
             url: coverURL,
             cornerRadius: InkuRadius.radius12,
+            maxWidth: width,
             isLoading: false
         )
         .frame(width: width, height: height)

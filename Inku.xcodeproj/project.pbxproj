@@ -86,6 +86,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6972176DA0A8475D80A22B48 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		D575EC052EFC8A9B00F99309 /* InkuTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InkuTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5A2CBBD2F3A30EA00D279BA /* Inku.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inku.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5A2CBC02F3A30EA00D279BA /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
@@ -112,6 +113,7 @@
 				Assets.xcassets,
 				Core/API/APIEndpoints.swift,
 				"Core/Extensions/Bundle+AppVersion.swift",
+				"Core/Extensions/Logger+Inku.swift",
 				"Core/Extensions/View+AdaptiveNavigationTitle.swift",
 				"Core/Extensions/View+LiquidGlass.swift",
 				"Core/Extensions/View+SectionIndex.swift",
@@ -142,6 +144,7 @@
 				Core/Services/Protocols/NetworkServiceProtocol.swift,
 				Core/Services/Protocols/WidgetCenterProtocol.swift,
 				Core/Services/SharedModelContainer.swift,
+				Core/Services/SSLPinningDelegate.swift,
 				Core/Services/WidgetCenterWrapper.swift,
 				Features/AdvancedFilters/Interactor/AdvancedFiltersInteractor.swift,
 				Features/AdvancedFilters/Interactor/MockAdvancedFiltersInteractor.swift,
@@ -159,7 +162,6 @@
 				Features/Authentication/Views/LoginView.swift,
 				Features/Authentication/Views/RegistrationView.swift,
 				Features/Collection/Environment/CollectionViewModelEnvironment.swift,
-				Features/Collection/Environment/EmptyCollectionViewModel.swift,
 				Features/Collection/Interactor/CollectionInteractor.swift,
 				Features/Collection/Interactor/MockCollectionInteractor.swift,
 				Features/Collection/Interactor/Protocols/CollectionInteractorProtocol.swift,
@@ -235,6 +237,7 @@
 		D5C3803F2F3BE1CD00D3AED8 /* Exceptions for "Inku" folder in "InkuWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"Core/Extensions/Logger+Inku.swift",
 				Core/Localization/L10n.swift,
 				Core/Models/Author.swift,
 				Core/Models/Demographic.swift,
@@ -267,6 +270,7 @@
 				Assets.xcassets,
 				Core/API/APIEndpoints.swift,
 				"Core/Extensions/Bundle+AppVersion.swift",
+				"Core/Extensions/Logger+Inku.swift",
 				"Core/Extensions/View+AdaptiveNavigationTitle.swift",
 				"Core/Extensions/View+SectionIndex.swift",
 				"Core/Extensions/WidgetCenter+Refresh.swift",
@@ -295,6 +299,7 @@
 				Core/Services/Protocols/NetworkServiceProtocol.swift,
 				Core/Services/Protocols/WidgetCenterProtocol.swift,
 				Core/Services/SharedModelContainer.swift,
+				Core/Services/SSLPinningDelegate.swift,
 				Core/Services/WidgetCenterWrapper.swift,
 				Features/AdvancedFilters/Interactor/AdvancedFiltersInteractor.swift,
 				Features/AdvancedFilters/Interactor/MockAdvancedFiltersInteractor.swift,
@@ -312,7 +317,6 @@
 				Features/Authentication/Views/LoginView.swift,
 				Features/Authentication/Views/RegistrationView.swift,
 				Features/Collection/Environment/CollectionViewModelEnvironment.swift,
-				Features/Collection/Environment/EmptyCollectionViewModel.swift,
 				Features/Collection/Interactor/CollectionInteractor.swift,
 				Features/Collection/Interactor/MockCollectionInteractor.swift,
 				Features/Collection/Interactor/Protocols/CollectionInteractorProtocol.swift,
@@ -478,6 +482,7 @@
 		D5A761472EF6DBB70043DFF3 = {
 			isa = PBXGroup;
 			children = (
+				6972176DA0A8475D80A22B48 /* Secrets.xcconfig */,
 				D5C380352F3BDFB900D3AED8 /* InkuWidgetExtension.entitlements */,
 				D5A761522EF6DBB70043DFF3 /* Inku */,
 				D575EC062EFC8A9B00F99309 /* InkuTests */,
@@ -962,6 +967,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_UPCOMING_FEATURE_INFER_SENDABLE_FROM_CAPTURES = YES;
 			};
 			name = Debug;
 		};
@@ -1018,12 +1024,14 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_UPCOMING_FEATURE_INFER_SENDABLE_FROM_CAPTURES = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
 		D5A7615C2EF6DBB80043DFF3 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6972176DA0A8475D80A22B48 /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1064,6 +1072,7 @@
 		};
 		D5A7615D2EF6DBB80043DFF3 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6972176DA0A8475D80A22B48 /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

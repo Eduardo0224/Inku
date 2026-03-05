@@ -12,6 +12,7 @@
 
 import SwiftData
 import Foundation
+import os
 
 /// Shared model container configuration for use across app and widget extension
 enum SharedModelContainer {
@@ -24,15 +25,16 @@ enum SharedModelContainer {
     /// SQLite database filename
     private static let databaseFilename = "Inku.sqlite"
 
-    /// Shared ModelContainer instance (singleton)
-    static let shared: ModelContainer = {
+    /// Shared ModelContainer instance (singleton, nil if creation fails)
+    static let shared: ModelContainer? = {
         let schema = Schema([CollectionManga.self])
         let modelConfiguration = createModelConfiguration(for: schema)
 
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            Logger.core.error("Could not create ModelContainer: \(error)")
+            return nil
         }
     }()
 

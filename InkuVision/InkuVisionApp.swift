@@ -26,34 +26,42 @@ struct InkuVisionApp: App {
 
     var body: some Scene {
         WindowGroup {
-            TabView {
-                Tab(L10n.Tabs.browse, systemImage: "books.vertical") {
-                    MangaListView()
-                }
+            if let modelContainer = SharedModelContainer.shared {
+                TabView {
+                    Tab(L10n.Tabs.browse, systemImage: "books.vertical") {
+                        MangaListView()
+                    }
 
-                Tab(L10n.Tabs.collection, systemImage: "bookmark") {
-                    CollectionView()
-                }
+                    Tab(L10n.Tabs.collection, systemImage: "bookmark") {
+                        CollectionView()
+                    }
 
-                Tab(L10n.Tabs.search, systemImage: "magnifyingglass", role: .search) {
-                    SearchView()
-                }
+                    Tab(L10n.Tabs.search, systemImage: "magnifyingglass", role: .search) {
+                        SearchView()
+                    }
 
-                Tab(L10n.Tabs.profile, systemImage: "person.circle") {
-                    ProfileView(authViewModel: authViewModel)
+                    Tab(L10n.Tabs.profile, systemImage: "person.circle") {
+                        ProfileView(authViewModel: authViewModel)
+                    }
                 }
-            }
-            .frame(minWidth: 800, minHeight: 600)
-            .environment(\.collectionViewModel, collectionViewModel)
-            .environment(authViewModel)
-            .onAppear {
-                setupViewModels()
+                .frame(minWidth: 800, minHeight: 600)
+                .environment(\.collectionViewModel, collectionViewModel)
+                .environment(authViewModel)
+                .modelContainer(modelContainer)
+                .onAppear {
+                    setupViewModels()
+                }
+            } else {
+                ContentUnavailableView(
+                    L10n.Error.title,
+                    systemImage: "exclamationmark.triangle",
+                    description: Text(L10n.Error.generic)
+                )
             }
         }
         .windowStyle(.automatic)
         .windowResizability(.contentSize)
         .defaultSize(width: 1200, height: 800)
-        .modelContainer(SharedModelContainer.shared)
     }
 
     // MARK: - Private Functions

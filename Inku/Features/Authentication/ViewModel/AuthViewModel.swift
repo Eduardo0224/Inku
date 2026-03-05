@@ -13,6 +13,7 @@
 
 import Foundation
 import Observation
+import os
 
 @Observable
 @MainActor
@@ -440,7 +441,7 @@ final class AuthViewModel: AuthViewModelProtocol {
 
     private func handleError(_ error: Error, isRegistration: Bool = false) {
         if let networkError = error as? NetworkError {
-            print("[AuthViewModel] NetworkError: \(networkError)")
+            Logger.auth.error("NetworkError: \(networkError, privacy: .private)")
 
             switch networkError {
             case .badRequest:
@@ -459,7 +460,7 @@ final class AuthViewModel: AuthViewModelProtocol {
                 errorMessage = L10n.Error.generic
             }
         } else if let urlError = error as? URLError {
-            print("[AuthViewModel] URLError: \(urlError.code)")
+            Logger.auth.error("URLError: \(urlError.code.rawValue, privacy: .public)")
 
             switch urlError.code {
             case .notConnectedToInternet:
@@ -472,10 +473,10 @@ final class AuthViewModel: AuthViewModelProtocol {
                 errorMessage = L10n.Error.generic
             }
         } else if let keychainError = error as? KeychainError {
-            print("[AuthViewModel] KeychainError: \(keychainError)")
+            Logger.auth.error("KeychainError: \(keychainError, privacy: .private)")
             errorMessage = L10n.Error.generic
         } else {
-            print("[AuthViewModel] Unknown error: \(error)")
+            Logger.auth.error("Unknown error: \(error, privacy: .private)")
             errorMessage = L10n.Error.generic
         }
     }

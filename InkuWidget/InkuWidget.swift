@@ -204,7 +204,10 @@ struct InkuWidgetProvider: TimelineProvider {
     // MARK: - Private Functions
 
     private func fetchMangas() async -> InkuWidgetEntry {
-        let context = ModelContext(SharedModelContainer.shared)
+        guard let container = SharedModelContainer.shared else {
+            return InkuWidgetEntry(date: Date(), mangas: [])
+        }
+        let context = ModelContext(container)
 
         let descriptor = FetchDescriptor<CollectionManga>(
             sortBy: [
