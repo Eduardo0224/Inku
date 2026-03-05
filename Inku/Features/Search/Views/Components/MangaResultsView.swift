@@ -121,7 +121,9 @@ struct MangaResultsView: View {
                             )
                             #endif
                             .task {
-                                if manga == mangas.last {
+                                let thresholdIndex = max(0, mangas.count - 3)
+                                if let index = mangas.firstIndex(of: manga),
+                                   index >= thresholdIndex {
                                     onMangaAppear(manga)
                                 }
                             }

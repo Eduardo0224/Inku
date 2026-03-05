@@ -13,17 +13,8 @@
 
 import SwiftUI
 
-// MARK: - CollectionViewModelKey
-
-private struct CollectionViewModelKey: EnvironmentKey {
-    nonisolated(unsafe) static let defaultValue: any CollectionViewModelProtocol = EmptyCollectionViewModel()
-}
-
 // MARK: - EnvironmentValues Extension
 
 extension EnvironmentValues {
-    var collectionViewModel: any CollectionViewModelProtocol {
-        get { self[CollectionViewModelKey.self] }
-        set { self[CollectionViewModelKey.self] = newValue }
-    }
+    @Entry var collectionViewModel: (any CollectionViewModelProtocol)? = nil
 }

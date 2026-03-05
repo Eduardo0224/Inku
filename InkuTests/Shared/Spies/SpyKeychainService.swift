@@ -25,9 +25,12 @@ final class SpyKeychainService: KeychainServiceProtocol, @unchecked Sendable {
     private(set) var getEmailWasCalled = false
     private(set) var deleteEmailWasCalled = false
     private(set) var deleteAllWasCalled = false
+    private(set) var saveAppTokenWasCalled = false
+    private(set) var getAppTokenWasCalled = false
 
     private(set) var savedAuthToken: AuthToken?
     private(set) var savedEmail: String?
+    private(set) var savedAppToken: String?
 
     // MARK: - Properties (Stub Data)
 
@@ -89,6 +92,25 @@ final class SpyKeychainService: KeychainServiceProtocol, @unchecked Sendable {
         if shouldThrowError {
             throw errorToThrow
         }
+    }
+
+    func save(appToken: String) throws {
+        saveAppTokenWasCalled = true
+        savedAppToken = appToken
+
+        if shouldThrowError {
+            throw errorToThrow
+        }
+    }
+
+    func getAppToken() throws -> String? {
+        getAppTokenWasCalled = true
+
+        if shouldThrowError {
+            throw errorToThrow
+        }
+
+        return savedAppToken ?? "test-app-token"
     }
 
     func deleteAll() throws {

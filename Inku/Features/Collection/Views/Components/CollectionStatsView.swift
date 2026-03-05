@@ -112,7 +112,7 @@ struct CollectionStatsView: View {
             }
             .padding(.horizontal, InkuSpacing.spacing16)
 
-            let topMangas = viewModel.getTopSeriesByVolumes(limit: 3)
+            let topMangas = viewModel?.getTopSeriesByVolumes(limit: 3) ?? []
             if topMangas.count >= 3 {
                 Text(L10n.Collection.Stats.topSeries)
                     .font(.inkuDisplayMedium)
@@ -124,7 +124,7 @@ struct CollectionStatsView: View {
                     .padding(.vertical, InkuSpacing.spacing16)
             }
 
-            let recentlyAdded = viewModel.getMostRecentlyAdded(limit: 6)
+            let recentlyAdded = viewModel?.getMostRecentlyAdded(limit: 6) ?? []
             if !recentlyAdded.isEmpty {
                 Text(L10n.Collection.Stats.recentlyAdded)
                     .font(.inkuDisplayMedium)
@@ -166,7 +166,7 @@ struct CollectionStatsView: View {
     private var basicStatsGroup: some View {
         InkuStatCard(
             icon: "books.vertical.fill",
-            value: "\(viewModel.totalMangas)",
+            value: "\(viewModel?.totalMangas ?? 0)",
             label: L10n.Collection.Stats.totalMangas,
             size: .large,
             accentColor: .inkuAccent
@@ -174,7 +174,7 @@ struct CollectionStatsView: View {
 
         InkuStatCard(
             icon: "book.fill",
-            value: "\(viewModel.totalVolumesOwned)",
+            value: "\(viewModel?.totalVolumesOwned ?? 0)",
             label: L10n.Collection.Stats.totalVolumes,
             size: .large,
             accentColor: .inkuAccentStrong
@@ -185,7 +185,7 @@ struct CollectionStatsView: View {
     private var collectionStatusGroup: some View {
         InkuStatCard(
             icon: "checkmark.circle.fill",
-            value: "\(viewModel.completedCount)",
+            value: "\(viewModel?.completedCount ?? 0)",
             label: L10n.Collection.Stats.completed,
             size: .large,
             accentColor: .green
@@ -193,7 +193,7 @@ struct CollectionStatsView: View {
 
         InkuStatCard(
             icon: "book.pages.fill",
-            value: "\(viewModel.readingCount)",
+            value: "\(viewModel?.readingCount ?? 0)",
             label: L10n.Collection.Stats.reading,
             size: .large,
             accentColor: .blue
@@ -204,7 +204,7 @@ struct CollectionStatsView: View {
     private var progressStatsGroup: some View {
         InkuStatCard(
             icon: "chart.bar.fill",
-            value: viewModel.averageProgress.formatted(
+            value: (viewModel?.averageProgress ?? 0.0).formatted(
                 .percent.precision(.integerAndFractionLength(integer: 1, fraction: 1))
             ),
             label: L10n.Collection.Stats.averageProgress,
@@ -214,7 +214,7 @@ struct CollectionStatsView: View {
 
         InkuStatCard(
             icon: "percent",
-            value: viewModel.completionPercentage.formatted(
+            value: (viewModel?.completionPercentage ?? 0.0).formatted(
                 .percent.precision(.integerAndFractionLength(integer: 1, fraction: 1))
             ),
             label: L10n.Collection.Stats.completionRate,
@@ -261,7 +261,7 @@ struct CollectionStatsView: View {
                 .fixedSize(horizontal: false, vertical: true)
 
             if let url = manga.coverURL {
-                InkuCoverImage(url: url, cornerRadius: InkuRadius.radius12)
+                InkuCoverImage(url: url, cornerRadius: InkuRadius.radius12, maxWidth: size.coverWidth)
                     .frame(width: size.coverWidth, height: size.coverHeight)
                     .shadow(color: Color.black.opacity(0.2), radius: 8, x: 0, y: 4)
             } else {
@@ -333,7 +333,7 @@ struct CollectionStatsView: View {
     private func recentCoverCard(manga: CollectionManga) -> some View {
         VStack(spacing: InkuSpacing.spacing8) {
             if let url = manga.coverURL {
-                InkuCoverImage(url: url, cornerRadius: InkuRadius.radius12)
+                InkuCoverImage(url: url, cornerRadius: InkuRadius.radius12, maxWidth: 100)
                     .frame(width: 100, height: 150)
             } else {
                 Rectangle()

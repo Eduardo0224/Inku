@@ -206,7 +206,9 @@ struct MangaListView: View {
             )
             #endif
             .task {
-                if manga == viewModel.mangas.last {
+                let thresholdIndex = max(0, viewModel.mangas.count - 3)
+                if let index = viewModel.mangas.firstIndex(of: manga),
+                   index >= thresholdIndex {
                     Task {
                         await viewModel.loadMoreMangas()
                     }

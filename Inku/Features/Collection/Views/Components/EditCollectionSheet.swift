@@ -65,11 +65,11 @@ struct EditCollectionSheet: View {
             }
             .alert(
                 L10n.Error.title,
-                isPresented: .constant(viewModel.errorMessage != nil),
-                presenting: viewModel.errorMessage
+                isPresented: .constant(viewModel?.errorMessage != nil),
+                presenting: viewModel?.errorMessage
             ) { _ in
                 Button(L10n.Common.ok, role: .cancel) {
-                    viewModel.clearError()
+                    viewModel?.clearError()
                 }
             } message: { errorMessage in
                 Text(errorMessage)
@@ -88,7 +88,7 @@ struct EditCollectionSheet: View {
         Section {
             HStack(spacing: InkuSpacing.spacing12) {
                 if let url = collectionManga.coverURL {
-                    InkuCoverImage(url: url, cornerRadius: InkuRadius.radius8)
+                    InkuCoverImage(url: url, cornerRadius: InkuRadius.radius8, maxWidth: 60)
                         .frame(width: 60, height: 90)
                 } else {
                     Rectangle()
@@ -198,7 +198,7 @@ struct EditCollectionSheet: View {
                 try await authViewModel.updateMangaInCollection(collectionManga)
                 dismiss()
             } catch {
-                viewModel.setError(error.localizedDescription)
+                viewModel?.setError(error.localizedDescription)
             }
             isUpdating = false
         }

@@ -126,8 +126,10 @@ struct ProfileView<T: AuthViewModelProtocol>: View {
             Text(L10n.Profile.SessionExpired.message)
         }
         .task {
-            collectionViewModel.setModelContext(modelContext)
-            authViewModel.setCollectionViewModel(collectionViewModel)
+            collectionViewModel?.setModelContext(modelContext)
+            if let collectionViewModel {
+                authViewModel.setCollectionViewModel(collectionViewModel)
+            }
             await authViewModel.checkAuthenticationStatus()
         }
         .onChange(of: authViewModel.authState) { _, newValue in

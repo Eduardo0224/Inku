@@ -121,12 +121,8 @@ struct UnauthenticatedSection: View {
         ScrollView {
             UnauthenticatedSection(
                 localMangasCount: 3,
-                onLoginTapped: {
-                    print("Login tapped")
-                },
-                onRegisterTapped: {
-                    print("Register tapped")
-                }
+                onLoginTapped: { },
+                onRegisterTapped: { }
             )
             .padding()
         }

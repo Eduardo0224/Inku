@@ -21,6 +21,7 @@ final class KeychainService: KeychainServiceProtocol, Sendable {
     private let service = "com.inku.app"
     private let tokenKey = "authToken"
     private let emailKey = "userEmail"
+    private let appTokenKey = "appToken"
 
     // MARK: - Token Management
 
@@ -56,6 +57,20 @@ final class KeychainService: KeychainServiceProtocol, Sendable {
         try delete(key: emailKey)
     }
 
+    // MARK: - App Token Management
+
+    func save(appToken: String) throws {
+        guard let data = appToken.data(using: .utf8) else {
+            throw KeychainError.encodingError
+        }
+        try save(data: data, key: appTokenKey)
+    }
+
+    func getAppToken() throws -> String? {
+        guard let data = try getData(key: appTokenKey) else { return nil }
+        return String(data: data, encoding: .utf8)
+    }
+
     // MARK: - Cleanup
 
     func deleteAll() throws {
@@ -70,7 +85,8 @@ final class KeychainService: KeychainServiceProtocol, Sendable {
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
             kSecAttrAccount as String: key,
-            kSecValueData as String: data
+            kSecValueData as String: data,
+            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock
         ]
 
         let status = SecItemAdd(query as CFDictionary, nil)
@@ -82,7 +98,8 @@ final class KeychainService: KeychainServiceProtocol, Sendable {
                 kSecAttrAccount as String: key
             ]
             let attributesToUpdate: [String: Any] = [
-                kSecValueData as String: data
+                kSecValueData as String: data,
+                kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock
             ]
             let updateStatus = SecItemUpdate(updateQuery as CFDictionary, attributesToUpdate as CFDictionary)
             guard updateStatus == errSecSuccess else {

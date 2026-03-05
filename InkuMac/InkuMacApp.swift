@@ -26,14 +26,22 @@ struct InkuMacApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MacOSRootView()
-                .environment(\.collectionViewModel, collectionViewModel)
-                .environment(authViewModel)
-                .onAppear {
-                    setupViewModels()
-                }
+            if let modelContainer = SharedModelContainer.shared {
+                MacOSRootView()
+                    .environment(\.collectionViewModel, collectionViewModel)
+                    .environment(authViewModel)
+                    .modelContainer(modelContainer)
+                    .onAppear {
+                        setupViewModels()
+                    }
+            } else {
+                ContentUnavailableView(
+                    L10n.Error.title,
+                    systemImage: "exclamationmark.triangle",
+                    description: Text(L10n.Error.generic)
+                )
+            }
         }
-        .modelContainer(SharedModelContainer.shared)
         .commands {
             // Add macOS-specific menu commands
             CommandGroup(replacing: .sidebar) {

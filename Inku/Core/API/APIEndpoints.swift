@@ -78,6 +78,5 @@ enum API {
     enum Constants {
         static let defaultPageSize = 20
         static let maxPageSize = 100
-        static let appToken = "sLGH38NhEJ0_anlIWwhsz1-LarClEohiAHQqayF0FY"
     }
 }

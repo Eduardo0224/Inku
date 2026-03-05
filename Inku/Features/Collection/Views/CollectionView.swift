@@ -43,7 +43,7 @@ struct CollectionView: View {
                 MangaDetailView(manga: manga)
             }
             .toolbar {
-                if !viewModel.isLoadingManga {
+                if !(viewModel?.isLoadingManga ?? false) {
                     toolbarContent
                 }
             }
@@ -52,20 +52,20 @@ struct CollectionView: View {
             }
         }
         .overlay {
-            if viewModel.isLoadingManga {
+            if viewModel?.isLoadingManga ?? false {
                 loadingOverlay
             }
         }
         #if os(iOS)
         .toolbar(
-            viewModel.isLoadingManga ? .hidden : .visible,
+            viewModel?.isLoadingManga ?? false ? .hidden : .visible,
             for: .tabBar
         )
         #endif
         .task {
-            viewModel.setModelContext(modelContext)
+            viewModel?.setModelContext(modelContext)
         }
-        .onChange(of: viewModel.loadedManga) { _, loadedManga in
+        .onChange(of: viewModel?.loadedManga) { _, loadedManga in
             if let manga = loadedManga {
                 navigationPath.append(manga)
             }
@@ -175,14 +175,18 @@ struct CollectionView: View {
     "Collection - Empty",
     traits: .previewContainer(.empty)
 ) {
+    @Previewable @State var authViewModel = AuthViewModel()
     CollectionView()
         .environment(\.collectionViewModel, MockCollectionViewModel.empty)
+        .environment(authViewModel)
 }
 
 #Preview(
     "Collection - With Data",
     traits: .previewContainer(.withData)
 ) {
+    @Previewable @State var authViewModel = AuthViewModel()
     CollectionView()
         .environment(\.collectionViewModel, MockCollectionViewModel.withData)
+        .environment(authViewModel)
 }
