@@ -11,6 +11,159 @@ Nothing pending for next release.
 
 ---
 
+## [3.0.1] - 2026-03-05
+
+### 🔒 Security & Performance Improvements
+
+**Inku v3.0.1** introduces critical security enhancements, structured logging, and performance optimizations. This patch release improves the internal security architecture without changing user-facing functionality.
+
+### Added
+
+#### Security Enhancements
+
+- **Keychain Integration** - Secure credential storage
+  - Migrated app token from hardcoded value to Keychain
+  - `KeychainService` with protocol-first design for testability
+  - Secure storage for `AuthToken`, email, and app token
+  - Error handling with `KeychainError` enum
+  - Support for token retrieval, update, and deletion
+  - Files: `KeychainService.swift`, `KeychainServiceProtocol.swift`
+
+- **SSL Certificate Pinning** - Server validation layer
+  - `SSLPinningDelegate` implementing `URLSessionDelegate`
+  - SHA-256 public key hash validation
+  - Configurable pinning (enabled/disabled for testing)
+  - Protection against man-in-the-middle attacks
+  - Currently disabled for test server (ready for production)
+  - Files: `SSLPinningDelegate.swift`
+
+- **Secrets Management** - Secure configuration
+  - `Secrets.xcconfig` for sensitive configuration (gitignored)
+  - `Secrets.xcconfig.example` template for team setup
+  - Environment variable injection: `APP_TOKEN_KEY`
+  - Build-time configuration without hardcoded secrets
+  - Files: `Secrets.xcconfig.example`, `.gitignore`
+
+#### Logging System
+
+- **Structured Logging with os.Logger** - Production-ready logging
+  - Replaced all `print()` statements with `os.Logger`
+  - Category-based loggers: Network, Cache, Auth, UI
+  - Log level support: debug, info, warning, error
+  - `Logger+Inku.swift` extension with predefined loggers
+  - Better debugging and monitoring capabilities
+  - Files: `Logger+Inku.swift`
+
+#### Architecture Improvements
+
+- **CollectionViewModel Environment** - SwiftUI best practices
+  - Migrated from custom `EnvironmentKey` to `@Entry` macro
+  - Simplified environment setup in `InkuApp.swift`
+  - Modern SwiftUI pattern (iOS 18+)
+  - Files: `CollectionViewModel.swift`, `InkuApp.swift`
+
+- **Optional SharedModelContainer** - Safer initialization
+  - Changed `SharedModelContainer.shared` from `!` to `?`
+  - Removed `fatalError()` for production safety
+  - Graceful handling of initialization failures
+  - Better error propagation to UI layer
+  - Files: `SharedModelContainer.swift`
+
+#### Performance Optimizations
+
+- **Image Loading Improvements** - InkuUI v1.15.1
+  - Upgraded to InkuUI 1.15.1 with SHA-256 cache keys
+  - Screen scale factor support for Retina displays
+  - visionOS layout fixes for cover images
+  - Memory-efficient image caching
+  - Dependency: InkuUI 1.15.1
+
+- **InkuCoverImage maxWidth Parameter** - Layout control
+  - Added optional `maxWidth` parameter to all `InkuCoverImage` consumers
+  - Better control over image sizing in different contexts
+  - Prevents oversized images in compact layouts
+  - Files: `MangaDetailView.swift`, `CollectionMangaCard.swift`, etc.
+
+- **Pagination Threshold** - Smoother scrolling
+  - Reduced threshold from 5 to 3 elements
+  - Earlier data prefetching for infinite scroll
+  - Improved perceived performance
+  - Files: `MangaListViewModel.swift`, `SearchViewModel.swift`
+
+### Changed
+
+#### Authentication Flow
+
+- **App Token Management** - Secure initialization
+  - `AuthInteractor.register()` now fetches app token from Keychain
+  - Authorization header includes app token from secure storage
+  - Fails gracefully if app token not found (`.unauthorized`)
+  - Files: `AuthInteractor.swift`
+
+#### Error Handling
+
+- **Improved Error Messages** - Better user feedback
+  - Specific error for missing app token during registration
+  - `KeychainError` with localized descriptions
+  - Proper error propagation through ViewModel layer
+
+### Fixed
+
+- **Security Vulnerabilities**
+  - ❌ **Before**: App token hardcoded in source code
+  - ✅ **After**: App token securely stored in Keychain + Secrets.xcconfig
+  - ❌ **Before**: No SSL certificate validation
+  - ✅ **After**: SSL pinning infrastructure ready for production
+
+- **Logging Issues**
+  - ❌ **Before**: `print()` statements scattered throughout ViewModels
+  - ✅ **After**: Structured logging with `os.Logger` by category
+
+- **Initialization Safety**
+  - ❌ **Before**: `SharedModelContainer.shared!` could crash if initialization fails
+  - ✅ **After**: Optional `SharedModelContainer.shared?` with graceful error handling
+
+### Testing
+
+- **Security Test Suite** (19 tests total)
+  - `KeychainServiceTests` (14 tests)
+    - AuthToken storage, retrieval, update, deletion
+    - Email storage, retrieval, update, deletion
+    - App token storage, retrieval, update (NEW)
+    - Batch delete operations
+    - Error handling scenarios
+    - Serialized execution to prevent race conditions
+  - `SSLPinningDelegateTests` (2 tests)
+    - Behavior when pinning disabled
+    - Challenge cancellation for invalid auth methods
+    - Synchronous tests without expectations
+  - `AuthenticationTests` updates (3 tests)
+    - Register with app token from Keychain
+    - Register failure when app token missing
+    - Verify app token retrieval during registration
+  - Files: `KeychainServiceTests.swift`, `SSLPinningDelegateTests.swift`, `AuthenticationTests+Interactor.swift`
+
+### Documentation
+
+- ✅ CHANGELOG.md updated for v3.0.1
+- ✅ Secrets.xcconfig.example with setup instructions
+- ✅ Test coverage for all security components
+- ✅ SSL Pinning documentation with integration notes
+
+### Notes
+
+- **Backward Compatible**: Existing v3.0.0 users can upgrade seamlessly
+- **Migration Required**: First-time users must configure `Secrets.xcconfig`
+- **SSL Pinning**: Infrastructure ready, disabled for test server
+- **Production Ready**: All security improvements validated with tests
+- **No UI Changes**: All improvements are internal (security, logging, performance)
+
+### Breaking Changes
+
+**None** - This is a patch release with internal improvements only. No API or user-facing changes.
+
+---
+
 ## [3.0.0] - 2026-02-15
 
 ### 🎉 Deluxe Version Release - Multi-Platform Support & Static Widgets
