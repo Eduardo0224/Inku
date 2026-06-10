@@ -1,389 +1,641 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "COMMAND_TOGGLE_SIDEBAR" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Toggle Sidebar"
+  "sourceLanguage": "en",
+  "strings": {
+    "COMMAND_TOGGLE_SIDEBAR": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toggle Sidebar"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alternar Barra Lateral"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alternar Barra Lateral"
           }
         }
       }
     },
-    "COMMON_CANCEL" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancel"
+    "COMMON_CANCEL": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancelar"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar"
           }
         }
       }
     },
-    "COMMON_DELETING" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deleting"
+    "COMMON_DELETING": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deleting"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eliminando"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eliminando"
           }
         }
       }
     },
-    "COMMON_DONE" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Done"
+    "COMMON_DONE": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Listo"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listo"
           }
         }
       }
     },
-    "COMMON_LOADING" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Loading..."
+    "COMMON_LOADING": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading..."
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cargando..."
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cargando..."
           }
         }
       }
     },
-    "COMMON_OK" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OK"
+    "COMMON_OK": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aceptar"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aceptar"
           }
         }
       }
     },
-    "COMMON_RETRY" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Retry"
+    "COMMON_RETRY": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retry"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reintentar"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reintentar"
           }
         }
       }
     },
-    "COMMON_UPDATING" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Updating..."
+    "COMMON_UPDATING": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updating..."
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Actualizando..."
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actualizando..."
           }
         }
       }
     },
-    "ERROR_GENERIC" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Something went wrong"
+    "ERROR_GENERIC": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Something went wrong"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Algo salió mal"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Algo salió mal"
           }
         }
       }
     },
-    "ERROR_NETWORK" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No internet connection"
+    "ERROR_NETWORK": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No internet connection"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sin conexión a internet"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sin conexión a internet"
           }
         }
       }
     },
-    "ERROR_TIMEOUT" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Request timed out"
+    "ERROR_TIMEOUT": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Request timed out"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tiempo de espera agotado"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiempo de espera agotado"
           }
         }
       }
     },
-    "ERROR_TITLE" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Error"
+    "ERROR_TITLE": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Error"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Error"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Error"
           }
         }
       }
     },
-    "TAB_BROWSE" : {
-      "comment" : "Title of the Browse tab in the main tab view.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Browse"
+    "TAB_BROWSE": {
+      "comment": "Title of the Browse tab in the main tab view.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Browse"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Explorar"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Explorar"
           }
         }
       }
     },
-    "TAB_COLLECTION" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Collection"
+    "TAB_COLLECTION": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Collection"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Colección"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Colección"
           }
         }
       }
     },
-    "TAB_PROFILE" : {
-      "comment" : "Title of the Profile tab in the main tab view.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Profile"
+    "TAB_PROFILE": {
+      "comment": "Title of the Profile tab in the main tab view.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profile"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Perfil"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Perfil"
           }
         }
       }
     },
-    "TAB_SEARCH" : {
-      "comment" : "Title of the Search tab in the main tab view.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search"
+    "TAB_SEARCH": {
+      "comment": "Title of the Search tab in the main tab view.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buscar"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buscar"
           }
         }
       }
     },
-    "WIDGET_COLLECTION" : {
-      "comment" : "Identifier for the \"Collection\" section in the widget.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Collection"
+    "WATCH_COLLECTION": {
+      "comment": "Tab title for collection section on watchOS",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Collection"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Colección"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Colección"
           }
         }
       }
     },
-    "WIDGET_DESCRIPTION" : {
-      "comment" : "Configuration description for the Inku collection widget.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shows your reading and collection mangas"
+    "WATCH_COMPLICATION_INLINE_SUMMARY": {
+      "comment": "Format string for watch inline complication. First argument is count of mangas currently being read, second is total collection count.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld reading · %2$lld mangas"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Muestra tus mangas en lectura y colección"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld leyendo · %2$lld mangas"
           }
         }
       }
     },
-    "WIDGET_EMPTY_HINT" : {
-      "comment" : "Hint to be displayed when the widget is empty.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "They will appear here automatically"
+    "WATCH_CURRENT_VOLUME": {
+      "comment": "Current volume label on watchOS detail view",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Current volume"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aparecerán aquí automáticamente"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Volumen actual"
           }
         }
       }
     },
-    "WIDGET_EMPTY_MESSAGE" : {
-      "comment" : "Message to show when the manga collection widget is empty.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add mangas from the app"
+    "WATCH_EMPTY_MESSAGE": {
+      "comment": "Empty state message prompting user to open iPhone app",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Inku on your iPhone"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Agrega mangas desde la app"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abre Inku en tu iPhone"
           }
         }
       }
     },
-    "WIDGET_EMPTY_TITLE" : {
-      "comment" : "Title text for the empty state of the manga collection widget.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Empty collection"
+    "WATCH_EMPTY_TITLE": {
+      "comment": "Empty state title when no mangas in watch collection",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No mangas yet"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Colección vacía"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sin mangas aún"
           }
         }
       }
     },
-    "WIDGET_EMPTY_TITLE_COMPACT" : {
-      "comment" : "Title to be displayed in a compact version of the empty state message in the widget.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Empty\ncollection"
+    "WATCH_INKU_COLLECTION": {
+      "comment": "Fallback text for inline complication when no manga is being read",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inku Collection"
           }
         },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Colección\nvacía"
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Colección Inku"
+          }
+        }
+      }
+    },
+    "WATCH_NOW_READING": {
+      "comment": "Tab title for currently reading section on watchOS",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Now Reading"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ahora Leyendo"
+          }
+        }
+      }
+    },
+    "WATCH_NO_ACTIVE_READING": {
+      "comment": "Empty state when no active reading on watchOS",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No active reading"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sin lectura activa"
+          }
+        }
+      }
+    },
+    "WATCH_PROGRESS": {
+      "comment": "Progress label on watchOS detail view",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Progress"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Progreso"
+          }
+        }
+      }
+    },
+    "WATCH_START_READING_HINT": {
+      "comment": "Hint to start reading from collection on watchOS",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start reading from your collection"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Empieza a leer desde tu colección"
+          }
+        }
+      }
+    },
+    "WATCH_STATS": {
+      "comment": "Tab title for stats section on watchOS",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stats"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estadísticas"
+          }
+        }
+      }
+    },
+    "WATCH_STATUS_COMPLETED": {
+      "comment": "Completed status label on watchOS",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Completed"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Completado"
+          }
+        }
+      }
+    },
+    "WATCH_STATUS_IN_COLLECTION": {
+      "comment": "In collection status label on watchOS",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In Collection"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En Colección"
+          }
+        }
+      }
+    },
+    "WATCH_STATUS_READING": {
+      "comment": "Reading status label on watchOS",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reading"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leyendo"
+          }
+        }
+      }
+    },
+    "WIDGET_COLLECTION": {
+      "comment": "Identifier for the \"Collection\" section in the widget.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Collection"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Colección"
+          }
+        }
+      }
+    },
+    "WIDGET_DESCRIPTION": {
+      "comment": "Configuration description for the Inku collection widget.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shows your reading and collection mangas"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Muestra tus mangas en lectura y colección"
+          }
+        }
+      }
+    },
+    "WIDGET_EMPTY_HINT": {
+      "comment": "Hint to be displayed when the widget is empty.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "They will appear here automatically"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aparecerán aquí automáticamente"
+          }
+        }
+      }
+    },
+    "WIDGET_EMPTY_MESSAGE": {
+      "comment": "Message to show when the manga collection widget is empty.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add mangas from the app"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agrega mangas desde la app"
+          }
+        }
+      }
+    },
+    "WIDGET_EMPTY_TITLE": {
+      "comment": "Title text for the empty state of the manga collection widget.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Empty collection"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Colección vacía"
+          }
+        }
+      }
+    },
+    "WIDGET_EMPTY_TITLE_COMPACT": {
+      "comment": "Title to be displayed in a compact version of the empty state message in the widget.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Empty\ncollection"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Colección\nvacía"
           }
         }
       }
     }
   },
-  "version" : "1.1"
+  "version": "1.1"
 }

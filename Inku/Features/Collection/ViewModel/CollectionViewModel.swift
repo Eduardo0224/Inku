@@ -29,6 +29,9 @@ final class CollectionViewModel: CollectionViewModelProtocol {
     @ObservationIgnored
     private let widgetCenter: WidgetCenterProtocol
 
+    @ObservationIgnored
+    private let watchSender = WatchConnectivitySender()
+
     var errorMessage: String?
     var isLoadingManga: Bool = false
     var loadedManga: Manga?
@@ -66,6 +69,7 @@ final class CollectionViewModel: CollectionViewModelProtocol {
                 try modelContext.save()
                 errorMessage = nil
                 widgetCenter.refreshInkuWidgets()
+                triggerWatchSync()
             }
         } catch {
             let collectionError = CollectionError.saveFailed(error)
@@ -88,6 +92,7 @@ final class CollectionViewModel: CollectionViewModelProtocol {
                 try modelContext.save()
                 errorMessage = nil
                 widgetCenter.refreshInkuWidgets()
+                triggerWatchSync()
             }
         } catch {
             let collectionError = CollectionError.updateFailed(error)
@@ -110,6 +115,7 @@ final class CollectionViewModel: CollectionViewModelProtocol {
                 try modelContext.save()
                 errorMessage = nil
                 widgetCenter.refreshInkuWidgets()
+                triggerWatchSync()
             }
         } catch {
             let collectionError = CollectionError.deleteFailed(error)
@@ -268,6 +274,7 @@ final class CollectionViewModel: CollectionViewModelProtocol {
                 try modelContext.save()
                 errorMessage = nil
                 widgetCenter.refreshInkuWidgets()
+                triggerWatchSync()
             }
         } catch {
             let collectionError = CollectionError.saveFailed(error)
@@ -297,6 +304,15 @@ final class CollectionViewModel: CollectionViewModelProtocol {
             errorMessage = collectionError.errorDescription
         } else {
             errorMessage = L10n.Error.generic
+        }
+    }
+
+    private func triggerWatchSync() {
+        let mangas = (try? getAllLocalMangas()) ?? []
+        let sender = watchSender
+        Task {
+            // sendCollection handles both simulator export and WCSession send
+            await sender.sendCollection(mangas)
         }
     }
 }

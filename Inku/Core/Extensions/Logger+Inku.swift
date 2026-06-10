@@ -36,4 +36,7 @@ extension Logger {
 
     /// Logger for Core services
     static let core = Logger(subsystem: subsystem, category: "Core")
+
+    /// Logger for WatchConnectivity / watchOS sync
+    static let inkuWatch = Logger(subsystem: subsystem, category: "Watch")
 }
