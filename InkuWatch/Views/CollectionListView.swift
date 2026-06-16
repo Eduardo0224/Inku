@@ -12,7 +12,6 @@
 //
 
 import SwiftUI
-import SwiftData
 import InkuUI
 
 // MARK: - Collection List View

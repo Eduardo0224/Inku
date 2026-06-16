@@ -81,6 +81,14 @@ enum L10n {
 
         // MARK: Complication Labels
 
+        static func volumeFormat(_ volume: Int) -> String {
+            String(localized: .watchVolumeFormat(volume))
+        }
+
+        static func volumeWithTotalFormat(_ current: Int, _ total: Int) -> String {
+            String(localized: .watchVolumeWithTotalFormat(current, total))
+        }
+
         static func complicationInlineSummary(reading: Int, total: Int) -> String {
             String(localized: .watchComplicationInlineSummary(reading, total))
         }

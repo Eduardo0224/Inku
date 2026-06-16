@@ -22,27 +22,34 @@ struct InkuWatchApp: App {
 
     // MARK: - Private Properties
 
-    private let container: ModelContainer
+    private let modelContainer: ModelContainer?
 
     // MARK: - Body
 
     var body: some Scene {
         WindowGroup {
-            WatchRootView()
+            if let modelContainer {
+                WatchRootView()
+                    .modelContainer(modelContainer)
+            } else {
+                ContentUnavailableView(
+                    L10n.Error.title,
+                    systemImage: "exclamationmark.triangle",
+                    description: Text(L10n.Error.generic)
+                )
+            }
         }
-        .modelContainer(container)
     }
 
     // MARK: - Initializers
 
     init() {
-        self.container = Self.makeModelContainer()
-        seedInitialData()
+        self.modelContainer = Self.makeModelContainer()
     }
 
     // MARK: - Model Container Factory
 
-    private static func makeModelContainer() -> ModelContainer {
+    private static func makeModelContainer() -> ModelContainer? {
         let schema = Schema([WatchMangaItem.self])
         let storeConfig = ModelConfiguration(
             "InkuWatch",
@@ -62,35 +69,8 @@ struct InkuWatchApp: App {
             return container
         }
 
-        // Attempt 3: in-memory fallback (guaranteed for a valid schema)
-        logger.error("Persistent store unavailable, falling back to in-memory")
-        let memConfig = ModelConfiguration(isStoredInMemoryOnly: true)
-        guard let container = try? ModelContainer(for: schema, configurations: [memConfig]) else {
-            // Truly unrecoverable: schema definition itself is broken.
-            preconditionFailure("InkuWatch: Cannot create ModelContainer — schema is invalid.")
-        }
-        return container
-    }
-
-    // MARK: - Seeding
-
-    private func seedInitialData() {
-        let context = ModelContext(container)
-        let descriptor = FetchDescriptor<WatchMangaItem>()
-        guard (try? context.fetch(descriptor).count) == 0 else { return }
-
-        let synced = SimulatorSyncBridge.loadTransferItems()
-        for item in synced {
-            let manga = WatchMangaItem(
-                mangaId: item.mangaId,
-                title: item.title
-            )
-            manga.apply(item)
-            context.insert(manga)
-        }
-
-        if !synced.isEmpty {
-            try? context.save()
-        }
+        // Attempt 3: both failed — show error UI instead of crashing
+        logger.error("Persistent store unavailable — showing error UI")
+        return nil
     }
 }

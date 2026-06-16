@@ -13,22 +13,22 @@
 
 import Foundation
 import WatchConnectivity
-import SwiftData
 import OSLog
 
 // MARK: - Watch Session Manager
 
-@MainActor
-@Observable
-final class WatchSessionManager {
+final class WatchSessionManager: WatchSessionManagerProtocol {
 
     // MARK: - Private Properties
 
     private let logger = Logger.inkuWatch
-    private var modelContainer: ModelContainer?
     private let sessionDelegate = SessionDelegate()
 
     // MARK: - Properties
+
+    /// Called on `@MainActor` when a sync payload arrives from the iPhone.
+    /// The Interactor registers this to own the data-persistence step.
+    var onSyncReceived: (([WatchMangaTransferItem]) -> Void)?
 
     private(set) var isSyncing = false
     private(set) var lastSyncDate: Date?
@@ -48,10 +48,6 @@ final class WatchSessionManager {
 
     // MARK: - Functions
 
-    func setModelContainer(_ container: ModelContainer) {
-        self.modelContainer = container
-    }
-
     /// Requests a full sync from the iOS app.
     func requestFullSync() {
         guard WCSession.default.isReachable else {
@@ -63,6 +59,7 @@ final class WatchSessionManager {
             ["action": "requestFullSync"],
             replyHandler: { _ in
                 Task { @MainActor [weak self] in
+                    self?.isSyncing = false
                     self?.logger.info("Full sync requested successfully")
                 }
             },
@@ -75,40 +72,12 @@ final class WatchSessionManager {
         )
     }
 
-    // MARK: - Fileprivate (called by SessionDelegate)
-
+    /// Forwards incoming sync items to the registered callback (the Interactor).
     fileprivate func handleSync(_ items: [WatchMangaTransferItem]) {
-        guard let context = modelContainer?.mainContext else { return }
-
-        let receivedIds = Set(items.map(\.mangaId))
-
-        for item in items {
-            let descriptor = FetchDescriptor<WatchMangaItem>(
-                predicate: #Predicate { $0.mangaId == item.mangaId }
-            )
-            if let existing = try? context.fetch(descriptor).first {
-                existing.apply(item)
-            } else {
-                let newItem = WatchMangaItem(
-                    mangaId: item.mangaId,
-                    title: item.title
-                )
-                newItem.apply(item)
-                context.insert(newItem)
-            }
-        }
-
-        let allDescriptor = FetchDescriptor<WatchMangaItem>()
-        if let all = try? context.fetch(allDescriptor) {
-            for manga in all where !receivedIds.contains(manga.mangaId) {
-                context.delete(manga)
-            }
-        }
-
-        try? context.save()
         lastSyncDate = Date()
         isSyncing = false
-        logger.info("Sync completed: \(items.count) items")
+        logger.info("Sync received: \(items.count) items — forwarding to interactor")
+        onSyncReceived?(items)
     }
 
     fileprivate func handleActivationError(_ error: Error) {

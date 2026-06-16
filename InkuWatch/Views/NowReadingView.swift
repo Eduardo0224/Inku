@@ -12,7 +12,6 @@
 //
 
 import SwiftUI
-import SwiftData
 import InkuUI
 
 // MARK: - Now Reading View

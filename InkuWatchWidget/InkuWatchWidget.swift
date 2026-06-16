@@ -40,7 +40,7 @@ struct WatchWidgetProvider: TimelineProvider {
         WatchWidgetEntry(
             date: Date(),
             currentlyReading: "One Piece",
-            currentChapter: "Vol. 51 / 106",
+            currentChapter: L10n.Watch.volumeWithTotalFormat(51, 106),
             readingProgressFraction: 0.48,
             latestCover: nil,
             latestTitle: "One Piece",
@@ -108,10 +108,11 @@ struct WatchWidgetProvider: TimelineProvider {
         var currentChapter: String?
         var readingProgressFraction: Double?
         if let r = reading, let current = r.currentReadingVolume {
-            currentChapter = "Vol. \(current)"
             if let total = r.totalVolumes, total > 0 {
-                currentChapter? += " / \(total)"
+                currentChapter = L10n.Watch.volumeWithTotalFormat(current, total)
                 readingProgressFraction = Double(current) / Double(total)
+            } else {
+                currentChapter = L10n.Watch.volumeFormat(current)
             }
         }
 

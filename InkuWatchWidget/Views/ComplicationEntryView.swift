@@ -18,13 +18,13 @@ import WidgetKit
 
 struct ComplicationEntryView: View {
 
-    // MARK: - Properties
-
-    let entry: WatchWidgetEntry
-
     // MARK: - Environment
 
     @Environment(\.widgetFamily) private var family
+
+    // MARK: - Properties
+
+    let entry: WatchWidgetEntry
 
     // MARK: - Body
 

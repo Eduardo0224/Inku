@@ -19,14 +19,21 @@ import InkuUI
 
 struct WatchRootView: View {
 
+    // MARK: - States
+
+    @State private var viewModel: WatchCollectionViewModel
+    @State private var didPerformInitialLoad = false
+
     // MARK: - Environment
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.scenePhase) private var scenePhase
 
-    // MARK: - States
+    // MARK: - Initializers
 
-    @State private var viewModel = WatchCollectionViewModel()
+    init(sessionManager: WatchSessionManagerProtocol = WatchSessionManager()) {
+        self.viewModel = WatchCollectionViewModel(sessionManager: sessionManager)
+    }
 
     // MARK: - Body
 
@@ -60,8 +67,10 @@ struct WatchRootView: View {
             viewModel.checkSimulatorSync(context: modelContext)
             viewModel.loadMangas(context: modelContext)
             viewModel.syncFromiPhone()
+            didPerformInitialLoad = true
         }
-        .onChange(of: scenePhase) {
+        .onChange(of: scenePhase) { _, newPhase in
+            guard didPerformInitialLoad, newPhase == .active else { return }
             viewModel.checkSimulatorSync(context: modelContext)
             viewModel.loadMangas(context: modelContext)
         }

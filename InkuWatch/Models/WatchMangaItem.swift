@@ -33,8 +33,6 @@ final class WatchMangaItem {
     var dateAdded: Date
     var lastSynced: Date
 
-    // MARK: - Computed Properties
-
     var readingProgress: Double? {
         guard let total = totalVolumes, total > 0 else { return nil }
         return Double(volumesOwned) / Double(total)
@@ -47,12 +45,6 @@ final class WatchMangaItem {
     var isComplete: Bool {
         guard let total = totalVolumes else { return hasCompleteCollection }
         return hasCompleteCollection || volumesOwned >= total
-    }
-
-    var statusText: String {
-        if isComplete { return "Completed" }
-        if isCurrentlyReading { return "Reading" }
-        return "In Collection"
     }
 
     // MARK: - Initializers
@@ -82,7 +74,7 @@ final class WatchMangaItem {
         self.lastSynced = Date()
     }
 
-    // MARK: - Update from Transfer Item
+    // MARK: - Functions
 
     func apply(_ item: WatchMangaTransferItem) {
         title = item.title

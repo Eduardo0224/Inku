@@ -54,7 +54,7 @@ struct WatchStatsView: View {
         .background(Color.inkuSurface)
     }
 
-    // MARK: - Private Computed Properties
+    // MARK: - Private Functions
 
     private var stats: [StatItem] {
         [
@@ -106,6 +106,8 @@ struct WatchStatsView: View {
 
 #Preview("Stats") {
     NavigationStack {
-        WatchStatsView(viewModel: WatchCollectionViewModel())
+        WatchStatsView(
+            viewModel: WatchCollectionViewModel(sessionManager: WatchSessionManager())
+        )
     }
 }

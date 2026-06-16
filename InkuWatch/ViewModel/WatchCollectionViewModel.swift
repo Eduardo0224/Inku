@@ -14,6 +14,7 @@
 import Foundation
 import SwiftData
 import Observation
+import OSLog
 
 // MARK: - Watch Collection ViewModel
 
@@ -24,47 +25,16 @@ final class WatchCollectionViewModel {
     // MARK: - Private Properties
 
     @ObservationIgnored
-    private let sessionManager: WatchSessionManager
+    private let interactor: WatchCollectionInteractorProtocol
+
+    @ObservationIgnored
+    private let logger = Logger.inkuWatch
 
     // MARK: - Properties
 
     var allMangas: [WatchMangaItem] = []
     var nowReading: [WatchMangaItem] = []
     var completed: [WatchMangaItem] = []
-
-    // MARK: - Initializers
-
-    init(sessionManager: WatchSessionManager? = nil) {
-        self.sessionManager = sessionManager ?? WatchSessionManager()
-    }
-
-    // MARK: - Functions
-
-    func loadMangas(context: ModelContext) {
-        let allDescriptor = FetchDescriptor<WatchMangaItem>(
-            sortBy: [SortDescriptor(\.dateAdded, order: .reverse)]
-        )
-        let readingDescriptor = FetchDescriptor<WatchMangaItem>(
-            predicate: #Predicate { $0.currentReadingVolume != nil },
-            sortBy: [SortDescriptor(\.dateAdded, order: .reverse)]
-        )
-        let completeDescriptor = FetchDescriptor<WatchMangaItem>(
-            predicate: #Predicate { $0.hasCompleteCollection == true },
-            sortBy: [SortDescriptor(\.dateAdded, order: .reverse)]
-        )
-
-        allMangas = (try? context.fetch(allDescriptor)) ?? []
-        nowReading = (try? context.fetch(readingDescriptor)) ?? []
-        completed = (try? context.fetch(completeDescriptor)) ?? []
-    }
-
-    // MARK: - Configuration
-
-    func configureSession(with container: ModelContainer) {
-        sessionManager.setModelContainer(container)
-    }
-
-    // MARK: - Stats
 
     var totalMangas: Int { allMangas.count }
     var totalVolumesOwned: Int { allMangas.reduce(0) { $0 + $1.volumesOwned } }
@@ -84,42 +54,38 @@ final class WatchCollectionViewModel {
         return Double(complete) / Double(withTotal.count)
     }
 
-    // MARK: - Sync
+    // MARK: - Initializers
+
+    init(sessionManager: WatchSessionManagerProtocol) {
+        self.interactor = WatchCollectionInteractor(sessionManager: sessionManager)
+    }
+
+    // MARK: - Functions
+
+    func loadMangas(context: ModelContext) {
+        do {
+            allMangas = try interactor.fetchAll(context: context)
+            nowReading = try interactor.fetchReading(context: context)
+            completed = try interactor.fetchCompleted(context: context)
+        } catch {
+            logger.error("Failed to load mangas: \(error.localizedDescription)")
+        }
+    }
+
+    func configureSession(with container: ModelContainer) {
+        interactor.configureSession(with: container)
+    }
 
     func syncFromiPhone() {
-        sessionManager.requestFullSync()
+        interactor.syncFromiPhone()
     }
 
     func checkSimulatorSync(context: ModelContext) {
-        let items = SimulatorSyncBridge.loadTransferItems()
-        guard !items.isEmpty else { return }
-
-        let receivedIds = Set(items.map(\.mangaId))
-
-        for item in items {
-            let descriptor = FetchDescriptor<WatchMangaItem>(
-                predicate: #Predicate { $0.mangaId == item.mangaId }
-            )
-            if let existing = try? context.fetch(descriptor).first {
-                existing.apply(item)
-            } else {
-                let newItem = WatchMangaItem(
-                    mangaId: item.mangaId,
-                    title: item.title
-                )
-                newItem.apply(item)
-                context.insert(newItem)
-            }
+        do {
+            try interactor.checkSimulatorSync(context: context)
+            loadMangas(context: context)
+        } catch {
+            logger.error("Simulator sync failed: \(error.localizedDescription)")
         }
-
-        let allDescriptor = FetchDescriptor<WatchMangaItem>()
-        if let all = try? context.fetch(allDescriptor) {
-            for manga in all where !receivedIds.contains(manga.mangaId) {
-                context.delete(manga)
-            }
-        }
-
-        try? context.save()
-        loadMangas(context: context)
     }
 }

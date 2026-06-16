@@ -43,19 +43,6 @@ struct MangaDetailView: View {
         .background(Color.inkuSurface)
     }
 
-    // MARK: - Private Computed Properties
-
-    private var statusText: String {
-        if item.isComplete { return L10n.Watch.statusCompleted }
-        if item.isCurrentlyReading { return L10n.Watch.statusReading }
-        return L10n.Watch.statusInCollection
-    }
-
-    private var coverImage: PlatformImage? {
-        guard let data = item.coverImageData else { return nil }
-        return PlatformImage(data: data)
-    }
-
     // MARK: - Private Views
 
     private var backgroundImageView: some View {
@@ -112,7 +99,7 @@ struct MangaDetailView: View {
     }
 
     private var infoSection: some View {
-        VStack(spacing: 4) {
+        VStack(spacing: InkuSpacing.spacing4) {
             if let japanese = item.japaneseTitle {
                 Text(japanese)
                     .font(.caption2)
@@ -120,7 +107,7 @@ struct MangaDetailView: View {
             }
 
             if let score = item.score {
-                HStack(spacing: 4) {
+                HStack(spacing: InkuSpacing.spacing4) {
                     Image(systemName: "star.fill")
                         .font(.caption2)
                         .foregroundColor(.yellow)
@@ -139,7 +126,7 @@ struct MangaDetailView: View {
     private var progressSection: some View {
         VStack(spacing: InkuSpacing.spacing8) {
             if let progress = item.readingProgress {
-                VStack(spacing: 4) {
+                VStack(spacing: InkuSpacing.spacing4) {
                     HStack {
                         Text(L10n.Watch.progress)
                             .font(.caption)
@@ -159,12 +146,25 @@ struct MangaDetailView: View {
                     Text(L10n.Watch.currentVolume)
                         .font(.caption)
                     Spacer()
-                    Text("Vol. \(current)")
+                    Text(L10n.Watch.volumeFormat(current))
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
             }
         }
+    }
+
+    // MARK: - Private Functions
+
+    private var statusText: String {
+        if item.isComplete { return L10n.Watch.statusCompleted }
+        if item.isCurrentlyReading { return L10n.Watch.statusReading }
+        return L10n.Watch.statusInCollection
+    }
+
+    private var coverImage: PlatformImage? {
+        guard let data = item.coverImageData else { return nil }
+        return PlatformImage(data: data)
     }
 }
 
