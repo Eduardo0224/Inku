@@ -35,6 +35,7 @@ final class WatchCollectionViewModel {
     var allMangas: [WatchMangaItem] = []
     var nowReading: [WatchMangaItem] = []
     var completed: [WatchMangaItem] = []
+    var errorMessage: String?
 
     var totalMangas: Int { allMangas.count }
     var totalVolumesOwned: Int { allMangas.reduce(0) { $0 + $1.volumesOwned } }
@@ -71,13 +72,19 @@ final class WatchCollectionViewModel {
             allMangas = try interactor.fetchAll(context: context)
             nowReading = try interactor.fetchReading(context: context)
             completed = try interactor.fetchCompleted(context: context)
+            errorMessage = nil
         } catch {
+            errorMessage = error.localizedDescription
             logger.error("Failed to load mangas: \(error.localizedDescription)")
         }
     }
 
     func configureSession(with container: ModelContainer) {
         interactor.configureSession(with: container)
+    }
+
+    func clearError() {
+        errorMessage = nil
     }
 
     func syncFromiPhone() {
@@ -88,7 +95,9 @@ final class WatchCollectionViewModel {
         do {
             try interactor.checkSimulatorSync(context: context)
             loadMangas(context: context)
+            errorMessage = nil
         } catch {
+            errorMessage = error.localizedDescription
             logger.error("Simulator sync failed: \(error.localizedDescription)")
         }
     }

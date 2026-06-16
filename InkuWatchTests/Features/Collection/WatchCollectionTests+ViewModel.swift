@@ -215,13 +215,6 @@ extension WatchCollectionTests {
                 totalVolumes: 10,
                 hasCompleteCollection: true
             )
-            let incomplete = WatchMangaItem(
-                mangaId: 2,
-                title: "B",
-                volumesOwned: 5,
-                totalVolumes: 72,
-                hasCompleteCollection: false
-            )
             spyInteractor.completedMangasToReturn = [complete]
 
             // When
@@ -238,11 +231,6 @@ extension WatchCollectionTests {
                 mangaId: 1,
                 title: "A",
                 currentReadingVolume: 51
-            )
-            let notReading = WatchMangaItem(
-                mangaId: 2,
-                title: "B",
-                currentReadingVolume: nil
             )
             spyInteractor.readingMangasToReturn = [reading]
 
@@ -293,6 +281,81 @@ extension WatchCollectionTests {
             // Then
             // 1/2 = 0.5
             #expect(sut.completionPercentage == 0.5)
+        }
+
+        // MARK: - Error Handling Tests
+
+        @Test("loadMangas sets errorMessage on fetch failure")
+        func loadMangasSetsErrorMessageOnFailure() {
+            // Given
+            spyInteractor.shouldThrowError = true
+
+            // When
+            sut.loadMangas(context: modelContext)
+
+            // Then
+            #expect(sut.errorMessage != nil)
+            #expect(spyInteractor.fetchAllWasCalled)
+        }
+
+        @Test("loadMangas clears errorMessage on success")
+        func loadMangasClearsErrorMessageOnSuccess() {
+            // Given — first trigger an error
+            spyInteractor.shouldThrowError = true
+            sut.loadMangas(context: modelContext)
+            #expect(sut.errorMessage != nil)
+
+            // When — then succeed
+            spyInteractor.shouldThrowError = false
+            spyInteractor.allMangasToReturn = [
+                WatchMangaItem(mangaId: 1, title: "A"),
+            ]
+            sut.loadMangas(context: modelContext)
+
+            // Then
+            #expect(sut.errorMessage == nil)
+        }
+
+        @Test("checkSimulatorSync sets errorMessage on failure")
+        func checkSimulatorSyncSetsErrorMessageOnFailure() {
+            // Given
+            spyInteractor.shouldThrowError = true
+
+            // When
+            sut.checkSimulatorSync(context: modelContext)
+
+            // Then
+            #expect(sut.errorMessage != nil)
+            #expect(spyInteractor.checkSimulatorSyncWasCalled)
+        }
+
+        @Test("checkSimulatorSync clears errorMessage on success")
+        func checkSimulatorSyncClearsErrorMessageOnSuccess() {
+            // Given — first trigger an error
+            spyInteractor.shouldThrowError = true
+            sut.checkSimulatorSync(context: modelContext)
+            #expect(sut.errorMessage != nil)
+
+            // When — then succeed
+            spyInteractor.shouldThrowError = false
+            sut.checkSimulatorSync(context: modelContext)
+
+            // Then
+            #expect(sut.errorMessage == nil)
+        }
+
+        @Test("clearError sets errorMessage to nil")
+        func clearErrorClearsMessage() {
+            // Given
+            spyInteractor.shouldThrowError = true
+            sut.loadMangas(context: modelContext)
+            #expect(sut.errorMessage != nil)
+
+            // When
+            sut.clearError()
+
+            // Then
+            #expect(sut.errorMessage == nil)
         }
     }
 }
