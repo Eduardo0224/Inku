@@ -26,6 +26,9 @@ enum SimulatorSyncWriter {
     // MARK: - Write
 
     static func exportCollection(_ items: [WatchMangaTransferItem]) {
+        #if !targetEnvironment(simulator)
+        return
+        #endif
         guard !items.isEmpty else { return }
 
         let dirURL = URL(fileURLWithPath: sharedDir)

@@ -26,7 +26,13 @@ enum SimulatorSyncBridge {
 
     // MARK: - Read
 
-    static var isEnabled = false
+    /// Automatically enabled when running in the simulator,
+    /// disabled on real devices (relies on WCSession instead).
+    #if targetEnvironment(simulator)
+    static let isEnabled = true
+    #else
+    static let isEnabled = false
+    #endif
 
     static func loadTransferItems() -> [WatchMangaTransferItem] {
         guard isEnabled else { return [] }

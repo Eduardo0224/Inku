@@ -19,7 +19,7 @@ internal import UIKit
 
 @MainActor
 @Observable
-final class WatchConnectivitySender {
+final class WatchConnectivitySender: WatchConnectivitySenderProtocol {
 
     // MARK: - Private Properties
 
@@ -27,6 +27,10 @@ final class WatchConnectivitySender {
     private let sessionDelegate = SessionDelegate()
 
     // MARK: - Properties
+
+    /// Called on `@MainActor` when the watch requests a full sync.
+    /// The owner (CollectionViewModel) sets this to trigger data delivery.
+    var onFullSyncRequested: (() async -> Void)?
 
     private(set) var isWatchReachable = false
 
@@ -84,7 +88,10 @@ final class WatchConnectivitySender {
     }
 
     fileprivate func handleFullSyncRequest() {
-        logger.info("Watch requested full sync")
+        logger.info("Watch requested full sync — forwarding to owner")
+        Task { [weak self] in
+            await self?.onFullSyncRequested?()
+        }
     }
 
     fileprivate func logActivationError(_ error: Error) {

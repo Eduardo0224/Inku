@@ -14,6 +14,7 @@
 import Foundation
 import SwiftData
 import OSLog
+import WidgetKit
 
 // MARK: - Watch Collection Interactor
 
@@ -51,6 +52,7 @@ final class WatchCollectionInteractor: WatchCollectionInteractorProtocol {
         guard !items.isEmpty else { return }
         try applyTransferItems(items, context: context)
         logger.info("Simulator sync applied: \(items.count) items")
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     // MARK: - Fetch Functions
@@ -121,6 +123,7 @@ final class WatchCollectionInteractor: WatchCollectionInteractorProtocol {
         do {
             try applyTransferItems(items, context: context)
             logger.info("Sync applied from iPhone: \(items.count) items")
+            WidgetCenter.shared.reloadAllTimelines()
         } catch {
             logger.error("Sync from iPhone failed: \(error.localizedDescription)")
         }

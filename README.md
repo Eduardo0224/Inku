@@ -6,7 +6,7 @@
   <div>
 
 ![Swift](https://img.shields.io/badge/Swift-6.0-orange.svg)
-![Platform](https://img.shields.io/badge/Platform-iOS%2018.6%2B%20%7C%20iPadOS%2018.6%2B%20%7C%20macOS%2015%2B%20%7C%20visionOS%202%2B-lightgrey.svg)
+![Platform](https://img.shields.io/badge/Platform-iOS%2018.6%2B%20%7C%20iPadOS%2018.6%2B%20%7C%20macOS%2015%2B%20%7C%20visionOS%202%2B%20%7C%20watchOS%2010%2B-lightgrey.svg)
 ![SwiftUI](https://img.shields.io/badge/SwiftUI-Observation-blue.svg)
 ![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-green.svg)
 ![License](https://img.shields.io/badge/License-MIT-purple.svg)
@@ -24,7 +24,7 @@
 
 ## 📖 Descripción
 
-**Inku** es una aplicación nativa multi-plataforma para iOS, iPadOS, macOS y visionOS que permite explorar, buscar y gestionar tu colección personal de manga. Con acceso a una base de datos de más de 64,000 títulos, Inku ofrece una experiencia visual distintiva optimizada para cada plataforma, con soporte completo para español e inglés y widgets nativos para acceso rápido.
+**Inku** es una aplicación nativa multi-plataforma para iOS, iPadOS, macOS, visionOS y watchOS que permite explorar, buscar y gestionar tu colección personal de manga. Con acceso a una base de datos de más de 64,000 títulos, Inku ofrece una experiencia visual distintiva optimizada para cada plataforma, con soporte completo para español e inglés y widgets nativos para acceso rápido.
 
 ### ✨ Puntos Destacados
 
@@ -551,6 +551,15 @@ Text(L10n.MangaList.mangaCount(mangas.count))
 - [x] **Widgets** - Small, Medium, Large, Extra Large en todas las plataformas
 - [x] **Multi-Platform Storage** - SharedModelContainer con App Groups
 - [x] **Platform-Specific Optimizations** - Layouts y controles nativos por plataforma
+
+### 🚧 v3.1.0 - Watch Companion (En desarrollo)
+
+- [x] **watchOS App** - Companion glanceable con TabView y navegación carousel
+- [x] **WatchConnectivity** - Sincronización iPhone → Watch vía WCSession
+- [x] **Watch Widget** - Complicaciones (Rectangular, Circular, Corner, Inline)
+- [x] **Clean Architecture** - ViewModel + Interactor + Service con protocolos
+- [ ] **Test Suite** - Swift Testing con Spies para ViewModel e Interactor
+- [ ] **Background Refresh** - Sincronización periódica en segundo plano
 
 ---
 

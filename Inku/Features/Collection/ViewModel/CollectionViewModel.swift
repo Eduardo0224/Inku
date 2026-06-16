@@ -30,7 +30,7 @@ final class CollectionViewModel: CollectionViewModelProtocol {
     private let widgetCenter: WidgetCenterProtocol
 
     @ObservationIgnored
-    private let watchSender = WatchConnectivitySender()
+    private let watchSender: WatchConnectivitySenderProtocol
 
     var errorMessage: String?
     var isLoadingManga: Bool = false
@@ -40,10 +40,15 @@ final class CollectionViewModel: CollectionViewModelProtocol {
 
     init(
         interactor: CollectionInteractorProtocol = CollectionInteractor(),
-        widgetCenter: WidgetCenterProtocol = WidgetCenterWrapper()
+        widgetCenter: WidgetCenterProtocol = WidgetCenterWrapper(),
+        watchSender: WatchConnectivitySenderProtocol = WatchConnectivitySender()
     ) {
         self.interactor = interactor
         self.widgetCenter = widgetCenter
+        self.watchSender = watchSender
+        watchSender.onFullSyncRequested = { [weak self] in
+            await self?.triggerWatchSync()
+        }
     }
 
     // MARK: - CRUD Operations
