@@ -30,7 +30,7 @@ struct WatchStatsView: View {
 
     // MARK: - Properties
 
-    let viewModel: WatchCollectionViewModel
+    let data: WatchStatsData
 
     // MARK: - Body
 
@@ -60,31 +60,31 @@ struct WatchStatsView: View {
         [
             StatItem(
                 icon: "books.vertical.fill",
-                value: "\(viewModel.totalMangas)",
+                value: "\(data.totalMangas)",
                 label: L10n.Collection.Stats.totalMangas,
                 accentColor: .inkuAccent
             ),
             StatItem(
                 icon: "book.fill",
-                value: "\(viewModel.totalVolumesOwned)",
+                value: "\(data.totalVolumesOwned)",
                 label: L10n.Collection.Stats.totalVolumes,
                 accentColor: .inkuAccentStrong
             ),
             StatItem(
                 icon: "checkmark.circle.fill",
-                value: "\(viewModel.completedCount)",
+                value: "\(data.completedCount)",
                 label: L10n.Collection.Stats.completed,
                 accentColor: .green
             ),
             StatItem(
                 icon: "book.pages.fill",
-                value: "\(viewModel.readingCount)",
+                value: "\(data.readingCount)",
                 label: L10n.Collection.Stats.reading,
                 accentColor: .blue
             ),
             StatItem(
                 icon: "chart.bar.fill",
-                value: viewModel.averageProgress.formatted(
+                value: data.averageProgress.formatted(
                     .percent.precision(.integerAndFractionLength(integer: 1, fraction: 1))
                 ),
                 label: L10n.Collection.Stats.averageProgress,
@@ -92,7 +92,7 @@ struct WatchStatsView: View {
             ),
             StatItem(
                 icon: "percent",
-                value: viewModel.completionPercentage.formatted(
+                value: data.completionPercentage.formatted(
                     .percent.precision(.integerAndFractionLength(integer: 1, fraction: 1))
                 ),
                 label: L10n.Collection.Stats.completionRate,
@@ -107,7 +107,14 @@ struct WatchStatsView: View {
 #Preview("Stats") {
     NavigationStack {
         WatchStatsView(
-            viewModel: WatchCollectionViewModel(sessionManager: WatchSessionManager())
+            data: WatchStatsData(
+                totalMangas: 42,
+                totalVolumesOwned: 520,
+                completedCount: 15,
+                readingCount: 8,
+                averageProgress: 0.65,
+                completionPercentage: 0.36
+            )
         )
     }
 }

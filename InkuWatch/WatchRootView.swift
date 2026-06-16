@@ -54,7 +54,7 @@ struct WatchRootView: View {
             }
 
             NavigationStack {
-                WatchStatsView(viewModel: viewModel)
+                WatchStatsView(data: statsData)
             }
             .tabItem {
                 Text(L10n.Watch.stats)
@@ -62,6 +62,16 @@ struct WatchRootView: View {
         }
         .inkuTabStyle()
         .background(Color.inkuSurface)
+        .alert(
+            L10n.Error.title,
+            isPresented: errorBinding
+        ) {
+            Button(L10n.Common.ok, role: .cancel) {
+                viewModel.clearError()
+            }
+        } message: {
+            Text(viewModel.errorMessage ?? "")
+        }
         .task {
             viewModel.configureSession(with: modelContext.container)
             viewModel.checkSimulatorSync(context: modelContext)
@@ -74,5 +84,30 @@ struct WatchRootView: View {
             viewModel.checkSimulatorSync(context: modelContext)
             viewModel.loadMangas(context: modelContext)
         }
+    }
+
+    // MARK: - Private Functions
+
+    /// Snapshot of computed stats for the stats tab.
+    /// Reading ViewModel properties here ensures `@Observable` tracks them,
+    /// so the stats view re-renders when the underlying data changes.
+    private var statsData: WatchStatsData {
+        WatchStatsData(
+            totalMangas: viewModel.totalMangas,
+            totalVolumesOwned: viewModel.totalVolumesOwned,
+            completedCount: viewModel.completedCount,
+            readingCount: viewModel.readingCount,
+            averageProgress: viewModel.averageProgress,
+            completionPercentage: viewModel.completionPercentage
+        )
+    }
+
+    /// Two-way binding that presents the alert when `errorMessage` is set
+    /// and clears it on dismiss.
+    private var errorBinding: Binding<Bool> {
+        Binding(
+            get: { viewModel.errorMessage != nil },
+            set: { if !$0 { viewModel.clearError() } }
+        )
     }
 }
