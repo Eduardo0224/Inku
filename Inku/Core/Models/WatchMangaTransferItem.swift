@@ -44,4 +44,29 @@ struct WatchMangaTransferItem: Codable, Sendable {
         self.dateAdded = collectionManga.dateAdded
         self.coverImageJPEGBase64 = coverJPEGBase64
     }
+
+    /// Memberwise initializer for testing and previews.
+    init(
+        mangaId: Int,
+        title: String,
+        japaneseTitle: String? = nil,
+        score: Double? = nil,
+        volumesOwned: Int = 0,
+        totalVolumes: Int? = nil,
+        currentReadingVolume: Int? = nil,
+        hasCompleteCollection: Bool = false,
+        dateAdded: Date = Date(),
+        coverImageJPEGBase64: String? = nil
+    ) {
+        self.mangaId = mangaId
+        self.title = title
+        self.japaneseTitle = japaneseTitle
+        self.score = score
+        self.volumesOwned = volumesOwned
+        self.totalVolumes = totalVolumes
+        self.currentReadingVolume = currentReadingVolume
+        self.hasCompleteCollection = hasCompleteCollection
+        self.dateAdded = dateAdded
+        self.coverImageJPEGBase64 = coverJPEGBase64
+    }
 }
