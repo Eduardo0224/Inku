@@ -19,6 +19,7 @@ import SwiftData
 extension WatchCollectionTests {
 
     @Suite("Interactor Tests")
+    @MainActor
     struct InteractorTests {
 
         // MARK: - Subject Under Test

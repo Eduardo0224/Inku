@@ -67,6 +67,6 @@ struct WatchMangaTransferItem: Codable, Sendable {
         self.currentReadingVolume = currentReadingVolume
         self.hasCompleteCollection = hasCompleteCollection
         self.dateAdded = dateAdded
-        self.coverImageJPEGBase64 = coverJPEGBase64
+        self.coverImageJPEGBase64 = coverImageJPEGBase64
     }
 }
