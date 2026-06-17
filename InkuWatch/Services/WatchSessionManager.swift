@@ -124,19 +124,36 @@ private final class SessionDelegate: NSObject, WCSessionDelegate, @unchecked Sen
 
         switch action {
         case "syncCollection":
-            guard let raw = message["items"] as? String,
-                  let data = raw.data(using: .utf8),
-                  let items = try? JSONDecoder().decode(
-                    [WatchMangaTransferItem].self,
-                    from: data
-                  ) else { return }
-
-            Task { @MainActor [weak self] in
-                self?.owner?.handleSync(items)
-            }
-
+            handleSyncPayload(message)
         default:
             break
+        }
+    }
+
+    /// Receives larger payloads sent via `transferUserInfo` (no ~100KB limit).
+    func session(_ session: WCSession, didReceiveUserInfo userInfo: [String: Any]) {
+        guard let action = userInfo["action"] as? String else { return }
+
+        switch action {
+        case "syncCollection":
+            handleSyncPayload(userInfo)
+        default:
+            break
+        }
+    }
+
+    // MARK: - Private Helpers
+
+    private func handleSyncPayload(_ payload: [String: Any]) {
+        guard let raw = payload["items"] as? String,
+              let data = raw.data(using: .utf8),
+              let items = try? JSONDecoder().decode(
+                [WatchMangaTransferItem].self,
+                from: data
+              ) else { return }
+
+        Task { @MainActor [weak self] in
+            self?.owner?.handleSync(items)
         }
     }
 }

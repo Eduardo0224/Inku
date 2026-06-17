@@ -48,13 +48,9 @@ final class WatchConnectivitySender: WatchConnectivitySenderProtocol {
 
     func sendCollection(_ mangas: [CollectionManga]) async {
         let items = await buildTransferItems(from: mangas)
+        guard !items.isEmpty else { return }
 
         SimulatorSyncWriter.exportCollection(items)
-
-        guard WCSession.default.isReachable else {
-            logger.info("Watch not reachable — sync deferred (simulator file exported)")
-            return
-        }
 
         guard let data = try? JSONEncoder().encode(items),
               let json = String(data: data, encoding: .utf8) else {
@@ -62,19 +58,13 @@ final class WatchConnectivitySender: WatchConnectivitySenderProtocol {
             return
         }
 
-        WCSession.default.sendMessage(
-            ["action": "syncCollection", "items": json],
-            replyHandler: { _ in
-                Task { @MainActor [weak self] in
-                    self?.logger.info("Collection sent to watch: \(items.count) items")
-                }
-            },
-            errorHandler: { error in
-                Task { @MainActor [weak self] in
-                    self?.logger.error("Send failed: \(error.localizedDescription)")
-                }
-            }
-        )
+        // transferUserInfo has no payload size limit (unlike sendMessage ~100KB)
+        // and queues the data for delivery when the watch becomes reachable.
+        WCSession.default.transferUserInfo([
+            "action": "syncCollection",
+            "items": json
+        ])
+        logger.info("Collection queued for watch: \(items.count) items")
     }
 
     // MARK: - Fileprivate (called by SessionDelegate)

@@ -61,6 +61,10 @@ final class WatchCollectionViewModel {
         self.interactor = WatchCollectionInteractor(sessionManager: sessionManager)
     }
 
+    init(interactor: WatchCollectionInteractorProtocol) {
+        self.interactor = interactor
+    }
+
     // MARK: - Functions
 
     func loadMangas(context: ModelContext) {

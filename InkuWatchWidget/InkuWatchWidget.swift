@@ -67,10 +67,23 @@ struct WatchWidgetProvider: TimelineProvider {
 
     // MARK: - Private
 
+    /// App Group store URL matching `WatchStoreConfiguration.storeURL`
+    /// so the widget reads the same SQLite file as the main watch app.
+    private static var storeURL: URL {
+        FileManager.default
+            .containerURL(forSecurityApplicationGroupIdentifier: "group.com.sdp26.inku")!
+            .appendingPathComponent("InkuWatch.sqlite")
+    }
+
     private func loadEntry() -> WatchWidgetEntry {
+        let config = ModelConfiguration(
+            "InkuWatch",
+            url: Self.storeURL,
+            cloudKitDatabase: .none
+        )
         guard let container = try? ModelContainer(
             for: WatchMangaItem.self,
-            configurations: ModelConfiguration("InkuWatch", cloudKitDatabase: .none)
+            configurations: config
         ) else {
             return WatchWidgetEntry(
                 date: Date(),

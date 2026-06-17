@@ -35,8 +35,8 @@ struct InlineComplicationView: View {
                     reading: entry.readingCount,
                     total: entry.totalCollectionCount
                 ))
-                Text("\(entry.readingCount) / \(entry.totalCollectionCount) 📚")
-                Text("📚 \(entry.totalCollectionCount)")
+                Text("\(entry.readingCount)/\(entry.totalCollectionCount)")
+                Text("\(entry.totalCollectionCount)")
             }
         } else {
             Text(fallbackLabel)
