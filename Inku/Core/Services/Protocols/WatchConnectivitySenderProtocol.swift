@@ -15,6 +15,7 @@ import Foundation
 
 // MARK: - Watch Connectivity Sender Protocol
 
+@MainActor
 protocol WatchConnectivitySenderProtocol: AnyObject {
 
     // MARK: - Properties

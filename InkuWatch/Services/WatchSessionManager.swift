@@ -73,7 +73,7 @@ final class WatchSessionManager: WatchSessionManagerProtocol {
     }
 
     /// Forwards incoming sync items to the registered callback (the Interactor).
-    fileprivate func handleSync(_ items: [WatchMangaTransferItem]) {
+    func handleSync(_ items: [WatchMangaTransferItem]) {
         lastSyncDate = Date()
         isSyncing = false
         logger.info("Sync received: \(items.count) items — forwarding to interactor")
