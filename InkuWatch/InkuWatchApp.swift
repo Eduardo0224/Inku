@@ -51,7 +51,10 @@ struct InkuWatchApp: App {
 
     private static func makeModelContainer() -> ModelContainer? {
         let schema = Schema([WatchMangaItem.self])
-        let storeConfig = WatchStoreConfiguration.makeConfiguration()
+        let storeConfig = ModelConfiguration(
+            "InkuWatch",
+            cloudKitDatabase: .none
+        )
         let logger = Logger.inkuWatch
 
         // Attempt 1: open existing store
