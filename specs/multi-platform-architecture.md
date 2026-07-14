@@ -1,8 +1,8 @@
-# Multi-Platform Architecture - Inku v3.0.0
+# Multi-Platform Architecture — Inku v4.0.0
 
 ## Overview
 
-Inku v3.0.0 extends the app to **macOS**, **visionOS**, and adds **iOS Widgets**, maintaining Clean Architecture principles and code reusability across platforms.
+Inku v4.0.0 extends the app to **macOS**, **visionOS**, **watchOS**, and adds **iOS Widgets** and **watch complications**, maintaining Clean Architecture principles and code reusability across platforms.
 
 ## Platform Support
 
@@ -12,6 +12,7 @@ Inku v3.0.0 extends the app to **macOS**, **visionOS**, and adds **iOS Widgets**
 | **iPadOS** | 18.6+ | Adaptive layouts, multitasking |
 | **macOS** | 15.0+ | Multi-column layout, keyboard shortcuts, menu bar |
 | **visionOS** | 2.0+ | Spatial interface, hover effects, ornaments |
+| **watchOS** | 26.2+ | Companion app, complications, WatchConnectivity sync |
 
 ## Project Structure
 
@@ -40,6 +41,15 @@ Inku/
 │   │   ├── MediumWidget.swift
 │   │   └── LargeWidget.swift
 │   └── Info.plist
+├── InkuWatch/                      # watchOS App Target
+│   ├── InkuWatchApp.swift          # watchOS entry point
+│   ├── WatchRootView.swift         # TabView (3 tabs)
+│   ├── Models/                     # WatchMangaItem, WatchMangaDisplayItem, WatchStatsData
+│   ├── Interactor/                 # WatchCollectionInteractor + Protocol
+│   ├── ViewModel/                  # WatchCollectionViewModel (@Observable @MainActor)
+│   ├── Views/                      # NowReading, Collection, Detail, Stats
+│   └── Services/                   # WatchSessionManager, SimulatorSyncBridge
+├── InkuWatchWidget/                # watchOS Widget/Complications
 ├── Shared/                         # Shared code across all platforms
 │   ├── Core/                       # Moved from Inku/Core
 │   │   ├── Models/
@@ -93,9 +103,21 @@ Each platform has its own entry point and UI adaptations:
 - Platform-specific UI adjustments (picker styles, keyboard dismissal)
 - Sheet dismissal buttons (no swipe gestures)
 
-#### Widget Extension
+#### watchOS-Specific
+- `InkuWatchApp.swift` — `@main` entry point with `ModelContainer`
+- `WatchRootView.swift` — `TabView` with 3 tabs (Now Reading, Collection, Stats)
+- `WatchMangaDisplayItem` — Value-type display model (decoupled from `@Model`)
+- `WatchSessionManager` — WCSession receiver with `SessionDelegate`
+- `SimulatorSyncBridge` — Dev-only simulator sync (`#if targetEnvironment(simulator)`)
+
+#### Widget Extension (iOS)
 - Timeline Provider for data updates
 - Small/Medium/Large widget views
+
+#### Widget Extension (watchOS)
+- 4 complication families: rectangular, circular, corner, inline
+- Shared `ModelConfiguration("InkuWatch")` store
+- Timeline refresh every 30 minutes
 - App Intents for widget configuration
 - Shared access to SwiftData container
 

@@ -78,50 +78,6 @@ final class WatchCollectionViewModel {
         setupSyncCallback()
     }
 
-    // MARK: - Functions
-
-    func setModelContext(_ modelContext: ModelContext) {
-        self.modelContext = modelContext
-    }
-
-    func startReceivingSync() {
-        interactor.startReceivingSync()
-    }
-
-    func loadMangas(context: ModelContext) {
-        do {
-            allMangas = try fetchAll(context: context)
-            nowReading = try fetchReading(context: context)
-            completed = try fetchCompleted(context: context)
-            errorMessage = nil
-        } catch {
-            errorMessage = error.localizedDescription
-            logger.error("Failed to load mangas: \(error.localizedDescription)")
-        }
-    }
-
-    func syncFromiPhone() {
-        interactor.syncFromiPhone()
-    }
-
-    func clearError() {
-        errorMessage = nil
-    }
-
-    func checkSimulatorSync(context: ModelContext) {
-        let items = interactor.loadSimulatorTransferItems()
-        guard !items.isEmpty else { return }
-        do {
-            try applyTransferItems(items, context: context)
-            logger.info("Simulator sync applied: \(items.count) items")
-            WidgetCenter.shared.reloadAllTimelines()
-            loadMangas(context: context)
-        } catch {
-            errorMessage = error.localizedDescription
-            logger.error("Simulator sync failed: \(error.localizedDescription)")
-        }
-    }
-
     // MARK: - Private Functions
 
     private func setupSyncCallback() {
@@ -142,8 +98,6 @@ final class WatchCollectionViewModel {
             logger.error("Sync from iPhone failed: \(error.localizedDescription)")
         }
     }
-
-    // MARK: - SwiftData Operations
 
     private func fetchAll(context: ModelContext) throws -> [WatchMangaItem] {
         let descriptor = FetchDescriptor<WatchMangaItem>(
@@ -198,5 +152,49 @@ final class WatchCollectionViewModel {
         }
 
         try context.save()
+    }
+
+    // MARK: - Functions
+
+    func setModelContext(_ modelContext: ModelContext) {
+        self.modelContext = modelContext
+    }
+
+    func startReceivingSync() {
+        interactor.startReceivingSync()
+    }
+
+    func loadMangas(context: ModelContext) {
+        do {
+            allMangas = try fetchAll(context: context)
+            nowReading = try fetchReading(context: context)
+            completed = try fetchCompleted(context: context)
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+            logger.error("Failed to load mangas: \(error.localizedDescription)")
+        }
+    }
+
+    func syncFromiPhone() {
+        interactor.syncFromiPhone()
+    }
+
+    func clearError() {
+        errorMessage = nil
+    }
+
+    func checkSimulatorSync(context: ModelContext) {
+        let items = interactor.loadSimulatorTransferItems()
+        guard !items.isEmpty else { return }
+        do {
+            try applyTransferItems(items, context: context)
+            logger.info("Simulator sync applied: \(items.count) items")
+            WidgetCenter.shared.reloadAllTimelines()
+            loadMangas(context: context)
+        } catch {
+            errorMessage = error.localizedDescription
+            logger.error("Simulator sync failed: \(error.localizedDescription)")
+        }
     }
 }

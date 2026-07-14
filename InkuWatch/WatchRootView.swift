@@ -29,6 +29,31 @@ struct WatchRootView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.scenePhase) private var scenePhase
 
+    // MARK: - Properties
+
+    /// Snapshot of computed stats for the stats tab.
+    /// Reading ViewModel properties here ensures `@Observable` tracks them,
+    /// so the stats view re-renders when the underlying data changes.
+    private var statsData: WatchStatsData {
+        WatchStatsData(
+            totalMangas: viewModel.totalMangas,
+            totalVolumesOwned: viewModel.totalVolumesOwned,
+            completedCount: viewModel.completedCount,
+            readingCount: viewModel.readingCount,
+            averageProgress: viewModel.averageProgress,
+            completionPercentage: viewModel.completionPercentage
+        )
+    }
+
+    /// Two-way binding that presents the alert when `errorMessage` is set
+    /// and clears it on dismiss.
+    private var errorBinding: Binding<Bool> {
+        Binding(
+            get: { viewModel.errorMessage != nil },
+            set: { if !$0 { viewModel.clearError() } }
+        )
+    }
+
     // MARK: - Body
 
     var body: some View {
@@ -87,28 +112,4 @@ struct WatchRootView: View {
         self.viewModel = WatchCollectionViewModel()
     }
 
-    // MARK: - Properties
-
-    /// Snapshot of computed stats for the stats tab.
-    /// Reading ViewModel properties here ensures `@Observable` tracks them,
-    /// so the stats view re-renders when the underlying data changes.
-    private var statsData: WatchStatsData {
-        WatchStatsData(
-            totalMangas: viewModel.totalMangas,
-            totalVolumesOwned: viewModel.totalVolumesOwned,
-            completedCount: viewModel.completedCount,
-            readingCount: viewModel.readingCount,
-            averageProgress: viewModel.averageProgress,
-            completionPercentage: viewModel.completionPercentage
-        )
-    }
-
-    /// Two-way binding that presents the alert when `errorMessage` is set
-    /// and clears it on dismiss.
-    private var errorBinding: Binding<Bool> {
-        Binding(
-            get: { viewModel.errorMessage != nil },
-            set: { if !$0 { viewModel.clearError() } }
-        )
-    }
 }
