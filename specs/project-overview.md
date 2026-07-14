@@ -205,9 +205,9 @@ InkuTests/
         └── SpyNetworkService.swift
 ```
 
-## Current Status (v1.0.0)
+## Current Status (v4.0.0)
 
-✅ **MVP COMPLETED** - Released on 2026-01-23
+✅ **DELUXE + watchOS COMPLETED** — Released on 2026-07-14
 
 ### Features Completed
 - ✅ MangaList with pagination and filters

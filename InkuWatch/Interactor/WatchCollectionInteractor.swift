@@ -38,7 +38,21 @@ final class WatchCollectionInteractor: WatchCollectionInteractorProtocol {
         self.sessionManager = sessionManager
     }
 
-    // MARK: - Session Configuration
+    // MARK: - Private Functions
+
+    /// Forwards incoming WCSession items to the ViewModel's callback.
+    /// Called on `@MainActor` by `WatchSessionManager`.
+    // MARK: - Private Functions
+
+    /// Forwards incoming WCSession items to the ViewModel's callback.
+    /// Called on `@MainActor` by `WatchSessionManager`.
+    @MainActor
+    private func handleIncomingSync(_ items: [WatchMangaTransferItem]) {
+        logger.info("Sync received from iPhone: \(items.count) items — forwarding to ViewModel")
+        onSyncReceived?(items)
+    }
+
+    // MARK: - Functions
 
     @MainActor
     func startReceivingSync() {
@@ -53,19 +67,7 @@ final class WatchCollectionInteractor: WatchCollectionInteractorProtocol {
         sessionManager.requestFullSync()
     }
 
-    // MARK: - Simulator Sync
-
     func loadSimulatorTransferItems() -> [WatchMangaTransferItem] {
         SimulatorSyncBridge.loadTransferItems()
-    }
-
-    // MARK: - Private Functions
-
-    /// Forwards incoming WCSession items to the ViewModel's callback.
-    /// Called on `@MainActor` by `WatchSessionManager`.
-    @MainActor
-    private func handleIncomingSync(_ items: [WatchMangaTransferItem]) {
-        logger.info("Sync received from iPhone: \(items.count) items — forwarding to ViewModel")
-        onSyncReceived?(items)
     }
 }

@@ -1270,12 +1270,16 @@ The Minimum Viable Product is complete with all required features:
 - ✅ Spanish/English localization
 - ✅ Professional design system
 
-### Next Versions (Planned)
+### Version History
 
-- **v1.1.x**: Bug fixes and minor improvements
-- **v1.5.0**: Advanced filters and grid view (Medium version)
-- **v2.0.0**: Authentication and cloud sync (Advanced version)
-- **v3.0.0**: Multi-platform and widgets (Deluxe version)
+All planned versions have been released:
+
+- ✅ **v1.0.0** — MVP (browse, search, local collection)
+- ✅ **v1.5.0** — Advanced filters and grid view
+- ✅ **v2.0.0** — Authentication and cloud sync
+- ✅ **v3.0.0** — Multi-platform and widgets
+- ✅ **v3.0.1** — Security & performance improvements
+- ✅ **v4.0.0** — watchOS companion app
 
 ### Change Categories
 
@@ -1290,9 +1294,18 @@ The Minimum Viable Product is complete with all required features:
 
 **Project**: Inku - Manga Collection Management
 **Repository**: https://github.com/Eduardo0224/Inku
-**Target Platform**: iOS 18.6+ / iPadOS 18.6+
+**Target Platforms**: iOS 18.6+ / iPadOS 18.6+ / macOS 15.0+ / visionOS 2.0+ / watchOS 26.2+
 **Language**: Swift 6
 **UI Framework**: SwiftUI + Observation
 **Architecture**: Clean Architecture (4 layers)
 **Testing**: Swift Testing framework
 **Localization**: Spanish & English
+
+[Unreleased]: https://github.com/Eduardo0224/Inku/compare/v4.0.0...HEAD
+[4.0.0]: https://github.com/Eduardo0224/Inku/compare/v3.0.1...v4.0.0
+[3.0.1]: https://github.com/Eduardo0224/Inku/compare/v3.0.0...v3.0.1
+[3.0.0]: https://github.com/Eduardo0224/Inku/compare/v2.0.0...v3.0.0
+[2.0.0]: https://github.com/Eduardo0224/Inku/compare/v1.5.0...v2.0.0
+[1.5.0]: https://github.com/Eduardo0224/Inku/compare/v1.0.0...v1.5.0
+[1.0.0]: https://github.com/Eduardo0224/Inku/compare/v0.1.0...v1.0.0
+[0.1.0]: https://github.com/Eduardo0224/Inku/releases/tag/v0.1.0

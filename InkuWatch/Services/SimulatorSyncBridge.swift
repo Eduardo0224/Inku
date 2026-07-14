@@ -20,6 +20,9 @@ import OSLog
 enum SimulatorSyncBridge {
 
     private static let logger = Logger.inkuWatch
+
+    /// Shared directory with the iOS side writer (`SimulatorSyncWriter`).
+    /// Must match `Inku/Core/Services/SimulatorSyncWriter.swift`.
     private static let sharedDir = "/tmp/inku-simulator-sync"
     private static let filename = "collection.json"
 

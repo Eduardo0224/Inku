@@ -154,7 +154,7 @@ struct MangaDetailView: View {
         }
     }
 
-    // MARK: - Private Functions
+    // MARK: - Private Properties
 
     private var statusText: String {
         if item.isComplete { return L10n.Watch.statusCompleted }

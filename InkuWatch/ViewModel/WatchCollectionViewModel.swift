@@ -87,7 +87,10 @@ final class WatchCollectionViewModel {
     }
 
     private func handleIncomingSync(_ items: [WatchMangaTransferItem]) {
-        guard let context = modelContext else { return }
+        guard let context = modelContext else {
+            logger.warning("Sync items received but modelContext not set — discarding")
+            return
+        }
         do {
             try applyTransferItems(items, context: context)
             logger.info("Sync applied from iPhone: \(items.count) items")

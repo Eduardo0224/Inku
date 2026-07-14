@@ -47,6 +47,16 @@ final class WatchSessionManager: WatchSessionManagerProtocol {
         session.activate()
     }
 
+    // MARK: - Private Functions
+
+    fileprivate func handleActivationError(_ error: Error) {
+        logger.error("WCSession activation failed: \(error.localizedDescription)")
+    }
+
+    fileprivate func handleActivationSuccess() {
+        logger.info("WCSession activated")
+    }
+
     // MARK: - Functions
 
     /// Requests a full sync from the iOS app.
@@ -81,14 +91,6 @@ final class WatchSessionManager: WatchSessionManagerProtocol {
         isSyncing = false
         logger.info("Sync received: \(items.count) items — forwarding to interactor")
         onSyncReceived?(items)
-    }
-
-    fileprivate func handleActivationError(_ error: Error) {
-        logger.error("WCSession activation failed: \(error.localizedDescription)")
-    }
-
-    fileprivate func handleActivationSuccess() {
-        logger.info("WCSession activated")
     }
 }
 
@@ -149,14 +151,21 @@ private final class SessionDelegate: NSObject, WCSessionDelegate, @unchecked Sen
 
     private func handleSyncPayload(_ payload: [String: Any]) {
         guard let raw = payload["items"] as? String,
-              let data = raw.data(using: .utf8),
-              let items = try? JSONDecoder().decode(
+              let data = raw.data(using: .utf8) else {
+            Logger.inkuWatch.error("Sync payload missing or invalid 'items' field")
+            return
+        }
+
+        do {
+            let items = try JSONDecoder().decode(
                 [WatchMangaTransferItem].self,
                 from: data
-              ) else { return }
-
-        Task { @MainActor [weak self] in
-            self?.owner?.handleSync(items)
+            )
+            Task { @MainActor [weak self] in
+                self?.owner?.handleSync(items)
+            }
+        } catch {
+            Logger.inkuWatch.error("Sync payload decode failed: \(error.localizedDescription)")
         }
     }
 }

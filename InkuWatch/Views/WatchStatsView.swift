@@ -54,7 +54,7 @@ struct WatchStatsView: View {
         .background(Color.inkuSurface)
     }
 
-    // MARK: - Private Functions
+    // MARK: - Private Properties
 
     private var stats: [StatItem] {
         [

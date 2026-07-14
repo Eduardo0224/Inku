@@ -32,7 +32,7 @@ struct WatchMangaRow: View {
         .padding(.vertical, InkuSpacing.spacing4)
     }
 
-    // MARK: - Private Computed Properties
+    // MARK: - Private Properties
 
     private var statusText: String {
         if item.isComplete { return L10n.Watch.statusCompleted }
