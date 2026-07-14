@@ -16,6 +16,7 @@ import Testing
 @testable import InkuWatch
 
 @Suite("WatchSessionManager Tests")
+@MainActor
 struct WatchSessionManagerTests {
 
     // MARK: - Subject Under Test

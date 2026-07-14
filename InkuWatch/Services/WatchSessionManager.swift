@@ -58,16 +58,18 @@ final class WatchSessionManager: WatchSessionManagerProtocol {
         isSyncing = true
         WCSession.default.sendMessage(
             ["action": "requestFullSync"],
-            replyHandler: { _ in
-                Task { @MainActor [weak self] in
-                    self?.isSyncing = false
-                    self?.logger.info("Full sync requested successfully")
+            replyHandler: { [weak self] _ in
+                Task { @MainActor in
+                    guard let self else { return }
+                    self.isSyncing = false
+                    self.logger.info("Full sync requested successfully")
                 }
             },
-            errorHandler: { error in
-                Task { @MainActor [weak self] in
-                    self?.logger.error("Full sync request failed: \(error.localizedDescription)")
-                    self?.isSyncing = false
+            errorHandler: { [weak self] error in
+                Task { @MainActor in
+                    guard let self else { return }
+                    self.logger.error("Full sync request failed: \(error.localizedDescription)")
+                    self.isSyncing = false
                 }
             }
         )

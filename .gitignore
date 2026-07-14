@@ -1,2 +1,9 @@
 .claude/
 Secrets.xcconfig
+
+# Xcode user-specific data
+**/xcuserdata/
+**/project.xcworkspace/xcuserdata/
+
+# Build artifacts
+build/

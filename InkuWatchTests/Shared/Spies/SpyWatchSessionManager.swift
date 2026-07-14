@@ -16,6 +16,7 @@ import Foundation
 
 // MARK: - Spy Watch Session Manager
 
+@MainActor
 final class SpyWatchSessionManager: WatchSessionManagerProtocol {
 
     // MARK: - Properties (Spy Tracking)
@@ -30,5 +31,13 @@ final class SpyWatchSessionManager: WatchSessionManagerProtocol {
 
     func requestFullSync() {
         requestFullSyncWasCalled = true
+    }
+
+    func simulateIncomingSync(_ items: [WatchMangaTransferItem]) {
+        onSyncReceived?(items)
+    }
+
+    func reset() {
+        requestFullSyncWasCalled = false
     }
 }

@@ -59,7 +59,6 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D57AB38E2FCF02A800F9C5D3"
             BuildableName = "InkuWatch.app"
-            BlueprintName = "InkuWatch"
             ReferencedContainer = "container:Inku.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -76,7 +75,6 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D57AB38E2FCF02A800F9C5D3"
             BuildableName = "InkuWatch.app"
-            BlueprintName = "InkuWatch"
             ReferencedContainer = "container:Inku.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

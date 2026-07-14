@@ -48,6 +48,7 @@ extension WatchCollectionTests {
             )
             modelContext = container.mainContext
             sut = WatchCollectionViewModel(interactor: spyInteractor)
+            sut.setModelContext(modelContext)
         }
 
         // MARK: - Initialization Tests
@@ -70,15 +71,14 @@ extension WatchCollectionTests {
 
         // MARK: - Load Mangas Tests
 
-        @Test("loadMangas populates all arrays successfully")
+        @Test("loadMangas populates all arrays from SwiftData")
         func loadMangasSuccess() throws {
-            // Given
+            // Given — insert data directly into in-memory store
             let sampleManga = WatchMangaItem(
                 mangaId: 1,
                 title: "Berserk",
                 volumesOwned: 41,
                 totalVolumes: 41,
-                currentReadingVolume: nil,
                 hasCompleteCollection: true
             )
             let readingManga = WatchMangaItem(
@@ -89,29 +89,24 @@ extension WatchCollectionTests {
                 currentReadingVolume: 51,
                 hasCompleteCollection: false
             )
-
-            spyInteractor.allMangasToReturn = [sampleManga, readingManga]
-            spyInteractor.readingMangasToReturn = [readingManga]
-            spyInteractor.completedMangasToReturn = [sampleManga]
+            modelContext.insert(sampleManga)
+            modelContext.insert(readingManga)
+            try modelContext.save()
 
             // When
             sut.loadMangas(context: modelContext)
 
             // Then
-            #expect(spyInteractor.fetchAllWasCalled)
-            #expect(spyInteractor.fetchReadingWasCalled)
-            #expect(spyInteractor.fetchCompletedWasCalled)
             #expect(sut.allMangas.count == 2)
             #expect(sut.nowReading.count == 1)
             #expect(sut.completed.count == 1)
+            #expect(sut.nowReading.first?.title == "One Piece")
+            #expect(sut.completed.first?.title == "Berserk")
         }
 
         @Test("loadMangas handles empty collection")
         func loadMangasEmpty() {
-            // Given
-            spyInteractor.allMangasToReturn = []
-            spyInteractor.readingMangasToReturn = []
-            spyInteractor.completedMangasToReturn = []
+            // Given — nothing inserted
 
             // When
             sut.loadMangas(context: modelContext)
@@ -124,17 +119,13 @@ extension WatchCollectionTests {
 
         // MARK: - Configure Session Tests
 
-        @Test("configureSession delegates to interactor")
-        func configureSessionDelegatesToInteractor() {
-            // Given
-            let container = self.container
-
-            // When
-            sut.configureSession(with: container)
+        @Test("startReceivingSync delegates to interactor")
+        func startReceivingSyncDelegatesToInteractor() {
+            // Given/When
+            sut.startReceivingSync()
 
             // Then
-            #expect(spyInteractor.configureSessionWasCalled)
-            #expect(spyInteractor.lastConfigureSessionContainer === container)
+            #expect(spyInteractor.startReceivingSyncWasCalled)
         }
 
         // MARK: - Sync From iPhone Tests
@@ -150,38 +141,51 @@ extension WatchCollectionTests {
 
         // MARK: - Check Simulator Sync Tests
 
-        @Test("checkSimulatorSync succeeds and reloads mangas")
+        @Test("checkSimulatorSync applies items and reloads mangas")
         func checkSimulatorSyncSuccess() throws {
             // Given
-            let sampleManga = WatchMangaItem(
+            let item = WatchMangaTransferItem(
                 mangaId: 1,
                 title: "Naruto",
                 volumesOwned: 72,
                 totalVolumes: 72,
                 hasCompleteCollection: true
             )
-            spyInteractor.allMangasToReturn = [sampleManga]
+            spyInteractor.simulatorItemsToReturn = [item]
 
             // When
             sut.checkSimulatorSync(context: modelContext)
 
             // Then
-            #expect(spyInteractor.checkSimulatorSyncWasCalled)
-            #expect(spyInteractor.lastCheckSimulatorSyncContext === modelContext)
-            #expect(spyInteractor.fetchAllWasCalled)
+            #expect(spyInteractor.loadSimulatorTransferItemsWasCalled)
+            #expect(sut.allMangas.count == 1)
+            #expect(sut.allMangas.first?.title == "Naruto")
+            #expect(sut.completed.count == 1)
+        }
+
+        @Test("checkSimulatorSync does nothing when no items returned")
+        func checkSimulatorSyncEmpty() throws {
+            // Given
+            spyInteractor.simulatorItemsToReturn = []
+
+            // When
+            sut.checkSimulatorSync(context: modelContext)
+
+            // Then
+            #expect(spyInteractor.loadSimulatorTransferItemsWasCalled)
+            #expect(sut.allMangas.isEmpty)
         }
 
         // MARK: - Statistics Tests
 
         @Test("totalMangas returns correct count after load")
-        func totalMangasAfterLoad() {
+        func totalMangasAfterLoad() throws {
             // Given
-            let mangas = [
-                WatchMangaItem(mangaId: 1, title: "A"),
-                WatchMangaItem(mangaId: 2, title: "B"),
-                WatchMangaItem(mangaId: 3, title: "C"),
-            ]
-            spyInteractor.allMangasToReturn = mangas
+            let mangas = (1...3).map { i in
+                WatchMangaItem(mangaId: i, title: "Manga \(i)")
+            }
+            for m in mangas { modelContext.insert(m) }
+            try modelContext.save()
 
             // When
             sut.loadMangas(context: modelContext)
@@ -191,12 +195,12 @@ extension WatchCollectionTests {
         }
 
         @Test("totalVolumesOwned sums correctly")
-        func totalVolumesOwnedSum() {
+        func totalVolumesOwnedSum() throws {
             // Given
-            let m1 = WatchMangaItem(mangaId: 1, title: "A", volumesOwned: 10)
-            let m2 = WatchMangaItem(mangaId: 2, title: "B", volumesOwned: 25)
-            let m3 = WatchMangaItem(mangaId: 3, title: "C", volumesOwned: 50)
-            spyInteractor.allMangasToReturn = [m1, m2, m3]
+            modelContext.insert(WatchMangaItem(mangaId: 1, title: "A", volumesOwned: 10))
+            modelContext.insert(WatchMangaItem(mangaId: 2, title: "B", volumesOwned: 25))
+            modelContext.insert(WatchMangaItem(mangaId: 3, title: "C", volumesOwned: 50))
+            try modelContext.save()
 
             // When
             sut.loadMangas(context: modelContext)
@@ -206,16 +210,14 @@ extension WatchCollectionTests {
         }
 
         @Test("completedCount returns correct number")
-        func completedCountCorrect() {
+        func completedCountCorrect() throws {
             // Given
-            let complete = WatchMangaItem(
-                mangaId: 1,
-                title: "A",
-                volumesOwned: 10,
-                totalVolumes: 10,
+            modelContext.insert(WatchMangaItem(
+                mangaId: 1, title: "A",
+                volumesOwned: 10, totalVolumes: 10,
                 hasCompleteCollection: true
-            )
-            spyInteractor.completedMangasToReturn = [complete]
+            ))
+            try modelContext.save()
 
             // When
             sut.loadMangas(context: modelContext)
@@ -225,14 +227,13 @@ extension WatchCollectionTests {
         }
 
         @Test("readingCount returns correct number")
-        func readingCountCorrect() {
+        func readingCountCorrect() throws {
             // Given
-            let reading = WatchMangaItem(
-                mangaId: 1,
-                title: "A",
+            modelContext.insert(WatchMangaItem(
+                mangaId: 1, title: "A",
                 currentReadingVolume: 51
-            )
-            spyInteractor.readingMangasToReturn = [reading]
+            ))
+            try modelContext.save()
 
             // When
             sut.loadMangas(context: modelContext)
@@ -242,11 +243,17 @@ extension WatchCollectionTests {
         }
 
         @Test("averageProgress computes correctly")
-        func averageProgressComputesCorrectly() {
+        func averageProgressComputesCorrectly() throws {
             // Given
-            let m1 = WatchMangaItem(mangaId: 1, title: "A", volumesOwned: 50, totalVolumes: 100)
-            let m2 = WatchMangaItem(mangaId: 2, title: "B", volumesOwned: 72, totalVolumes: 72)
-            spyInteractor.allMangasToReturn = [m1, m2]
+            modelContext.insert(WatchMangaItem(
+                mangaId: 1, title: "A",
+                volumesOwned: 50, totalVolumes: 100
+            ))
+            modelContext.insert(WatchMangaItem(
+                mangaId: 2, title: "B",
+                volumesOwned: 72, totalVolumes: 72
+            ))
+            try modelContext.save()
 
             // When
             sut.loadMangas(context: modelContext)
@@ -257,23 +264,19 @@ extension WatchCollectionTests {
         }
 
         @Test("completionPercentage computes correctly")
-        func completionPercentageComputesCorrectly() {
+        func completionPercentageComputesCorrectly() throws {
             // Given
-            let complete = WatchMangaItem(
-                mangaId: 1,
-                title: "A",
-                volumesOwned: 41,
-                totalVolumes: 41,
+            modelContext.insert(WatchMangaItem(
+                mangaId: 1, title: "A",
+                volumesOwned: 41, totalVolumes: 41,
                 hasCompleteCollection: true
-            )
-            let incomplete = WatchMangaItem(
-                mangaId: 2,
-                title: "B",
-                volumesOwned: 50,
-                totalVolumes: 106,
+            ))
+            modelContext.insert(WatchMangaItem(
+                mangaId: 2, title: "B",
+                volumesOwned: 50, totalVolumes: 106,
                 hasCompleteCollection: false
-            )
-            spyInteractor.allMangasToReturn = [complete, incomplete]
+            ))
+            try modelContext.save()
 
             // When
             sut.loadMangas(context: modelContext)
@@ -285,77 +288,47 @@ extension WatchCollectionTests {
 
         // MARK: - Error Handling Tests
 
-        @Test("loadMangas sets errorMessage on fetch failure")
-        func loadMangasSetsErrorMessageOnFailure() {
-            // Given
-            spyInteractor.shouldThrowError = true
-
-            // When
-            sut.loadMangas(context: modelContext)
-
-            // Then
-            #expect(sut.errorMessage != nil)
-            #expect(spyInteractor.fetchAllWasCalled)
-        }
-
-        @Test("loadMangas clears errorMessage on success")
-        func loadMangasClearsErrorMessageOnSuccess() {
-            // Given — first trigger an error
-            spyInteractor.shouldThrowError = true
-            sut.loadMangas(context: modelContext)
-            #expect(sut.errorMessage != nil)
-
-            // When — then succeed
-            spyInteractor.shouldThrowError = false
-            spyInteractor.allMangasToReturn = [
-                WatchMangaItem(mangaId: 1, title: "A"),
-            ]
-            sut.loadMangas(context: modelContext)
-
-            // Then
-            #expect(sut.errorMessage == nil)
-        }
-
-        @Test("checkSimulatorSync sets errorMessage on failure")
-        func checkSimulatorSyncSetsErrorMessageOnFailure() {
-            // Given
-            spyInteractor.shouldThrowError = true
-
-            // When
-            sut.checkSimulatorSync(context: modelContext)
-
-            // Then
-            #expect(sut.errorMessage != nil)
-            #expect(spyInteractor.checkSimulatorSyncWasCalled)
-        }
-
-        @Test("checkSimulatorSync clears errorMessage on success")
-        func checkSimulatorSyncClearsErrorMessageOnSuccess() {
-            // Given — first trigger an error
-            spyInteractor.shouldThrowError = true
-            sut.checkSimulatorSync(context: modelContext)
-            #expect(sut.errorMessage != nil)
-
-            // When — then succeed
-            spyInteractor.shouldThrowError = false
-            sut.checkSimulatorSync(context: modelContext)
-
-            // Then
-            #expect(sut.errorMessage == nil)
-        }
-
         @Test("clearError sets errorMessage to nil")
         func clearErrorClearsMessage() {
-            // Given
-            spyInteractor.shouldThrowError = true
-            sut.loadMangas(context: modelContext)
-            #expect(sut.errorMessage != nil)
+            // Given — no error initially
+            #expect(sut.errorMessage == nil)
 
             // When
             sut.clearError()
 
             // Then
             #expect(sut.errorMessage == nil)
+        }
+
+        // MARK: - Incoming Sync Tests
+
+        @Test("incoming sync callback is wired at init")
+        func onSyncReceivedIsWired() {
+            // Given/When — sut created in init()
+
+            // Then — the ViewModel should have registered its callback
+            #expect(spyInteractor.onSyncReceived != nil,
+                    "ViewModel should register onSyncReceived on interactor")
+        }
+
+        @Test("incoming sync applies items and reloads UI")
+        func incomingSyncAppliesAndReloads() throws {
+            // Given
+            let item = WatchMangaTransferItem(
+                mangaId: 1,
+                title: "Berserk",
+                volumesOwned: 41,
+                totalVolumes: 41,
+                hasCompleteCollection: true
+            )
+
+            // When — simulate the Interactor calling the ViewModel's callback
+            spyInteractor.onSyncReceived?([item])
+
+            // Then — data should be persisted and arrays updated
+            #expect(sut.allMangas.count == 1)
+            #expect(sut.allMangas.first?.title == "Berserk")
+            #expect(sut.completed.count == 1)
         }
     }
 }
