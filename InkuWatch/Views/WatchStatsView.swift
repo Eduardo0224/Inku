@@ -28,32 +28,6 @@ private struct StatItem: Identifiable {
 
 struct WatchStatsView: View {
 
-    // MARK: - Properties
-
-    let data: WatchStatsData
-
-    // MARK: - Body
-
-    var body: some View {
-        ScrollView {
-            VStack(spacing: InkuSpacing.spacing12) {
-                ForEach(stats) { stat in
-                    InkuStatCard(
-                        icon: stat.icon,
-                        value: stat.value,
-                        label: stat.label,
-                        size: .compact,
-                        accentColor: stat.accentColor
-                    )
-                }
-            }
-            .padding(.horizontal, InkuSpacing.spacing4)
-            .padding(.vertical, InkuSpacing.spacing12)
-        }
-        .navigationTitle(L10n.Collection.Stats.title)
-        .background(Color.inkuSurface)
-    }
-
     // MARK: - Private Properties
 
     private var stats: [StatItem] {
@@ -99,6 +73,32 @@ struct WatchStatsView: View {
                 accentColor: .purple
             ),
         ]
+    }
+
+    // MARK: - Properties
+
+    let data: WatchStatsData
+
+    // MARK: - Body
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: InkuSpacing.spacing12) {
+                ForEach(stats) { stat in
+                    InkuStatCard(
+                        icon: stat.icon,
+                        value: stat.value,
+                        label: stat.label,
+                        size: .compact,
+                        accentColor: stat.accentColor
+                    )
+                }
+            }
+            .padding(.horizontal, InkuSpacing.spacing4)
+            .padding(.vertical, InkuSpacing.spacing12)
+        }
+        .navigationTitle(L10n.Collection.Stats.title)
+        .background(Color.inkuSurface)
     }
 }
 

@@ -18,6 +18,19 @@ import InkuUI
 
 struct MangaDetailView: View {
 
+    // MARK: - Private Properties
+
+    private var statusText: String {
+        if item.isComplete { return L10n.Watch.statusCompleted }
+        if item.isCurrentlyReading { return L10n.Watch.statusReading }
+        return L10n.Watch.statusInCollection
+    }
+
+    private var coverImage: PlatformImage? {
+        guard let data = item.coverImageData else { return nil }
+        return PlatformImage(data: data)
+    }
+
     // MARK: - Properties
 
     let item: WatchMangaDisplayItem
@@ -152,21 +165,7 @@ struct MangaDetailView: View {
                 }
             }
         }
-    }
-
-    // MARK: - Private Properties
-
-    private var statusText: String {
-        if item.isComplete { return L10n.Watch.statusCompleted }
-        if item.isCurrentlyReading { return L10n.Watch.statusReading }
-        return L10n.Watch.statusInCollection
-    }
-
-    private var coverImage: PlatformImage? {
-        guard let data = item.coverImageData else { return nil }
-        return PlatformImage(data: data)
-    }
-}
+    }}
 
 // MARK: - Preview
 

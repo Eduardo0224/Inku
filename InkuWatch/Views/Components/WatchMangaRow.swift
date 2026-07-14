@@ -18,6 +18,14 @@ import InkuUI
 
 struct WatchMangaRow: View {
 
+    // MARK: - Private Properties
+
+    private var statusText: String {
+        if item.isComplete { return L10n.Watch.statusCompleted }
+        if item.isCurrentlyReading { return L10n.Watch.statusReading }
+        return L10n.Watch.statusInCollection
+    }
+
     // MARK: - Properties
 
     let item: WatchMangaDisplayItem
@@ -30,14 +38,6 @@ struct WatchMangaRow: View {
             infoView
         }
         .padding(.vertical, InkuSpacing.spacing4)
-    }
-
-    // MARK: - Private Properties
-
-    private var statusText: String {
-        if item.isComplete { return L10n.Watch.statusCompleted }
-        if item.isCurrentlyReading { return L10n.Watch.statusReading }
-        return L10n.Watch.statusInCollection
     }
 
     // MARK: - Private Views

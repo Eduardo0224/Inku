@@ -19,7 +19,6 @@ internal import UIKit
 
 // MARK: - Watch Connectivity Sender
 
-@MainActor
 @Observable
 final class WatchConnectivitySender: WatchConnectivitySenderProtocol {
 

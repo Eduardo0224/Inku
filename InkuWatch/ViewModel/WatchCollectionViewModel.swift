@@ -147,11 +147,13 @@ final class WatchCollectionViewModel {
             }
         }
 
-        let allDescriptor = FetchDescriptor<WatchMangaItem>()
-        if let all = try? context.fetch(allDescriptor) {
+        do {
+            let all = try context.fetch(FetchDescriptor<WatchMangaItem>())
             for manga in all where !receivedIds.contains(manga.mangaId) {
                 context.delete(manga)
             }
+        } catch {
+            logger.warning("Failed to fetch mangas for cleanup during sync: \(error.localizedDescription)")
         }
 
         try context.save()
