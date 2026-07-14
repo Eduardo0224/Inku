@@ -105,16 +105,14 @@ struct WatchStatsView: View {
 // MARK: - Preview
 
 #Preview("Stats") {
-    NavigationStack {
-        WatchStatsView(
-            data: WatchStatsData(
-                totalMangas: 42,
-                totalVolumesOwned: 520,
-                completedCount: 15,
-                readingCount: 8,
-                averageProgress: 0.65,
-                completionPercentage: 0.36
-            )
+    WatchStatsView(
+        data: WatchStatsData(
+            totalMangas: 42,
+            totalVolumesOwned: 520,
+            completedCount: 15,
+            readingCount: 8,
+            averageProgress: 0.65,
+            completionPercentage: 0.36
         )
-    }
+    )
 }

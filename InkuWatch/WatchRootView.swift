@@ -31,8 +31,8 @@ struct WatchRootView: View {
 
     // MARK: - Initializers
 
-    init(sessionManager: WatchSessionManagerProtocol = WatchSessionManager()) {
-        self.viewModel = WatchCollectionViewModel(sessionManager: sessionManager)
+    init() {
+        self.viewModel = WatchCollectionViewModel()
     }
 
     // MARK: - Body
@@ -40,14 +40,14 @@ struct WatchRootView: View {
     var body: some View {
         TabView {
             NavigationStack {
-                NowReadingView(mangas: viewModel.nowReading)
+                NowReadingView(mangas: viewModel.nowReadingDisplayItems)
             }
             .tabItem {
                 Text(L10n.Watch.nowReading)
             }
 
             NavigationStack {
-                CollectionListView(mangas: viewModel.allMangas)
+                CollectionListView(mangas: viewModel.allMangaDisplayItems)
             }
             .tabItem {
                 Text(L10n.Watch.collection)
@@ -73,7 +73,8 @@ struct WatchRootView: View {
             Text(viewModel.errorMessage ?? "")
         }
         .task {
-            viewModel.configureSession(with: modelContext.container)
+            viewModel.setModelContext(modelContext)
+            viewModel.startReceivingSync()
             viewModel.checkSimulatorSync(context: modelContext)
             viewModel.loadMangas(context: modelContext)
             viewModel.syncFromiPhone()

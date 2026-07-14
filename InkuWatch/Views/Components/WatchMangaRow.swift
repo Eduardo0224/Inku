@@ -20,7 +20,7 @@ struct WatchMangaRow: View {
 
     // MARK: - Properties
 
-    let item: WatchMangaItem
+    let item: WatchMangaDisplayItem
 
     // MARK: - Body
 

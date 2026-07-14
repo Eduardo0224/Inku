@@ -15,6 +15,7 @@ import Foundation
 
 // MARK: - Watch Session Manager Protocol
 
+@MainActor
 protocol WatchSessionManagerProtocol: AnyObject {
 
     // MARK: - Properties

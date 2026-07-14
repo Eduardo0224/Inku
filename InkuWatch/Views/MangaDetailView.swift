@@ -20,7 +20,7 @@ struct MangaDetailView: View {
 
     // MARK: - Properties
 
-    let item: WatchMangaItem
+    let item: WatchMangaDisplayItem
 
     // MARK: - Body
 
@@ -171,23 +171,19 @@ struct MangaDetailView: View {
 // MARK: - Preview
 
 #Preview("Detail with cover") {
-    NavigationStack {
-        MangaDetailView(item: .berserk)
-    }
+    MangaDetailView(item: .berserk)
 }
 
 #Preview("Detail without cover") {
-    NavigationStack {
-        MangaDetailView(
-            item: WatchMangaItem(
-                mangaId: 99,
-                title: "Unknown Manga",
-                volumesOwned: 5,
-                totalVolumes: 10,
-                currentReadingVolume: 6,
-                hasCompleteCollection: false,
-                dateAdded: Date()
-            )
+    MangaDetailView(
+        item: WatchMangaDisplayItem(
+            mangaId: 99,
+            title: "Unknown Manga",
+            volumesOwned: 5,
+            totalVolumes: 10,
+            currentReadingVolume: 6,
+            hasCompleteCollection: false,
+            dateAdded: Date()
         )
-    }
+    )
 }

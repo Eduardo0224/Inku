@@ -20,7 +20,7 @@ struct NowReadingView: View {
 
     // MARK: - Properties
 
-    let mangas: [WatchMangaItem]
+    let mangas: [WatchMangaDisplayItem]
 
     // MARK: - Body
 
@@ -70,13 +70,9 @@ struct NowReadingView: View {
 // MARK: - Preview
 
 #Preview("Now Reading with data") {
-    NavigationStack {
-        NowReadingView(mangas: .watchPreview)
-    }
+    NowReadingView(mangas: .watchPreview)
 }
 
 #Preview("Now Reading empty") {
-    NavigationStack {
-        NowReadingView(mangas: [])
-    }
+    NowReadingView(mangas: [])
 }

@@ -92,4 +92,23 @@ final class WatchMangaItem {
             coverImageData = data
         }
     }
+
+    // MARK: - Display Mapping
+
+    /// Converts this `@Model` instance into a plain value-type
+    /// for use in views that should not depend on SwiftData.
+    var displayItem: WatchMangaDisplayItem {
+        WatchMangaDisplayItem(
+            mangaId: mangaId,
+            title: title,
+            japaneseTitle: japaneseTitle,
+            coverImageData: coverImageData,
+            score: score,
+            volumesOwned: volumesOwned,
+            totalVolumes: totalVolumes,
+            currentReadingVolume: currentReadingVolume,
+            hasCompleteCollection: hasCompleteCollection,
+            dateAdded: dateAdded
+        )
+    }
 }

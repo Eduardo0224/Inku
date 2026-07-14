@@ -20,7 +20,7 @@ struct CollectionListView: View {
 
     // MARK: - Properties
 
-    let mangas: [WatchMangaItem]
+    let mangas: [WatchMangaDisplayItem]
 
     // MARK: - Body
 
@@ -70,13 +70,9 @@ struct CollectionListView: View {
 // MARK: - Preview
 
 #Preview("Collection with data") {
-    NavigationStack {
-        CollectionListView(mangas: .watchPreview)
-    }
+    CollectionListView(mangas: .watchPreview)
 }
 
 #Preview("Empty collection") {
-    NavigationStack {
-        CollectionListView(mangas: [])
-    }
+    CollectionListView(mangas: [])
 }

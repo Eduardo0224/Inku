@@ -13,7 +13,6 @@
 //
 
 import Foundation
-import SwiftData
 import OSLog
 
 // MARK: - Simulator Sync Bridge

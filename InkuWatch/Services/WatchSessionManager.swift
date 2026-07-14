@@ -17,6 +17,7 @@ import OSLog
 
 // MARK: - Watch Session Manager
 
+@MainActor
 final class WatchSessionManager: WatchSessionManagerProtocol {
 
     // MARK: - Private Properties
