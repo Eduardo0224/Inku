@@ -9,6 +9,8 @@
 //
 //  For educational purposes only.
 //  Copyright © 2026 Eduardo Andrade. All rights reserved.
+//
+
 import Foundation
 import WatchConnectivity
 import SwiftData
@@ -37,8 +39,8 @@ final class WatchConnectivitySender: WatchConnectivitySenderProtocol {
     // MARK: - Initializers
 
     init() {
-        sessionDelegate.owner = self
         guard WCSession.isSupported() else { return }
+        sessionDelegate.owner = self
         let session = WCSession.default
         session.delegate = sessionDelegate
         session.activate()

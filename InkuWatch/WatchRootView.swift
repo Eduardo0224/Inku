@@ -29,12 +29,6 @@ struct WatchRootView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.scenePhase) private var scenePhase
 
-    // MARK: - Initializers
-
-    init() {
-        self.viewModel = WatchCollectionViewModel()
-    }
-
     // MARK: - Body
 
     var body: some View {
@@ -72,7 +66,7 @@ struct WatchRootView: View {
         } message: {
             Text(viewModel.errorMessage ?? "")
         }
-        .task {
+        .onAppear {
             viewModel.setModelContext(modelContext)
             viewModel.startReceivingSync()
             viewModel.checkSimulatorSync(context: modelContext)
@@ -87,7 +81,13 @@ struct WatchRootView: View {
         }
     }
 
-    // MARK: - Private Functions
+    // MARK: - Initializers
+
+    init() {
+        self.viewModel = WatchCollectionViewModel()
+    }
+
+    // MARK: - Properties
 
     /// Snapshot of computed stats for the stats tab.
     /// Reading ViewModel properties here ensures `@Observable` tracks them,

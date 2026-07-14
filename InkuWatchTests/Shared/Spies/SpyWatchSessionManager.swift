@@ -22,10 +22,14 @@ final class SpyWatchSessionManager: WatchSessionManagerProtocol {
     // MARK: - Properties (Spy Tracking)
 
     private(set) var requestFullSyncWasCalled = false
+    private(set) var lastSimulatedSyncItems: [WatchMangaTransferItem]?
+    private(set) var lastSyncCallback: (([WatchMangaTransferItem]) -> Void)?
 
     // MARK: - Properties (Stub Data)
 
-    var onSyncReceived: (([WatchMangaTransferItem]) -> Void)?
+    var onSyncReceived: (([WatchMangaTransferItem]) -> Void)? {
+        didSet { lastSyncCallback = onSyncReceived }
+    }
 
     // MARK: - WatchSessionManagerProtocol
 
@@ -34,10 +38,13 @@ final class SpyWatchSessionManager: WatchSessionManagerProtocol {
     }
 
     func simulateIncomingSync(_ items: [WatchMangaTransferItem]) {
+        lastSimulatedSyncItems = items
         onSyncReceived?(items)
     }
 
     func reset() {
         requestFullSyncWasCalled = false
+        lastSimulatedSyncItems = nil
+        lastSyncCallback = nil
     }
 }

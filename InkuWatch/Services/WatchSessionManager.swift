@@ -37,11 +37,11 @@ final class WatchSessionManager: WatchSessionManagerProtocol {
     // MARK: - Initializers
 
     init() {
-        sessionDelegate.owner = self
         guard WCSession.isSupported() else {
             logger.warning("WatchConnectivity not supported on this device")
             return
         }
+        sessionDelegate.owner = self
         let session = WCSession.default
         session.delegate = sessionDelegate
         session.activate()

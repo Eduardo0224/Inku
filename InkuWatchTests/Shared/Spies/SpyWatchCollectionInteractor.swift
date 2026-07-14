@@ -24,23 +24,22 @@ final class SpyWatchCollectionInteractor: WatchCollectionInteractorProtocol {
     private(set) var startReceivingSyncWasCalled = false
     private(set) var syncFromiPhoneWasCalled = false
     private(set) var loadSimulatorTransferItemsWasCalled = false
+    private(set) var lastSyncCallback: (([WatchMangaTransferItem]) -> Void)?
 
     // MARK: - Properties (Stub Data)
 
-    @MainActor var onSyncReceived: (([WatchMangaTransferItem]) -> Void)?
+    var onSyncReceived: (([WatchMangaTransferItem]) -> Void)? {
+        didSet { lastSyncCallback = onSyncReceived }
+    }
 
     var simulatorItemsToReturn: [WatchMangaTransferItem] = []
-    var shouldThrowError = false
-    var errorToThrow: Error = NSError(domain: "SpyError", code: 1)
 
     // MARK: - WatchCollectionInteractorProtocol
 
-    @MainActor
     func startReceivingSync() {
         startReceivingSyncWasCalled = true
     }
 
-    @MainActor
     func syncFromiPhone() {
         syncFromiPhoneWasCalled = true
     }
@@ -54,7 +53,7 @@ final class SpyWatchCollectionInteractor: WatchCollectionInteractorProtocol {
         startReceivingSyncWasCalled = false
         syncFromiPhoneWasCalled = false
         loadSimulatorTransferItemsWasCalled = false
+        lastSyncCallback = nil
         simulatorItemsToReturn = []
-        shouldThrowError = false
     }
 }

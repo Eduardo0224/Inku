@@ -29,7 +29,7 @@ struct NowReadingView: View {
             if mangas.isEmpty {
                 emptyView
             } else {
-                List(mangas, id: \.mangaId) { item in
+                List(mangas) { item in
                     NavigationLink(destination: MangaDetailView(item: item)) {
                         WatchMangaRow(item: item)
                     }

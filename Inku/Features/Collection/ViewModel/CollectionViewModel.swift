@@ -47,7 +47,7 @@ final class CollectionViewModel: CollectionViewModelProtocol {
         self.widgetCenter = widgetCenter
         self.watchSender = watchSender
         watchSender.onFullSyncRequested = { [weak self] in
-            await self?.triggerWatchSync()
+            self?.triggerWatchSync()
         }
     }
 

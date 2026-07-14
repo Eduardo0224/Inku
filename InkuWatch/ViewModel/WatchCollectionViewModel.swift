@@ -138,6 +138,7 @@ final class WatchCollectionViewModel {
             WidgetCenter.shared.reloadAllTimelines()
             loadMangas(context: context)
         } catch {
+            errorMessage = error.localizedDescription
             logger.error("Sync from iPhone failed: \(error.localizedDescription)")
         }
     }
