@@ -19,7 +19,7 @@ https://mymanga-acacademy-5607149ebe3d.herokuapp.com
 ## Endpoint Organization
 
 ```swift
-// In Inku project: Core/Services/API.swift
+// In Inku project: Core/API/APIEndpoints.swift
 enum API {
     enum Endpoints {
         // Manga List

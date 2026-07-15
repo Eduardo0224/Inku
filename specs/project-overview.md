@@ -16,8 +16,8 @@
 |------------|-------------------|---------|
 | **Language** | Swift 6 | Primary development language |
 | **UI Framework** | SwiftUI + Observation | Modern declarative UI with `@Observable` macro |
-| **Target Platforms** | iOS 26 (primary), iOS 18 (fallback) | iPhone and iPad support |
-| **Minimum Deployment** | iOS 18.6+ / iPadOS 18.6+ | Minimum supported version |
+| **Target Platforms** | iOS 26 (primary), watchOS 26, iOS 18 (widget fallback) | iPhone, iPad, Apple Watch |
+| **Minimum Deployment** | iOS 18.6+ / iPadOS 18.6+ / watchOS 26.2+ | Minimum supported version |
 | **Architecture** | Clean Architecture (4 layers) | Models → Interactors → ViewModels → Views |
 | **Persistence** | SwiftData | Local manga collection storage |
 | **Networking** | URLSession + async/await | Async networking with structured concurrency |
@@ -205,9 +205,9 @@ InkuTests/
         └── SpyNetworkService.swift
 ```
 
-## Current Status (v1.0.0)
+## Current Status (v4.0.0)
 
-✅ **MVP COMPLETED** - Released on 2026-01-23
+✅ **DELUXE + watchOS COMPLETED** — Released on 2026-07-14
 
 ### Features Completed
 - ✅ MangaList with pagination and filters
@@ -240,10 +240,14 @@ InkuTests/
 - Token/credentials storage in Keychain
 - Offline support with local cache
 
-### v3.0.0 - Deluxe Version
-- Multi-platform support (macOS, watchOS, or tvOS)
-- Static widget showing reading progress
-- Complications (if watchOS)
+### v3.0.0 - Deluxe Version ✅
+- ✅ Multi-platform support (macOS + visionOS)
+- ✅ Static widget showing reading progress (4 sizes)
+
+### v4.0.0 - watchOS Companion ✅
+- ✅ watchOS native app with full Clean Architecture
+- ✅ WatchConnectivity sync with iPhone
+- ✅ Widget complications (4 families)
 
 ## Development Workflow
 

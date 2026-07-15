@@ -6,7 +6,7 @@
   <div>
 
 ![Swift](https://img.shields.io/badge/Swift-6.0-orange.svg)
-![Platform](https://img.shields.io/badge/Platform-iOS%2018.6%2B%20%7C%20iPadOS%2018.6%2B%20%7C%20macOS%2015%2B%20%7C%20visionOS%202%2B-lightgrey.svg)
+![Platform](https://img.shields.io/badge/Platform-iOS%2018.6%2B%20%7C%20iPadOS%2018.6%2B%20%7C%20macOS%2015%2B%20%7C%20visionOS%202%2B%20%7C%20watchOS%2010%2B-lightgrey.svg)
 ![SwiftUI](https://img.shields.io/badge/SwiftUI-Observation-blue.svg)
 ![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-green.svg)
 ![License](https://img.shields.io/badge/License-MIT-purple.svg)
@@ -24,13 +24,14 @@
 
 ## 📖 Descripción
 
-**Inku** es una aplicación nativa multi-plataforma para iOS, iPadOS, macOS y visionOS que permite explorar, buscar y gestionar tu colección personal de manga. Con acceso a una base de datos de más de 64,000 títulos, Inku ofrece una experiencia visual distintiva optimizada para cada plataforma, con soporte completo para español e inglés y widgets nativos para acceso rápido.
+**Inku** es una aplicación nativa multi-plataforma para iOS, iPadOS, macOS, visionOS y watchOS que permite explorar, buscar y gestionar tu colección personal de manga. Con acceso a una base de datos de más de 64,000 títulos, Inku ofrece una experiencia visual distintiva optimizada para cada plataforma, con soporte completo para español e inglés y widgets nativos para acceso rápido.
 
 ### ✨ Puntos Destacados
 
 - 🎨 **Diseño Visual Distintivo**: Interfaz moderna con énfasis en portadas de manga
-- 🖥️ **Multi-Plataforma**: iOS, iPadOS, macOS y visionOS con optimizaciones nativas
-- 📱 **Widgets Nativos**: Acceso rápido a tu colección desde home screen, lock screen y desktop
+- 🖥️ **Multi-Plataforma**: iOS, iPadOS, macOS, visionOS y watchOS con optimizaciones nativas
+- ⌚ **Apple Watch**: App companion con sync en tiempo real y complicaciones
+- 📱 **Widgets Nativos**: Acceso rápido a tu colección desde home screen, lock screen, desktop y carátula
 - 🌐 **Bilingüe**: Español e inglés con String Catalog
 - 💾 **Persistencia Local**: SwiftData para gestión de colección offline
 - 🧪 **Clean Architecture**: Código mantenible con separación de responsabilidades
@@ -90,17 +91,20 @@
 - **Sincronización manual** desde perfil
 - **Session management** con token persistence
 
-### 🖥️ Multi-Plataforma (v3.0.0)
+### 🖥️ Multi-Plataforma (v3.0.0 + v4.0.0)
 
 - **iOS/iPadOS** - Experiencia optimizada para iPhone y iPad
 - **macOS** - App nativa con NavigationSplitView y atajos de teclado
 - **visionOS** - Optimizado para Apple Vision Pro
-- **Sincronización entre dispositivos** - Colección compartida vía App Group
+- **watchOS** - App companion con sync en tiempo real y complicaciones (v4.0.0)
+- **Sincronización entre dispositivos** - Colección compartida vía App Group y WatchConnectivity
 - **Widgets nativos** - Disponibles en todas las plataformas:
   - **Small**: 1 manga con progreso
   - **Medium**: 2 mangas horizontalmente
   - **Large**: 4 mangas en grid 2x2
   - **Extra Large**: 6 mangas en grid 2x3
+- **Complicaciones watchOS** (v4.0.0):
+  - **Rectangular**, **Circular**, **Corner**, **Inline**
 - **Localización multiplataforma** - Español/inglés en todos los dispositivos
 
 ### 🎨 InkuUI Design System
@@ -279,6 +283,47 @@
     </tr>
 </table>
 
+### v4.0.0 - watchOS Companion
+
+<table width="800" align="center">
+    <tr>
+        <th colspan="2">InkuWatch — Now Reading + Collection</th>
+    </tr>
+    <tr>
+        <td width="400" align="center">
+            <img src="https://github.com/user-attachments/assets/634b2183-c731-4bc2-a77d-ed814f6c158a">
+            <p><i>📸 Now Reading — Vista principal con carrusel de mangas en lectura</i></p>
+        </td>
+        <td width="400" align="center">
+            <img src="https://github.com/user-attachments/assets/9d462106-463f-4459-b971-aa096b4bc3b3">
+            <p><i>📸 Collection — Navegación completa de la colección</i></p>
+        </td>
+    </tr>
+    <tr>
+        <th colspan="2">InkuWatch — Manga Detail + Stats</th>
+    </tr>
+    <tr>
+        <td width="400" align="center">
+            <img src="https://github.com/user-attachments/assets/b434ec7e-83cd-40cc-979c-525c85a2fbe0">
+            <p><i>📸 Manga Detail — Portada, progreso, estado de lectura</i></p>
+        </td>
+        <td width="400" align="center">
+            <img src="https://github.com/user-attachments/assets/46dc1a43-bbe8-4385-af20-d15578800cd2">
+            <p><i>📸 Stats — Estadísticas de la colección</i></p>
+        </td>
+    </tr>
+    <tr>
+        <th colspan="2">InkuWatch — Demo</th>
+    </tr>
+    <tr>
+        <td width="400" align="center">
+            <video source src="https://github.com/user-attachments/assets/a0260036-1173-4b1d-8a87-27e0fa8e1e0a">
+            </video>
+            <p><i>🎥 Video — Demo de navegación en Apple Watch</i></p>
+        </td>
+    </tr>
+</table>
+
 ---
 
 ## 🎥 Video Demo
@@ -372,7 +417,17 @@ Inku.xcodeproj/
 │   └── MacOSRootView.swift      # NavigationSplitView
 ├── InkuVision/                  # visionOS Target
 │   └── InkuVisionApp.swift      # visionOS entry point
-├── InkuWidget/                  # Widget Extension (todas las plataformas)
+├── InkuWatch/                   # watchOS Target (v4.0.0)
+│   ├── InkuWatchApp.swift       # watchOS entry point
+│   ├── WatchRootView.swift      # TabView (Now Reading, Collection, Stats)
+│   ├── Models/                  # WatchMangaItem, WatchMangaDisplayItem, WatchStatsData
+│   ├── Interactor/              # WatchCollectionInteractor + Protocol
+│   ├── ViewModel/               # WatchCollectionViewModel (@Observable @MainActor)
+│   ├── Views/                   # NowReading, Collection, Detail, Stats
+│   └── Services/                # WatchSessionManager, SimulatorSyncBridge
+├── InkuWatchWidget/             # watchOS Complications (v4.0.0)
+│   └── ComplicationViews/       # Rectangular, Circular, Corner, Inline
+├── InkuWidget/                  # Widget Extension (iOS/iPadOS/macOS/visionOS)
 │   ├── InkuWidget.swift         # Widget provider y entry
 │   ├── Views/
 │   │   ├── SmallWidgetView.swift
@@ -382,8 +437,11 @@ Inku.xcodeproj/
 │   ├── Models/
 │   │   └── WidgetMangaData.swift
 │   └── Assets.xcassets          # Widget assets
-├── InkuTests/                   # Test Target
+├── InkuTests/                   # Test Target (iOS)
 │   └── Features/
+├── InkuWatchTests/              # Test Target (watchOS)
+│   ├── Features/Collection/
+│   └── Shared/Spies/
 └── InkuUI/                      # Swift Package (Design System)
     ├── Package.swift
     └── Sources/InkuUI/
@@ -420,7 +478,8 @@ Inku.xcodeproj/
 - **iPadOS**: 18.6+
 - **macOS**: 15.0+ (Sequoia)
 - **visionOS**: 2.0+
-- **Xcode**: 15.0+
+- **watchOS**: 10.0+
+- **Xcode**: 16.0+
 
 ### API Externa
 
@@ -551,6 +610,23 @@ Text(L10n.MangaList.mangaCount(mangas.count))
 - [x] **Widgets** - Small, Medium, Large, Extra Large en todas las plataformas
 - [x] **Multi-Platform Storage** - SharedModelContainer con App Groups
 - [x] **Platform-Specific Optimizations** - Layouts y controles nativos por plataforma
+
+### ✅ v3.0.1 - Security & Performance (Completado)
+
+- [x] **Keychain Integration** - Almacenamiento seguro de credenciales
+- [x] **SSL Certificate Pinning** - Validación de certificados (SHA-256)
+- [x] **Secrets Management** - Configuración segura vía `Secrets.xcconfig`
+- [x] **Structured Logging** - `os.Logger` con categorías por subsistema
+- [x] **Performance** - Cache de imágenes con SHA-256, paginación optimizada
+
+### ✅ v4.0.0 - watchOS Companion (Completado)
+
+- [x] **watchOS App** - Companion app con TabView y navegación carousel
+- [x] **WatchConnectivity** - Sincronización bidireccional iPhone ↔ Watch
+- [x] **Watch Complications** - 4 familias (Rectangular, Circular, Corner, Inline)
+- [x] **Clean Architecture** - ViewModel + Interactor + Service con protocolos
+- [x] **SwiftData Local** - Persistencia independiente con `ModelContainer` propio
+- [x] **Test Suite** - 32 tests con Swift Testing y Spy pattern
 
 ---
 
