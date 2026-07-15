@@ -276,6 +276,294 @@
         }
       }
     },
+    "WATCH_COLLECTION" : {
+      "comment" : "Tab title for collection section on watchOS",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Collection"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Colección"
+          }
+        }
+      }
+    },
+    "WATCH_COMPLICATION_INLINE_SUMMARY" : {
+      "comment" : "Format string for watch inline complication. First argument is count of mangas currently being read, second is total collection count.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld reading · %2$lld mangas"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld leyendo · %2$lld mangas"
+          }
+        }
+      }
+    },
+    "WATCH_CURRENT_VOLUME" : {
+      "comment" : "Current volume label on watchOS detail view",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Current volume"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volumen actual"
+          }
+        }
+      }
+    },
+    "WATCH_EMPTY_MESSAGE" : {
+      "comment" : "Empty state message prompting user to open iPhone app",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Inku on your iPhone"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre Inku en tu iPhone"
+          }
+        }
+      }
+    },
+    "WATCH_EMPTY_TITLE" : {
+      "comment" : "Empty state title when no mangas in watch collection",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No mangas yet"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin mangas aún"
+          }
+        }
+      }
+    },
+    "WATCH_INKU_COLLECTION" : {
+      "comment" : "Fallback text for inline complication when no manga is being read",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inku Collection"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Colección Inku"
+          }
+        }
+      }
+    },
+    "WATCH_NO_ACTIVE_READING" : {
+      "comment" : "Empty state when no active reading on watchOS",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No active reading"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin lectura activa"
+          }
+        }
+      }
+    },
+    "WATCH_NOW_READING" : {
+      "comment" : "Tab title for currently reading section on watchOS",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Now Reading"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ahora Leyendo"
+          }
+        }
+      }
+    },
+    "WATCH_PROGRESS" : {
+      "comment" : "Progress label on watchOS detail view",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Progress"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Progreso"
+          }
+        }
+      }
+    },
+    "WATCH_START_READING_HINT" : {
+      "comment" : "Hint to start reading from collection on watchOS",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start reading from your collection"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empieza a leer desde tu colección"
+          }
+        }
+      }
+    },
+    "WATCH_STATS" : {
+      "comment" : "Tab title for stats section on watchOS",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stats"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estadísticas"
+          }
+        }
+      }
+    },
+    "WATCH_STATUS_COMPLETED" : {
+      "comment" : "Completed status label on watchOS",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Completed"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Completado"
+          }
+        }
+      }
+    },
+    "WATCH_STATUS_IN_COLLECTION" : {
+      "comment" : "In collection status label on watchOS",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Collection"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En Colección"
+          }
+        }
+      }
+    },
+    "WATCH_STATUS_READING" : {
+      "comment" : "Reading status label on watchOS",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reading"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leyendo"
+          }
+        }
+      }
+    },
+    "WATCH_VOLUME_FORMAT" : {
+      "comment" : "Format for current volume display on watchOS. First argument is the current volume number.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vol. %lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vol. %lld"
+          }
+        }
+      }
+    },
+    "WATCH_VOLUME_WITH_TOTAL_FORMAT" : {
+      "comment" : "Format for current volume with total display on watchOS. First argument is current volume, second is total.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vol. %1$lld / %2$lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vol. %1$lld / %2$lld"
+          }
+        }
+      }
+    },
     "WIDGET_COLLECTION" : {
       "comment" : "Identifier for the \"Collection\" section in the widget.",
       "extractionState" : "manual",

@@ -4,11 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Quick Reference
 
-- **Project**: Inku - iOS/iPadOS Native App
+- **Project**: Inku — Multi-platform (iOS/iPadOS/watchOS) Native App
 - **Language**: Swift (English-only code)
 - **UI Framework**: SwiftUI with Observation framework
-- **Target**: iOS 26 (primary) with iOS 18 fallback
-- **Architecture**: Clean Architecture (4 layers) - Feature-based organization
+- **Target**: iOS 26 (primary), watchOS 26, with iOS 18 widget fallback
+- **Persistence**: SwiftData with `ModelContainer` per target
+- **Architecture**: Clean Architecture (4 layers) — Feature-based organization
 - **Testing**: Swift Testing framework only (no XCTest)
 - **Localization**: String Catalog (Spanish & English)
 
@@ -27,6 +28,7 @@ Read the appropriate skill before implementing:
 | Create component | `skills/swiftui-components/SKILL.md` |
 | Write tests | `skills/swift-testing-patterns/SKILL.md` |
 | Add localization | `skills/ios-localization/SKILL.md` |
+| Concurrency / actors | `skills/swift-concurrency/SKILL.md` |
 
 ### Specs (Inku-Specific Content)
 
@@ -36,9 +38,8 @@ Consult project-specific information:
 |-------------|------|
 | Project overview | `specs/project-overview.md` |
 | API endpoints | `specs/api-endpoints.md` |
-| Design system | `specs/inku-ui-design-system.md` (or `07-ui-design.md` + `09-inku-ui.md`) |
-
-> **Note**: Legacy numbered specs (01-09) are being phased out. Prefer skills/ and new specs/ files.
+| Design system | `specs/inku-ui-design-system.md` |
+| Multi-platform architecture | `specs/multi-platform-architecture.md` |
 
 > **Note**: All UI work should use InkuUI tokens (`InkuSpacing`, `InkuRadius`, `.inkuText`, etc.) and components when applicable.
 
@@ -66,8 +67,7 @@ Inku/
 │   │       ├── Models/
 │   │       ├── Interactor/
 │   │       │   ├── Protocols/
-│   │       │   ├── [Feature]Interactor.swift
-│   │       │   └── Spy[Feature]Interactor.swift
+│   │       │   └── [Feature]Interactor.swift
 │   │       ├── ViewModel/
 │   │       │   └── [Feature]ViewModel.swift
 │   │       └── Views/
@@ -77,11 +77,14 @@ Inku/
 │       ├── Assets.xcassets
 │       └── Localizable.xcstrings       ← When created
 ├── InkuTests/                         ← Test target (create as needed)
-│   └── Features/
-│       └── [FeatureName]/
-│           ├── [Feature]Tests.swift
-│           ├── [Feature]Tests+ViewModel.swift
-│           └── [Feature]Tests+Interactor.swift
+│   ├── Features/
+│   │   └── [FeatureName]/
+│   │       ├── [Feature]Tests.swift
+│   │       ├── [Feature]Tests+ViewModel.swift
+│   │       └── [Feature]Tests+Interactor.swift
+│   └── Shared/
+│       └── Spies/
+│           └── Spy[Feature]Interactor.swift
 └── InkuUI/                            ← UI Package (create when needed)
     ├── Package.swift
     ├── Sources/
@@ -100,7 +103,7 @@ Inku/
 4. ✅ `@Observable` for ViewModels (Observation framework)
 5. ✅ `@State` for view-owned observable objects
 6. ✅ `async/await` for all async operations
-7. ✅ MARK comments in fixed order (see `03-code-style.md`)
+7. ✅ MARK comments in fixed order (see Key Patterns → MARK Comment Order below)
 8. ✅ English code, localized UI (String Catalog)
 9. ✅ Swift Testing framework only (no XCTest)
 10. ✅ LiquidGlass only where Apple recommends
@@ -201,7 +204,7 @@ final class SpyMovieInteractor: MovieInteractorProtocol {
 
 ### MARK Comment Order
 
-Strictly follow this order (see `03-code-style.md` for details):
+Strictly follow this order:
 
 1. `// MARK: - Private Properties`
 2. `// MARK: - States` (@State, @Bindable, etc.)
@@ -245,3 +248,48 @@ Use `Inku` prefix for all public elements:
 - Colors: `.inkuAccent`, `.inkuSurface`
 - Spacing: `InkuSpacing.spacing16`
 - Radius: `InkuRadius.radius12`
+
+## InkuWatch (watchOS Companion)
+
+```
+InkuWatch/
+├── InkuWatchApp.swift                  ← @main entry point
+├── WatchRootView.swift                 ← TabView (Now Reading / Collection / Stats)
+├── Models/
+│   ├── WatchMangaItem.swift            ← @Model entity (SwiftData)
+│   ├── WatchMangaDisplayItem.swift     ← Value-type display model (no SwiftData)
+│   └── WatchStatsData.swift            ← Stats data struct
+├── Interactor/
+│   ├── Protocols/
+│   │   └── WatchCollectionInteractorProtocol.swift
+│   └── WatchCollectionInteractor.swift ← WCSession orchestration
+├── ViewModel/
+│   └── WatchCollectionViewModel.swift  ← @Observable @MainActor
+├── Views/
+│   ├── CollectionListView.swift
+│   ├── NowReadingView.swift
+│   ├── MangaDetailView.swift
+│   ├── WatchStatsView.swift
+│   └── Components/
+│       └── WatchMangaRow.swift
+└── Services/
+    ├── Protocols/
+    │   └── WatchSessionManagerProtocol.swift
+    ├── WatchSessionManager.swift       ← WCSession wrapper
+    └── SimulatorSyncBridge.swift       ← Dev-only simulator sync
+```
+
+**Key differences from iOS target:**
+
+| Aspect | iOS | watchOS |
+|--------|-----|---------|
+| Views receive | `CollectionManga` (@Model) | `WatchMangaDisplayItem` (value type) |
+| Previews | `NavigationStack` OK | **No** `NavigationStack` (preview engine crash) |
+| ModelContainer | Shared across targets | Own container, `cloudKitDatabase: .none` |
+| WCSession | Sender (`WatchConnectivitySender`) | Receiver (`WatchSessionManager`) |
+
+### Watch Previews
+
+- Do **NOT** wrap in `NavigationStack` — watchOS preview engine crashes
+- Use `WatchMangaDisplayItem` (not `@Model` `WatchMangaItem`) for preview data
+- Preview data via `[WatchMangaDisplayItem].watchPreview` and inline `WatchStatsData`

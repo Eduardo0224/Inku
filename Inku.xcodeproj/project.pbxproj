@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4ED280C620C048F1A37A4996 /* InkuUI in Frameworks */ = {isa = PBXBuildFile; productRef = D57AB3B72FCF070700F9C5D3 /* InkuUI */; };
+		D57AB3992FCF02A900F9C5D3 /* InkuWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = D57AB38F2FCF02A800F9C5D3 /* InkuWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		D57AB3A32FCF047600F9C5D3 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5C380202F3BDDBC00D3AED8 /* WidgetKit.framework */; };
+		D57AB3A42FCF047600F9C5D3 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5C380222F3BDDBC00D3AED8 /* SwiftUI.framework */; };
+		D57AB3AF2FCF047700F9C5D3 /* InkuWatchWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D57AB3A22FCF047600F9C5D3 /* InkuWatchWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		D57AB3B82FCF070700F9C5D3 /* InkuUI in Frameworks */ = {isa = PBXBuildFile; productRef = D57AB3B72FCF070700F9C5D3 /* InkuUI */; };
 		D586AA9E2F3F75C30039640F /* InkuWidgetExtension.appex in CopyFiles */ = {isa = PBXBuildFile; fileRef = D5C3801F2F3BDDBC00D3AED8 /* InkuWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D586AAA22F3F79480039640F /* InkuWidgetExtension.appex in CopyFiles */ = {isa = PBXBuildFile; fileRef = D5C3801F2F3BDDBC00D3AED8 /* InkuWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D5A2CBC22F3A30EA00D279BA /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = D5A2CBC12F3A30EA00D279BA /* RealityKitContent */; };
@@ -21,12 +27,33 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		D53BF4452FE1B1700005CC96 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D5A761482EF6DBB70043DFF3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D57AB38E2FCF02A800F9C5D3;
+			remoteInfo = InkuWatch;
+		};
 		D575EC092EFC8A9B00F99309 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D5A761482EF6DBB70043DFF3 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = D5A7614F2EF6DBB70043DFF3;
 			remoteInfo = Inku;
+		};
+		D57AB3972FCF02A900F9C5D3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D5A761482EF6DBB70043DFF3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D57AB38E2FCF02A800F9C5D3;
+			remoteInfo = InkuWatch;
+		};
+		D57AB3AD2FCF047700F9C5D3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D5A761482EF6DBB70043DFF3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D57AB3A12FCF047600F9C5D3;
+			remoteInfo = InkuWatchWidgetExtension;
 		};
 		D586AA9F2F3F75F80039640F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +79,28 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		D57AB39D2FCF02A900F9C5D3 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				D57AB3992FCF02A900F9C5D3 /* InkuWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D57AB3B42FCF047700F9C5D3 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				D57AB3AF2FCF047700F9C5D3 /* InkuWatchWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D586AA9C2F3F74D20039640F /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -87,7 +136,10 @@
 
 /* Begin PBXFileReference section */
 		6972176DA0A8475D80A22B48 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		D53BF4412FE1B1700005CC96 /* InkuWatchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InkuWatchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D575EC052EFC8A9B00F99309 /* InkuTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InkuTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D57AB38F2FCF02A800F9C5D3 /* InkuWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InkuWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D57AB3A22FCF047600F9C5D3 /* InkuWatchWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = InkuWatchWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5A2CBBD2F3A30EA00D279BA /* Inku.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inku.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5A2CBC02F3A30EA00D279BA /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
 		D5A761502EF6DBB70043DFF3 /* Inku.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inku.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -100,6 +152,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		D57AB3B32FCF047700F9C5D3 /* Exceptions for "InkuWatchWidget" folder in "InkuWatchWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = D57AB3A12FCF047600F9C5D3 /* InkuWatchWidgetExtension */;
+		};
 		D5A2CBCA2F3A30EB00D279BA /* Exceptions for "InkuVision" folder in "InkuVision" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -264,6 +323,59 @@
 			);
 			target = D5A7614F2EF6DBB70043DFF3 /* Inku */;
 		};
+		D5E6FBD62FCF1C0400DE27E1 /* Exceptions for "Inku" folder in "InkuWatch" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Core/Extensions/Logger+Inku.swift",
+				Core/Localization/L10n.swift,
+				Core/Models/Author.swift,
+				Core/Models/Demographic.swift,
+				Core/Models/Genre.swift,
+				Core/Models/Manga.swift,
+				Core/Models/Theme.swift,
+				Core/Models/WatchMangaTransferItem.swift,
+				Features/Collection/Models/CollectionManga.swift,
+				Resources/AdvancedFiltersLocalizable.xcstrings,
+				Resources/AuthenticationLocalizable.xcstrings,
+				Resources/CollectionLocalizable.xcstrings,
+				Resources/Localizable.xcstrings,
+				Resources/MangaDetailLocalizable.xcstrings,
+				Resources/MangaListLocalizable.xcstrings,
+				Resources/ProfileLocalizable.xcstrings,
+				Resources/SearchLocalizable.xcstrings,
+			);
+			target = D57AB38E2FCF02A800F9C5D3 /* InkuWatch */;
+		};
+		D5E6FBDB2FCF1C4B00DE27E1 /* Exceptions for "InkuWatch" folder in "InkuWatchWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Models/WatchMangaDisplayItem.swift,
+				Models/WatchMangaItem.swift,
+			);
+			target = D57AB3A12FCF047600F9C5D3 /* InkuWatchWidgetExtension */;
+		};
+		D5E6FBDD2FCF1C5F00DE27E1 /* Exceptions for "Inku" folder in "InkuWatchWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Core/Localization/L10n.swift,
+				Core/Models/Author.swift,
+				Core/Models/Demographic.swift,
+				Core/Models/Genre.swift,
+				Core/Models/Manga.swift,
+				Core/Models/Theme.swift,
+				Core/Models/WatchMangaTransferItem.swift,
+				Features/Collection/Models/CollectionManga.swift,
+				Resources/AdvancedFiltersLocalizable.xcstrings,
+				Resources/AuthenticationLocalizable.xcstrings,
+				Resources/CollectionLocalizable.xcstrings,
+				Resources/Localizable.xcstrings,
+				Resources/MangaDetailLocalizable.xcstrings,
+				Resources/MangaListLocalizable.xcstrings,
+				Resources/ProfileLocalizable.xcstrings,
+				Resources/SearchLocalizable.xcstrings,
+			);
+			target = D57AB3A12FCF047600F9C5D3 /* InkuWatchWidgetExtension */;
+		};
 		D5EFF0882F365148006F3603 /* Exceptions for "Inku" folder in "InkuMac" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -385,9 +497,30 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		D53BF4422FE1B1700005CC96 /* InkuWatchTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = InkuWatchTests;
+			sourceTree = "<group>";
+		};
 		D575EC062EFC8A9B00F99309 /* InkuTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = InkuTests;
+			sourceTree = "<group>";
+		};
+		D57AB3902FCF02A800F9C5D3 /* InkuWatch */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D5E6FBDB2FCF1C4B00DE27E1 /* Exceptions for "InkuWatch" folder in "InkuWatchWidgetExtension" target */,
+			);
+			path = InkuWatch;
+			sourceTree = "<group>";
+		};
+		D57AB3A52FCF047600F9C5D3 /* InkuWatchWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D57AB3B32FCF047700F9C5D3 /* Exceptions for "InkuWatchWidget" folder in "InkuWatchWidgetExtension" target */,
+			);
+			path = InkuWatchWidget;
 			sourceTree = "<group>";
 		};
 		D5A2CBBE2F3A30EA00D279BA /* InkuVision */ = {
@@ -405,6 +538,8 @@
 				D5EFF0882F365148006F3603 /* Exceptions for "Inku" folder in "InkuMac" target */,
 				D5A2CC3A2F3A32A500D279BA /* Exceptions for "Inku" folder in "InkuVision" target */,
 				D5C3803F2F3BE1CD00D3AED8 /* Exceptions for "Inku" folder in "InkuWidgetExtension" target */,
+				D5E6FBD62FCF1C0400DE27E1 /* Exceptions for "Inku" folder in "InkuWatch" target */,
+				D5E6FBDD2FCF1C5F00DE27E1 /* Exceptions for "Inku" folder in "InkuWatchWidgetExtension" target */,
 			);
 			path = Inku;
 			sourceTree = "<group>";
@@ -425,10 +560,35 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		D53BF43E2FE1B1700005CC96 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D575EC022EFC8A9B00F99309 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D57AB38C2FCF02A800F9C5D3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4ED280C620C048F1A37A4996 /* InkuUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D57AB39F2FCF047600F9C5D3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D57AB3A42FCF047600F9C5D3 /* SwiftUI.framework in Frameworks */,
+				D57AB3B82FCF070700F9C5D3 /* InkuUI in Frameworks */,
+				D57AB3A32FCF047600F9C5D3 /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -489,6 +649,9 @@
 				D5EFEF9A2F364E60006F3603 /* InkuMac */,
 				D5A2CBBE2F3A30EA00D279BA /* InkuVision */,
 				D5C380242F3BDDBC00D3AED8 /* InkuWidget */,
+				D57AB3902FCF02A800F9C5D3 /* InkuWatch */,
+				D57AB3A52FCF047600F9C5D3 /* InkuWatchWidget */,
+				D53BF4422FE1B1700005CC96 /* InkuWatchTests */,
 				D5EFEFA42F364EA8006F3603 /* Frameworks */,
 				D5A2CBBF2F3A30EA00D279BA /* Packages */,
 				D5A761512EF6DBB70043DFF3 /* Products */,
@@ -503,6 +666,9 @@
 				D5EFEF992F364E60006F3603 /* Inku.app */,
 				D5A2CBBD2F3A30EA00D279BA /* Inku.app */,
 				D5C3801F2F3BDDBC00D3AED8 /* InkuWidgetExtension.appex */,
+				D57AB38F2FCF02A800F9C5D3 /* InkuWatch.app */,
+				D57AB3A22FCF047600F9C5D3 /* InkuWatchWidgetExtension.appex */,
+				D53BF4412FE1B1700005CC96 /* InkuWatchTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -520,6 +686,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		D53BF4402FE1B1700005CC96 /* InkuWatchTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D53BF4472FE1B1700005CC96 /* Build configuration list for PBXNativeTarget "InkuWatchTests" */;
+			buildPhases = (
+				D53BF43D2FE1B1700005CC96 /* Sources */,
+				D53BF43E2FE1B1700005CC96 /* Frameworks */,
+				D53BF43F2FE1B1700005CC96 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D53BF4462FE1B1700005CC96 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				D53BF4422FE1B1700005CC96 /* InkuWatchTests */,
+			);
+			name = InkuWatchTests;
+			packageProductDependencies = (
+			);
+			productName = InkuWatchTests;
+			productReference = D53BF4412FE1B1700005CC96 /* InkuWatchTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		D575EC042EFC8A9B00F99309 /* InkuTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D575EC0B2EFC8A9B00F99309 /* Build configuration list for PBXNativeTarget "InkuTests" */;
@@ -542,6 +731,54 @@
 			productName = InkuTests;
 			productReference = D575EC052EFC8A9B00F99309 /* InkuTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		D57AB38E2FCF02A800F9C5D3 /* InkuWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D57AB39A2FCF02A900F9C5D3 /* Build configuration list for PBXNativeTarget "InkuWatch" */;
+			buildPhases = (
+				D57AB38B2FCF02A800F9C5D3 /* Sources */,
+				D57AB38C2FCF02A800F9C5D3 /* Frameworks */,
+				D57AB38D2FCF02A800F9C5D3 /* Resources */,
+				D57AB3B42FCF047700F9C5D3 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D57AB3AE2FCF047700F9C5D3 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				D57AB3902FCF02A800F9C5D3 /* InkuWatch */,
+			);
+			name = InkuWatch;
+			packageProductDependencies = (
+				D57AB3B72FCF070700F9C5D3 /* InkuUI */,
+			);
+			productName = InkuWatch;
+			productReference = D57AB38F2FCF02A800F9C5D3 /* InkuWatch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D57AB3A12FCF047600F9C5D3 /* InkuWatchWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D57AB3B02FCF047700F9C5D3 /* Build configuration list for PBXNativeTarget "InkuWatchWidgetExtension" */;
+			buildPhases = (
+				D57AB39E2FCF047600F9C5D3 /* Sources */,
+				D57AB39F2FCF047600F9C5D3 /* Frameworks */,
+				D57AB3A02FCF047600F9C5D3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				D57AB3A52FCF047600F9C5D3 /* InkuWatchWidget */,
+			);
+			name = InkuWatchWidgetExtension;
+			packageProductDependencies = (
+				D57AB3B72FCF070700F9C5D3 /* InkuUI */,
+			);
+			productName = InkuWatchWidgetExtension;
+			productReference = D57AB3A22FCF047600F9C5D3 /* InkuWatchWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 		D5A2CBBC2F3A30EA00D279BA /* InkuVision */ = {
 			isa = PBXNativeTarget;
@@ -577,11 +814,13 @@
 				D5A7614D2EF6DBB70043DFF3 /* Frameworks */,
 				D5A7614E2EF6DBB70043DFF3 /* Resources */,
 				D5C3802F2F3BDDBE00D3AED8 /* Embed Foundation Extensions */,
+				D57AB39D2FCF02A900F9C5D3 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				D5C3802D2F3BDDBE00D3AED8 /* PBXTargetDependency */,
+				D57AB3982FCF02A900F9C5D3 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				D5A761522EF6DBB70043DFF3 /* Inku */,
@@ -652,9 +891,19 @@
 				LastSwiftUpdateCheck = 2630;
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
+					D53BF4402FE1B1700005CC96 = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = D57AB38E2FCF02A800F9C5D3;
+					};
 					D575EC042EFC8A9B00F99309 = {
 						CreatedOnToolsVersion = 26.2;
 						TestTargetID = D5A7614F2EF6DBB70043DFF3;
+					};
+					D57AB38E2FCF02A800F9C5D3 = {
+						CreatedOnToolsVersion = 26.3;
+					};
+					D57AB3A12FCF047600F9C5D3 = {
+						CreatedOnToolsVersion = 26.3;
 					};
 					D5A2CBBC2F3A30EA00D279BA = {
 						CreatedOnToolsVersion = 26.3;
@@ -692,12 +941,36 @@
 				D575EC042EFC8A9B00F99309 /* InkuTests */,
 				D5A2CBBC2F3A30EA00D279BA /* InkuVision */,
 				D5C3801E2F3BDDBC00D3AED8 /* InkuWidgetExtension */,
+				D57AB38E2FCF02A800F9C5D3 /* InkuWatch */,
+				D57AB3A12FCF047600F9C5D3 /* InkuWatchWidgetExtension */,
+				D53BF4402FE1B1700005CC96 /* InkuWatchTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		D53BF43F2FE1B1700005CC96 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D575EC032EFC8A9B00F99309 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D57AB38D2FCF02A800F9C5D3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D57AB3A02FCF047600F9C5D3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -735,7 +1008,28 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		D53BF43D2FE1B1700005CC96 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D575EC012EFC8A9B00F99309 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D57AB38B2FCF02A800F9C5D3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D57AB39E2FCF047600F9C5D3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -773,10 +1067,25 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		D53BF4462FE1B1700005CC96 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D57AB38E2FCF02A800F9C5D3 /* InkuWatch */;
+			targetProxy = D53BF4452FE1B1700005CC96 /* PBXContainerItemProxy */;
+		};
 		D575EC0A2EFC8A9B00F99309 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = D5A7614F2EF6DBB70043DFF3 /* Inku */;
 			targetProxy = D575EC092EFC8A9B00F99309 /* PBXContainerItemProxy */;
+		};
+		D57AB3982FCF02A900F9C5D3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D57AB38E2FCF02A800F9C5D3 /* InkuWatch */;
+			targetProxy = D57AB3972FCF02A900F9C5D3 /* PBXContainerItemProxy */;
+		};
+		D57AB3AE2FCF047700F9C5D3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D57AB3A12FCF047600F9C5D3 /* InkuWatchWidgetExtension */;
+			targetProxy = D57AB3AD2FCF047700F9C5D3 /* PBXContainerItemProxy */;
 		};
 		D586AAA02F3F75F80039640F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -796,6 +1105,52 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		D53BF4482FE1B1700005CC96 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V8BCKJ57FF;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sdp26-ea.Inku.InkuWatchTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/InkuWatch.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/InkuWatch";
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		D53BF4492FE1B1700005CC96 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V8BCKJ57FF;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sdp26-ea.Inku.InkuWatchTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/InkuWatch.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/InkuWatch";
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
 		D575EC0C2EFC8A9B00F99309 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -804,8 +1159,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = V8BCKJ57FF;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 3.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sdp26.InkuTests;
+				MARKETING_VERSION = 4.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sdp26-ea.InkuTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -825,8 +1180,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = V8BCKJ57FF;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 3.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sdp26.InkuTests;
+				MARKETING_VERSION = 4.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sdp26-ea.InkuTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -835,6 +1190,140 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Inku.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Inku";
+			};
+			name = Release;
+		};
+		D57AB39B2FCF02A900F9C5D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V8BCKJ57FF;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Inku;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "com.sdp26-ea.Inku";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sdp26-ea.Inku.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = NO;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		D57AB39C2FCF02A900F9C5D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V8BCKJ57FF;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Inku;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "com.sdp26-ea.Inku";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sdp26-ea.Inku.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = NO;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
+		D57AB3B12FCF047700F9C5D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V8BCKJ57FF;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = InkuWatchWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = InkuWatchWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sdp26-ea.Inku.watchkitapp.InkuWatchWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		D57AB3B22FCF047700F9C5D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V8BCKJ57FF;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = InkuWatchWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = InkuWatchWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sdp26-ea.Inku.watchkitapp.InkuWatchWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
 			};
 			name = Release;
 		};
@@ -855,8 +1344,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sdp26.Inku;
+				MARKETING_VERSION = 4.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sdp26-ea.Inku";
 				PRODUCT_NAME = Inku;
 				SDKROOT = xros;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -889,8 +1378,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sdp26.Inku;
+				MARKETING_VERSION = 4.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sdp26-ea.Inku";
 				PRODUCT_NAME = Inku;
 				SDKROOT = xros;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -1053,8 +1542,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sdp26.Inku;
+				MARKETING_VERSION = 4.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sdp26-ea.Inku";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1094,8 +1583,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sdp26.Inku;
+				MARKETING_VERSION = 4.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sdp26-ea.Inku";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1134,8 +1623,8 @@
 					"@executable_path/../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
-				MARKETING_VERSION = 3.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sdp26.Inku.InkuWidget;
+				MARKETING_VERSION = 4.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sdp26-ea.Inku.InkuWidget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = xros;
@@ -1176,8 +1665,8 @@
 					"@executable_path/../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
-				MARKETING_VERSION = 3.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sdp26.Inku.InkuWidget;
+				MARKETING_VERSION = 4.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sdp26-ea.Inku.InkuWidget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = xros;
@@ -1229,8 +1718,8 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
-				MARKETING_VERSION = 3.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sdp26.Inku;
+				MARKETING_VERSION = 4.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sdp26-ea.Inku";
 				PRODUCT_NAME = Inku;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
@@ -1278,8 +1767,8 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
-				MARKETING_VERSION = 3.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sdp26.Inku;
+				MARKETING_VERSION = 4.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sdp26-ea.Inku";
 				PRODUCT_NAME = Inku;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
@@ -1296,11 +1785,38 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		D53BF4472FE1B1700005CC96 /* Build configuration list for PBXNativeTarget "InkuWatchTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D53BF4482FE1B1700005CC96 /* Debug */,
+				D53BF4492FE1B1700005CC96 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D575EC0B2EFC8A9B00F99309 /* Build configuration list for PBXNativeTarget "InkuTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D575EC0C2EFC8A9B00F99309 /* Debug */,
 				D575EC0D2EFC8A9B00F99309 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D57AB39A2FCF02A900F9C5D3 /* Build configuration list for PBXNativeTarget "InkuWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D57AB39B2FCF02A900F9C5D3 /* Debug */,
+				D57AB39C2FCF02A900F9C5D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D57AB3B02FCF047700F9C5D3 /* Build configuration list for PBXNativeTarget "InkuWatchWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D57AB3B12FCF047700F9C5D3 /* Debug */,
+				D57AB3B22FCF047700F9C5D3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1364,6 +1880,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		D57AB3B72FCF070700F9C5D3 /* InkuUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D5A7EB102F0163DA001B368C /* XCRemoteSwiftPackageReference "InkuUI" */;
+			productName = InkuUI;
+		};
 		D5A2CBC12F3A30EA00D279BA /* RealityKitContent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RealityKitContent;

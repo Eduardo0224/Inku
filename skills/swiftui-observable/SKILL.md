@@ -1,830 +1,194 @@
-# SwiftUI with Observable Framework
+---
+name: swiftui-observable
+description: >-
+  Modern SwiftUI patterns with Observation framework (@Observable macro, iOS 17+).
+  Covers ViewModels, property wrappers, MARK comment ordering, async/await, pagination,
+  and error handling. Use when creating SwiftUI views, building ViewModels, implementing
+  pagination, handling async state, or user mentions "@Observable", "@State", "ViewModel",
+  "async/await SwiftUI", "pagination", or "Observation framework".
+user-invocable: true
+when_to_use: |
+  When creating SwiftUI views, building ViewModels, implementing pagination, or handling async state. When the user mentions "@Observable", "@State", "ViewModel", "async/await SwiftUI", "pagination", "Observation framework", or "MARK comment".
+---
 
-## Description
+## Overview
 
-Modern SwiftUI patterns using the Observation framework (`@Observable` macro) introduced in iOS 17. This skill covers ViewModels, property wrappers, MARK comment organization, async/await patterns, and pagination.
+Always use `@Observable` (iOS 17+) for ViewModels — never `ObservableObject` with `@Published`. Views own ViewModels via `@State`. All async work uses `async/await`. Pagination uses separate loading states for initial load vs. loading more.
 
-## When to Use
+> **Project-specific settings**: Before applying this skill, check `CLAUDE.md` for:
+> - Minimum deployment target (determines available APIs)
+> - Localization pattern (enum name, string catalog structure)
+> - API endpoint organization convention
+> - Design system / UI package name
 
-- Building iOS 17+ apps with SwiftUI
-- Creating reactive ViewModels without `ObservableObject`
-- Implementing Clean Architecture with MVVM pattern
-- Apps requiring async/await networking
-- Implementing infinite scroll pagination
+## Instructions
 
-## Rule 1: Use @Observable for ViewModels
+1. **Create ViewModel** — `@Observable @MainActor final class`, inject Interactor via `init`
+2. **Mark non-observed dependencies** — `@ObservationIgnored` on Interactor, page counters, IDs
+3. **Create View** — own ViewModel via `@State private var`, inject Interactor in `init`
+4. **Add async behavior** — `.task {}` for initial load, `.refreshable {}` for pull-to-refresh
+5. **Handle errors** — catch in ViewModel, set `errorMessage`, display via `.alert()`
+6. **Add pagination** — separate `isLoading` (initial) from `isLoadingMore` (pagination), guard against concurrent loads
 
-**ALWAYS use `@Observable` macro. NEVER use `ObservableObject` with `@Published`.**
+## Rules
 
-### Property Wrappers Decision Tree
+### Property Wrappers
 
-```
-What type of data is it?
-│
-├─ ViewModel (@Observable class) in View
-│   └─ @State private var viewModel
-│
-├─ ViewModel passed from parent
-│   └─ @Bindable var viewModel (if you need $binding)
-│   └─ let viewModel (if read-only)
-│
-├─ Simple local value (Bool, String, Int)
-│   └─ @State private var
-│
-├─ Two-way sync with parent
-│   └─ @Binding var
-│
-├─ Property in @Observable that should NOT be observed
-│   └─ @ObservationIgnored
-│
-└─ Environment value
-    └─ @Environment(\.dismiss) / @Environment(Model.self)
-```
+- **`@State`** — View owns an `@Observable` ViewModel → `@State private var viewModel`
+- **`@Bindable`** — Child view receives parent's `@Observable` and needs `$` bindings → `@Bindable var viewModel`
+- **`@Binding`** — Primitive two-way sync (Bool, String) → `@Binding var isPresented`
+- **`@Environment`** — System values (dismiss, colorScheme) or shared models → `@Environment(\.dismiss)`
+- **`@ObservationIgnored`** — Inside `@Observable`, properties that should NOT trigger UI updates → `@ObservationIgnored private let interactor`
 
-### Quick Reference Table
+### ViewModel Rules
 
-| Wrapper | Context | Use Case |
-|---------|---------|----------|
-| `@State` | View owns @Observable | ViewModel creation |
-| `@Bindable` | View receives @Observable | Need $binding to properties |
-| `@Binding` | Primitive sync | Two-way Bool, String, etc. |
-| `@Environment` | System/shared | dismiss, colorScheme, shared models |
-| `@ObservationIgnored` | Inside @Observable | Non-reactive properties |
+- Mark with `@Observable` and `@MainActor`
+- Inject Interactor via `init` with protocol type and default value
+- Mark Interactor and internal state (page numbers, IDs) as `@ObservationIgnored`
+- Use computed properties for derived data (`filteredItems`, `formattedDate`)
+- Set `isLoading = true` with `defer { isLoading = false }` for all async operations
+- Handle errors in a private `handleError(_:)` method — never expose raw errors to UI
 
-### ✅ Correct ViewModel
+### View Rules
+
+- Own ViewModel via `@State private var`
+- Inject Interactor in `init`, pass to ViewModel
+- Use `.task { await viewModel.loadData() }` for automatic load-on-appear with cancellation
+- Use `.refreshable { await viewModel.loadData() }` for pull-to-refresh
+- Use `@ViewBuilder` computed properties for conditional content (loading/error/empty/data)
+- Never call business logic directly — always delegate to ViewModel
+
+### Pagination Rules
+
+- Track `currentPage` and `itemsPerPage` as `@ObservationIgnored` in ViewModel
+- Use separate `isLoading` (initial/full reload) and `isLoadingMore` (append) flags
+- Guard every load function: `guard !isLoading, !isLoadingMore, hasMorePages else { return }`
+- Trigger `loadMore` when the last item appears: `if item == viewModel.items.last { Task { await viewModel.loadMore() } }`
+- Show `ProgressView` only during `isLoadingMore`, not during initial `isLoading`
+- Reset `currentPage = 1` and clear array on full reload
+
+### Async/Await Rules
+
+- Use `.task {}` for lifecycle-bound async work (auto-cancelled on view disappear)
+- Use `async/await` for all network and database operations — never completion handlers
+- `defer` for resetting loading flags — ensures cleanup even on error
+- Handle `URLError.cancelled` silently — don't show errors for cancelled tasks
+
+### Task Management in @MainActor ViewModels
+
+**`[weak self]` depends on whether `self` owns the Task:**
+
+- **Task stored as property** (`self.loadTask = task`) → MUST use `[weak self]` — forms a retain cycle: `self → task → closure → self`
+- **Fire-and-forget Task** (not stored, not awaited) → `[weak self]` optional — no cycle, but keeps `self` alive until completion
+- **`.task {}` modifier** → no `[weak self]` needed — SwiftUI auto-cancels when view disappears
+
+- **DO** return `Task<Void, Never>` with `@discardableResult` from methods that start async work — allows callers to cancel or await
+- **DO** store task references as `@ObservationIgnored private var` so they can be cancelled before starting new work
+- **DO** cancel previous tasks before starting new ones: `loadTask?.cancel()`
+- **DO** check cancellation between async operations with `guard !Task.isCancelled else { return }` in non-throwing tasks
+- **DO** use `try Task.checkCancellation()` in throwing tasks — propagates cancellation as a `CancellationError`
+- **NEVER** write `Task { @MainActor in ... }` inside a `@MainActor` class — the task already inherits the actor's isolation context. Adding `@MainActor` is redundant and suggests the developer doesn't understand actor inheritance.
+
+**Stored task (MUST use `[weak self]`):**
 
 ```swift
-import Observation
-
-@Observable
 @MainActor
-final class MovieDetailViewModel {
-
-    // MARK: - Private Properties
+final class FeatureViewModel {
 
     @ObservationIgnored
-    private let interactor: MovieDetailInteractorProtocol
+    private var loadTask: Task<Void, Never>?
 
-    @ObservationIgnored
-    private let movieId: UUID
+    @discardableResult
+    func loadInitialDataIfNeeded() -> Task<Void, Never> {
+        loadTask?.cancel()
 
-    // MARK: - Properties
+        let task = Task { [weak self] in  // ← [weak self] REQUIRED: self owns loadTask
+            guard let self, !Task.isCancelled else { return }
 
-    var movie: Movie?
-    var isLoading = false
-    var errorMessage: String?
-    var isFavorite = false
+            async let data1: Void = self.fetchData1()
+            async let data2: Void = self.fetchData2()
+            _ = await (data1, data2)
 
-    // MARK: - Initializers
+            guard !Task.isCancelled else { return }
 
-    init(movieId: UUID, interactor: MovieDetailInteractorProtocol) {
-        self.movieId = movieId
-        self.interactor = interactor
-    }
-
-    // MARK: - Functions
-
-    func loadMovie() async {
-        isLoading = true
-        defer { isLoading = false }
-
-        do {
-            movie = try await interactor.fetchMovie(id: movieId)
-        } catch {
-            handleError(error)
+            self.hasLoadedData = true
         }
-    }
 
-    // MARK: - Private Functions
-
-    private func handleError(_ error: Error) {
-        errorMessage = error.localizedDescription
+        loadTask = task
+        return task
     }
 }
 ```
 
-### ❌ Incorrect (Old Pattern)
+**Fire-and-forget (no cycle, `[weak self]` optional):**
 
 ```swift
-// ❌ DON'T USE ObservableObject
-import Combine
-
-class MovieDetailViewModel: ObservableObject {
-    @Published var movie: Movie?  // ❌ Use @Observable instead
-    @Published var isLoading = false
-}
-```
-
-## Rule 2: View with @State Ownership
-
-**Views own ViewModels using `@State` and inject Interactors via initializer.**
-
-### ✅ Correct
-
-```swift
-struct MovieDetailView: View {
-
-    // MARK: - States
-
-    @State private var viewModel: MovieDetailViewModel
-
-    // MARK: - Body
-
-    var body: some View {
-        ScrollView {
-            if let movie = viewModel.movie {
-                MovieContentView(movie: movie, viewModel: viewModel)
-            }
-        }
-        .overlay { loadingOverlay }
-        .task { await viewModel.loadMovie() }
-    }
-
-    // MARK: - Initializers
-
-    init(movieId: UUID, interactor: MovieDetailInteractorProtocol = MovieDetailInteractor()) {
-        self.viewModel = MovieDetailViewModel(movieId: movieId, interactor: interactor)
-    }
-
-    // MARK: - Private Views
-
-    @ViewBuilder
-    private var loadingOverlay: some View {
-        if viewModel.isLoading {
-            ProgressView()
-        }
+func loadOnAppear() {
+    Task {  // ← strong capture OK — task completes quickly, no cycle
+        let data = await fetch()
+        self.data = data
     }
 }
 ```
 
-### Using @Bindable for Child Views
+### Error Handling Rules
 
-```swift
-struct MovieContentView: View {
+- Create a single `private func handleError(_ error: Error)` in ViewModel
+- Map typed errors (NetworkError) to user-facing messages
+- Log detailed errors for debugging: `print("[ViewModelName] Error: \(error)")`
+- Never expose internal error details to the user
+- Display errors via `.alert()` with a Binding to `errorMessage`
 
-    // MARK: - Properties
+### Formatting Rules
 
-    let movie: Movie
-    @Bindable var viewModel: MovieDetailViewModel
+- Always use `.formatted()` APIs — never `String(format:)` or `DateFormatter`
+- Numbers: `value.formatted(.number.precision(.fractionLength(2)))`
+- Dates: `date.formatted(date: .numeric, time: .omitted)`
+- Percentages: `value.formatted(.percent.precision(.fractionLength(1)))`
 
-    // MARK: - Body
+### API Endpoint Organization
 
-    var body: some View {
-        VStack {
-            Text(movie.title)
-
-            // Can create bindings with $
-            Toggle("Favorite", isOn: $viewModel.isFavorite)
-        }
-    }
-}
-```
-
-## Rule 3: MARK Comment Structure
-
-**ALL Swift files MUST follow this exact order:**
-
-### MARK Order Reference
-
-| Order | MARK | Contents |
-|-------|------|----------|
-| 1 | Private Properties | `private let/var` **without** property wrappers |
-| 2 | States | `@State`, `@Bindable`, `@AppStorage`, `@SceneStorage` |
-| 3 | Bindings | `@Binding` only |
-| 4 | Environment | `@Environment` |
-| 5 | Properties | `let`, `var` (public/internal, no wrappers) |
-| 6 | Body | `var body: some View` |
-| 7 | Initializers | `init()` methods |
-| 8 | Private Views | `@ViewBuilder private var` |
-| 9 | Private Functions | `private func` |
-| 10 | Functions | `func` (public/internal) |
-| 11 | Extensions | `extension TypeName` |
-| 12 | Previews | `#Preview` |
-
-### Complete Example
-
-```swift
-import SwiftUI
-
-struct MovieDetailView: View {
-
-    // MARK: - Private Properties
-
-    private let movieId: UUID
-
-    // MARK: - States
-
-    @State private var viewModel: MovieDetailViewModel
-    @State private var showingShareSheet = false
-
-    // MARK: - Bindings
-
-    @Binding var selectedMovie: Movie?
-
-    // MARK: - Environment
-
-    @Environment(\.dismiss) private var dismiss
-    @Environment(\.colorScheme) private var colorScheme
-
-    // MARK: - Properties
-
-    var onDismiss: (() -> Void)?
-
-    // MARK: - Body
-
-    var body: some View {
-        // Implementation
-    }
-
-    // MARK: - Initializers
-
-    init(movieId: UUID, selectedMovie: Binding<Movie?>) {
-        self.movieId = movieId
-        self._selectedMovie = selectedMovie
-        self.viewModel = MovieDetailViewModel(movieId: movieId)
-    }
-
-    // MARK: - Private Views
-
-    @ViewBuilder
-    private var loadingView: some View {
-        ProgressView()
-    }
-
-    // MARK: - Private Functions
-
-    private func handleError(_ error: Error) {
-        // Error handling
-    }
-
-    // MARK: - Functions
-
-    func refreshData() {
-        // Public function
-    }
-}
-
-// MARK: - Extensions
-
-extension MovieDetailView {
-    // Extensions if needed
-}
-
-// MARK: - Previews
-
-#Preview("Movie Detail") {
-    MovieDetailView(movieId: UUID(), selectedMovie: .constant(nil))
-}
-```
-
-### ViewModel MARK Structure
-
-```swift
-import Observation
-
-@Observable
-@MainActor
-final class MovieDetailViewModel {
-
-    // MARK: - Private Properties
-
-    @ObservationIgnored
-    private let interactor: MovieDetailInteractorProtocol
-
-    @ObservationIgnored
-    private let movieId: UUID
-
-    // MARK: - Properties
-
-    var movie: Movie?
-    var isLoading = false
-    var errorMessage: String?
-
-    var formattedReleaseDate: String {
-        // Computed property
-        movie?.releaseDate.formatted(date: .long, time: .omitted) ?? "N/A"
-    }
-
-    // MARK: - Initializers
-
-    init(movieId: UUID, interactor: MovieDetailInteractorProtocol) {
-        self.movieId = movieId
-        self.interactor = interactor
-    }
-
-    // MARK: - Functions
-
-    func loadMovie() async {
-        // ...
-    }
-
-    // MARK: - Private Functions
-
-    private func handleError(_ error: Error) {
-        // ...
-    }
-}
-```
-
-## Rule 4: Async/Await Patterns
-
-**Use `async/await` for all asynchronous operations. Never use completion handlers.**
-
-### ViewModel with Async Operations
-
-```swift
-@Observable
-@MainActor
-final class MovieListViewModel {
-
-    // MARK: - Private Properties
-
-    @ObservationIgnored
-    private let interactor: MovieListInteractorProtocol
-
-    // MARK: - Properties
-
-    var movies: [Movie] = []
-    var isLoading = false
-    var errorMessage: String?
-
-    // MARK: - Initializers
-
-    init(interactor: MovieListInteractorProtocol) {
-        self.interactor = interactor
-    }
-
-    // MARK: - Functions
-
-    func loadMovies() async {
-        isLoading = true
-        defer { isLoading = false }
-
-        do {
-            movies = try await interactor.fetchMovies()
-            errorMessage = nil
-        } catch {
-            handleError(error)
-        }
-    }
-
-    func deleteMovie(_ movie: Movie) async {
-        do {
-            try await interactor.deleteMovie(id: movie.id)
-            movies.removeAll { $0.id == movie.id }
-        } catch {
-            handleError(error)
-        }
-    }
-
-    // MARK: - Private Functions
-
-    private func handleError(_ error: Error) {
-        if let customError = error as? CustomError {
-            errorMessage = customError.userMessage
-        } else {
-            errorMessage = error.localizedDescription
-        }
-    }
-}
-```
-
-### View Integration with .task
-
-```swift
-struct MovieListView: View {
-
-    // MARK: - States
-
-    @State private var viewModel: MovieListViewModel
-
-    // MARK: - Body
-
-    var body: some View {
-        NavigationStack {
-            contentView
-                .navigationTitle("Movies")
-        }
-        .task {
-            await viewModel.loadMovies()  // ← Automatic cancellation
-        }
-        .refreshable {
-            await viewModel.loadMovies()  // ← Pull to refresh
-        }
-    }
-
-    // MARK: - Initializers
-
-    init(interactor: MovieListInteractorProtocol = MovieListInteractor()) {
-        self.viewModel = MovieListViewModel(interactor: interactor)
-    }
-
-    // MARK: - Private Views
-
-    @ViewBuilder
-    private var contentView: some View {
-        if viewModel.isLoading && viewModel.movies.isEmpty {
-            ProgressView()
-        } else {
-            List(viewModel.movies) { movie in
-                MovieRowView(movie: movie)
-            }
-        }
-    }
-}
-```
-
-## Rule 5: Pagination Pattern
-
-**For infinite scrolling, track pagination state in ViewModel.**
-
-### Pagination ViewModel
-
-```swift
-@Observable
-@MainActor
-final class MangaListViewModel {
-
-    // MARK: - Private Properties
-
-    @ObservationIgnored
-    private let interactor: MangaListInteractorProtocol
-
-    @ObservationIgnored
-    private var currentPage = 1
-
-    @ObservationIgnored
-    private let itemsPerPage = 20
-
-    // MARK: - Properties
-
-    var mangas: [Manga] = []
-    var isLoading = false
-    var isLoadingMore = false  // Separate from initial loading
-    var hasMorePages = true
-
-    // MARK: - Initializers
-
-    init(interactor: MangaListInteractorProtocol = MangaListInteractor()) {
-        self.interactor = interactor
-    }
-
-    // MARK: - Functions
-
-    func loadMangas() async {
-        guard !isLoading else { return }
-
-        isLoading = true
-        currentPage = 1
-        mangas = []
-        defer { isLoading = false }
-
-        do {
-            let response = try await interactor.fetchMangas(page: currentPage, per: itemsPerPage)
-            mangas = response.items
-            hasMorePages = response.metadata.hasMorePages
-        } catch {
-            handleError(error)
-        }
-    }
-
-    func loadMoreMangas() async {
-        // Guard against multiple simultaneous loads
-        guard !isLoadingMore, !isLoading, hasMorePages else { return }
-
-        isLoadingMore = true
-        defer { isLoadingMore = false }
-
-        let nextPage = currentPage + 1
-
-        do {
-            let response = try await interactor.fetchMangas(page: nextPage, per: itemsPerPage)
-            mangas.append(contentsOf: response.items)
-            currentPage = nextPage
-            hasMorePages = response.metadata.hasMorePages
-        } catch {
-            handleError(error)
-        }
-    }
-
-    // MARK: - Private Functions
-
-    private func handleError(_ error: Error) {
-        errorMessage = error.localizedDescription
-    }
-}
-```
-
-### Pagination in Views
-
-```swift
-struct MangaListView: View {
-
-    // MARK: - States
-
-    @State private var viewModel: MangaListViewModel
-
-    // MARK: - Body
-
-    var body: some View {
-        ScrollView {
-            LazyVStack(spacing: 16) {
-                ForEach(viewModel.mangas) { manga in
-                    MangaRowView(manga: manga)
-                        .onAppear {
-                            // Trigger load more when last item appears
-                            if manga == viewModel.mangas.last {
-                                Task {
-                                    await viewModel.loadMoreMangas()
-                                }
-                            }
-                        }
-                }
-
-                if viewModel.isLoadingMore {
-                    ProgressView()
-                        .padding()
-                }
-            }
-            .padding()
-        }
-        .task { await viewModel.loadMangas() }
-    }
-
-    // MARK: - Initializers
-
-    init(interactor: MangaListInteractorProtocol = MangaListInteractor()) {
-        self.viewModel = MangaListViewModel(interactor: interactor)
-    }
-}
-```
-
-**Key Points**:
-- Use `@ObservationIgnored` for pagination state (currentPage)
-- Separate `isLoading` (initial) from `isLoadingMore` (pagination)
-- Guard against multiple simultaneous loads
-- Check last item with `manga == viewModel.mangas.last`
-- Show loading indicator only during pagination
-
-## Rule 6: Error Handling
-
-**ViewModels handle errors and provide user-friendly messages.**
-
-### Error Handling Pattern
-
-```swift
-@Observable
-@MainActor
-final class MangaListViewModel {
-
-    var errorMessage: String?
-
-    func loadMangas() async {
-        do {
-            let response = try await interactor.fetchMangas(page: 1, per: 20)
-            mangas = response.items
-        } catch {
-            handleError(error)
-        }
-    }
-
-    // MARK: - Private Functions
-
-    private func handleError(_ error: Error) {
-        // Log detailed error for debugging
-        print("[MangaListViewModel] Error: \(error)")
-
-        // Generic message to user (security)
-        if let networkError = error as? NetworkError {
-            errorMessage = L10n.Error.generic
-        } else if let urlError = error as? URLError {
-            switch urlError.code {
-            case .notConnectedToInternet:
-                errorMessage = L10n.Error.network
-            case .timedOut:
-                errorMessage = L10n.Error.timeout
-            case .cancelled:
-                return  // Don't show error for cancelled requests
-            default:
-                errorMessage = L10n.Error.generic
-            }
-        } else {
-            errorMessage = L10n.Error.generic
-        }
-    }
-}
-```
-
-### Displaying Errors in Views
-
-```swift
-struct MangaListView: View {
-
-    // MARK: - States
-
-    @State private var viewModel: MangaListViewModel
-
-    // MARK: - Body
-
-    var body: some View {
-        contentView
-            .alert(
-                L10n.Error.title,
-                isPresented: Binding(
-                    get: { viewModel.errorMessage != nil },
-                    set: { if !$0 { viewModel.errorMessage = nil } }
-                )
-            ) {
-                Button(L10n.Common.ok, role: .cancel) {
-                    viewModel.errorMessage = nil
-                }
-                Button(L10n.Common.retry) {
-                    Task { await viewModel.loadMangas() }
-                }
-            } message: {
-                if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
-                }
-            }
-    }
-
-    // MARK: - Private Views
-
-    @ViewBuilder
-    private var contentView: some View {
-        // content
-    }
-}
-```
-
-## Rule 7: Modern Formatting APIs
-
-**ALWAYS use `.formatted()` APIs. NEVER use legacy formatters.**
-
-### ❌ DON'T USE (Legacy)
-
-```swift
-// ❌ String(format:)
-let score = 8.41
-let formatted = String(format: "%.2f", score)
-
-// ❌ DateFormatter
-let dateFormatter = DateFormatter()
-dateFormatter.dateStyle = .medium
-let formatted = dateFormatter.string(from: date)
-```
-
-### ✅ USE (Modern)
-
-```swift
-// ✅ Numbers with precision
-let score = 8.41
-let formatted = score.formatted(.number.precision(.fractionLength(2)))
-// Result: "8.41"
-
-// ✅ Currency
-let price = 1299.99
-let formatted = price.formatted(.currency(code: "USD"))
-// Result: "$1,299.99"
-
-// ✅ Dates
-let date = Date()
-let formatted = date.formatted(date: .numeric, time: .omitted)
-// Result: "12/22/2025"
-
-// ✅ Custom date format
-let customDate = date.formatted(.dateTime.day().month().year())
-// Result: "Dec 22, 2025"
-
-// ✅ Percentages
-let progress = 0.847
-let formatted = progress.formatted(.percent.precision(.fractionLength(1)))
-// Result: "84.7%"
-```
-
-## Rule 8: API Endpoints Organization
-
-**Use case-less enums as namespaces for API endpoints.**
-
-### ✅ Correct Pattern
+- Use case-less enums as namespaces for endpoints
+- Group by feature with MARK comments
+- Use static functions for parameterized endpoints
 
 ```swift
 enum API {
     enum Endpoints {
-        // MARK: - Manga List
-
-        static let listMangas = "/list/mangas"
-        static let listGenres = "/list/genres"
-
-        // MARK: - Manga Filtering
-
-        static func listMangaByGenre(_ genre: String) -> String {
-            "/list/mangaByGenre/\(genre)"
-        }
-
-        // MARK: - Search
-
-        static func searchManga(id: Int) -> String {
-            "/search/manga/\(id)"
-        }
+        // Group endpoints by feature with MARK comments
+        // MARK: - Feature Name
+        static let items = "/items"
+        static func itemSearch(_ query: String) -> String { "/items/search?q=\(query)" }
     }
-
     enum Constants {
         static let defaultPageSize = 20
-        static let maxPageSize = 100
     }
 }
-
-// Usage
-func fetchMangas(page: Int, per: Int) async throws -> MangaListResponse {
-    try await networkService.get(endpoint: API.Endpoints.listMangas, queryItems: queryItems)
-}
 ```
 
-### ❌ Incorrect (Hardcoded Strings)
+## Verification Checklist
 
-```swift
-// ❌ BAD
-func fetchMangas() async throws -> MangaListResponse {
-    try await networkService.get(endpoint: "/list/mangas")  // ❌ Hardcoded
-}
-```
-
-## Checklist
-
-When creating a new SwiftUI feature:
-
-- [ ] ViewModel uses `@Observable` and `@MainActor`
+- [ ] ViewModel uses `@Observable` and `@MainActor` (not `ObservableObject`)
 - [ ] Non-observed properties use `@ObservationIgnored`
-- [ ] View owns ViewModel with `@State private var`
+- [ ] View owns ViewModel via `@State private var`
 - [ ] Dependencies injected via initializer with defaults
 - [ ] All async operations use `async/await`
-- [ ] MARK comments follow the exact order
 - [ ] Pagination uses separate `isLoading` and `isLoadingMore`
 - [ ] Error handling provides user-friendly messages
 - [ ] Modern `.formatted()` APIs for all formatting
-- [ ] API endpoints organized in case-less enum
-- [ ] No `ObservableObject` or `@Published`
-- [ ] `.task` used for automatic cancellation
-- [ ] Computed properties for derived data
+- [ ] API endpoints in case-less enum
+- [ ] MARK comments follow project's defined order
+- [ ] `.task` used for lifecycle-bound async work
 
 ## Common Mistakes
 
-### ❌ Mistake 1: Using ObservableObject
+- **Using `ObservableObject` with `@Published`** → Use `@Observable` macro (iOS 17+)
+- **Missing `@ObservationIgnored`** → Interactor and counters trigger unnecessary UI updates
+- **Wrong MARK order** → Follow the project's defined order in CLAUDE.md
+- **Single `isLoading` for pagination** → Separate `isLoading` (initial) from `isLoadingMore` (append)
+- **No guard against concurrent pagination loads** → `guard !isLoadingMore else { return }`
+- **Legacy formatters** → Use `.formatted()` instead of `DateFormatter` / `String(format:)`
 
-```swift
-// ❌ BAD
-class ViewModel: ObservableObject {
-    @Published var items: [Item] = []
-}
-```
+## References
 
-**Fix**: Use `@Observable` macro
-
-### ❌ Mistake 2: Missing @ObservationIgnored
-
-```swift
-// ❌ BAD: Interactor will be observed (unnecessary)
-@Observable
-class ViewModel {
-    private let interactor: InteractorProtocol
-}
-```
-
-**Fix**: Add `@ObservationIgnored`
-
-### ❌ Mistake 3: Wrong MARK Order
-
-```swift
-// ❌ BAD: Body before Properties
-struct MyView: View {
-    var body: some View { }
-
-    let title: String  // ❌ Properties should be before Body
-}
-```
-
-**Fix**: Follow MARK order exactly
-
-### ❌ Mistake 4: Legacy Formatters
-
-```swift
-// ❌ BAD
-let formatter = DateFormatter()
-formatter.dateStyle = .medium
-```
-
-**Fix**: Use `.formatted()` APIs
-
-## Examples
-
-See complete implementations in:
-- MangaListViewModel (pagination pattern)
-- SearchViewModel (debouncing)
-- CollectionViewModel (environment injection)
-
-## Related Skills
-
-- `skills/clean-architecture-ios/SKILL.md` - Architecture patterns
-- `skills/swift-testing-patterns/SKILL.md` - Testing ViewModels
-- `skills/swiftui-components/SKILL.md` - Component patterns
+- `${CLAUDE_SKILL_DIR}/references/examples.md` — Full ViewModel with pagination, View with error handling, API enum, pagination guard pattern

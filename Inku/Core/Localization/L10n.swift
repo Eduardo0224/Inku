@@ -62,6 +62,38 @@ enum L10n {
         static let emptyHint = String(localized: .widgetEmptyHint)
     }
 
+    // MARK: - Watch (Localizable.xcstrings)
+
+    enum Watch {
+        static let nowReading = String(localized: .watchNowReading)
+        static let collection = String(localized: .watchCollection)
+        static let stats = String(localized: .watchStats)
+        static let emptyTitle = String(localized: .watchEmptyTitle)
+        static let emptyMessage = String(localized: .watchEmptyMessage)
+        static let noActiveReading = String(localized: .watchNoActiveReading)
+        static let startReadingHint = String(localized: .watchStartReadingHint)
+        static let progress = String(localized: .watchProgress)
+        static let currentVolume = String(localized: .watchCurrentVolume)
+        static let statusReading = String(localized: .watchStatusReading)
+        static let statusCompleted = String(localized: .watchStatusCompleted)
+        static let statusInCollection = String(localized: .watchStatusInCollection)
+        static let inkuCollection = String(localized: .watchInkuCollection)
+
+        // MARK: Complication Labels
+
+        static func volumeFormat(_ volume: Int) -> String {
+            String(localized: .watchVolumeFormat(volume))
+        }
+
+        static func volumeWithTotalFormat(_ current: Int, _ total: Int) -> String {
+            String(localized: .watchVolumeWithTotalFormat(current, total))
+        }
+
+        static func complicationInlineSummary(reading: Int, total: Int) -> String {
+            String(localized: .watchComplicationInlineSummary(reading, total))
+        }
+    }
+
     // MARK: - Manga List (MangaListLocalizable.xcstrings)
 
     enum MangaList {
