@@ -291,11 +291,11 @@
     </tr>
     <tr>
         <td width="400" align="center">
-            <!-- TODO: Reemplazar con captura real de NowReadingView -->
+            <img src="https://github.com/user-attachments/assets/634b2183-c731-4bc2-a77d-ed814f6c158a">
             <p><i>📸 Now Reading — Vista principal con carrusel de mangas en lectura</i></p>
         </td>
         <td width="400" align="center">
-            <!-- TODO: Reemplazar con captura real de CollectionListView -->
+            <img src="https://github.com/user-attachments/assets/9d462106-463f-4459-b971-aa096b4bc3b3">
             <p><i>📸 Collection — Navegación completa de la colección</i></p>
         </td>
     </tr>
@@ -304,25 +304,22 @@
     </tr>
     <tr>
         <td width="400" align="center">
-            <!-- TODO: Reemplazar con captura real de MangaDetailView -->
+            <img src="https://github.com/user-attachments/assets/b434ec7e-83cd-40cc-979c-525c85a2fbe0">
             <p><i>📸 Manga Detail — Portada, progreso, estado de lectura</i></p>
         </td>
         <td width="400" align="center">
-            <!-- TODO: Reemplazar con captura real de WatchStatsView -->
+            <img src="https://github.com/user-attachments/assets/46dc1a43-bbe8-4385-af20-d15578800cd2">
             <p><i>📸 Stats — Estadísticas de la colección</i></p>
         </td>
     </tr>
     <tr>
-        <th colspan="2">InkuWatch — Demo + Complicaciones</th>
+        <th colspan="2">InkuWatch — Demo</th>
     </tr>
     <tr>
         <td width="400" align="center">
-            <!-- TODO: Reemplazar con video real del Apple Watch -->
+            <video source src="https://github.com/user-attachments/assets/a0260036-1173-4b1d-8a87-27e0fa8e1e0a">
+            </video>
             <p><i>🎥 Video — Demo de navegación en Apple Watch</i></p>
-        </td>
-        <td width="400" align="center">
-            <!-- TODO: Reemplazar con captura real de complicaciones -->
-            <p><i>📸 Complicaciones — Rectangular, Circular, Corner, Inline</i></p>
         </td>
     </tr>
 </table>
