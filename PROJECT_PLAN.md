@@ -14,7 +14,8 @@
 
 - **Language**: Swift 6
 - **UI Framework**: SwiftUI + Observation framework
-- **Target**: iOS 26 (primary) with iOS 18 fallback
+- **Target**: iOS 26 (primary), watchOS 26, with iOS 18 widget fallback
+- **Persistence**: SwiftData with `ModelContainer` per target
 - **Architecture**: Clean Architecture (4 layers)
 - **Testing**: Swift Testing framework
 - **Design System**: InkuUI package
@@ -362,6 +363,58 @@ https://mymanga-acacademy-5607149ebe3d.herokuapp.com
 
 ---
 
+### Phase 5: watchOS Companion App (v4.0.0) ✅ COMPLETED
+
+**Requirements**:
+- ✅ Everything from Deluxe Version (v3.0.0)
+- ✅ **watchOS companion target** with full Clean Architecture
+- ✅ **Widget complications** for watch face
+- ✅ **WatchConnectivity sync** with iPhone
+
+#### Feature 12: watchOS Companion App ✅
+
+**Description**: Native watchOS app for quick collection access and reading tracking.
+
+**User Stories**:
+- ✅ As a user, I want to see what I'm currently reading on my Apple Watch
+- ✅ As a user, I want to browse my full manga collection on my watch
+- ✅ As a user, I want to see manga details (cover, progress, status) on my watch
+- ✅ As a user, I want to view collection stats on my watch
+- ✅ As a user, I want my watch collection to sync automatically from iPhone
+
+**Architecture**:
+- ✅ Clean Architecture: Models → Interactor → ViewModel → Views
+- ✅ `WatchMangaDisplayItem` value-type display model (decoupled from SwiftData)
+- ✅ `WatchCollectionViewModel` with `@Observable @MainActor`
+- ✅ `WatchCollectionInteractor` with protocol-first design
+- ✅ `WatchSessionManager` for WCSession integration
+- ✅ SwiftData with own `ModelContainer` (no CloudKit)
+
+**Views**:
+- ✅ `NowReadingView` — carousel list of currently-reading manga
+- ✅ `CollectionListView` — full collection browser
+- ✅ `MangaDetailView` — detail view with cover, progress, status
+- ✅ `WatchStatsView` — collection statistics and analytics
+- ✅ `WatchMangaRow` — reusable manga list row component
+
+**Watch Connectivity**:
+- ✅ Bi-directional sync with iPhone via `WCSession`
+- ✅ `transferUserInfo` for large payloads (no 100KB limit)
+- ✅ `SimulatorSyncBridge` for dev-only simulator testing
+- ✅ `WatchConnectivitySender` (iOS side) for sending collection data
+
+**Widget Complication**:
+- ✅ 4 complication families: rectangular, circular, corner, inline
+- ✅ Reads from shared SwiftData store
+- ✅ Timeline refresh every 30 minutes
+
+**Testing**:
+- ✅ `InkuWatchTests` target with Swift Testing
+- ✅ Spy pattern: `SpyWatchSessionManager`, `SpyWatchCollectionInteractor`
+- ✅ ViewModel tests (16), Interactor tests (9), Service tests (7)
+
+---
+
 ## Development Roadmap
 
 ### 🎯 Phase 1: Basic Version (v1.0.0) - MVP ✅ COMPLETED
@@ -546,8 +599,9 @@ https://mymanga-acacademy-5607149ebe3d.herokuapp.com
 | **v1.5.0** (Medium) | Week 7 | + Advanced Filters, Grid View | +2 weeks |
 | **v2.0.0** (Advanced) | Week 9 | + Auth, Cloud Sync | +2 weeks |
 | **v3.0.0** (Deluxe) | Week 13 | + Multi-Platform, Widget | +4 weeks |
+| **v4.0.0** (watchOS) | Week 30 | + watchOS Companion, Widget Complications | +2 weeks |
 
-**Total estimated time: 13 weeks** (3+ months for complete deluxe version)
+**Total estimated time: 15 weeks** for complete feature set across all 5 platforms
 
 ---
 
@@ -567,13 +621,14 @@ For each feature, follow this layer-by-layer approach:
 
 - ✅ Project setup and architecture
 - ✅ Git workflow (GITFLOW.md)
-- ✅ Project plan with 4 versions
+- ✅ Project plan with 5 versions
 - ✅ Commit template configured
 - ✅ **v1.0.0 COMPLETED** - MVP with all core features
 - ✅ **v1.5.0 COMPLETED** - Advanced filters and grid view
 - ✅ **v2.0.0 COMPLETED** - Authentication and cloud sync
 - ✅ **v3.0.0 COMPLETED** - Multi-platform and widgets
-- 🎉 **Release Status**: Ready for v3.0.0 tag
+- ✅ **v4.0.0 COMPLETED** - watchOS companion app and complications
+- 🎉 **Release Status**: Ready for v4.0.0 tag
 - 📋 **All Features Completed**:
   - ✅ MangaList with pagination and filters
   - ✅ Search (manga by title, author by name)
@@ -586,11 +641,14 @@ For each feature, follow this layer-by-layer approach:
   - ✅ Profile view with sync controls
   - ✅ Multi-platform support (iOS, iPadOS, macOS, visionOS)
   - ✅ Widget system (Small, Medium, Large, Extra Large)
+  - ✅ watchOS companion app (Now Reading, Collection, Stats)
+  - ✅ Watch complications (4 families)
+  - ✅ WatchConnectivity sync (iPhone ↔ Apple Watch)
   - ✅ iPad adaptive layouts
-  - ✅ InkuUI design system (v1.11.0+)
+  - ✅ InkuUI design system
   - ✅ Spanish/English localization
-  - ✅ Comprehensive test suite
-- 🔄 **Next Step**: Merge feature/multi-platform-widget → develop → main and create v3.0.0 tag
+  - ✅ Comprehensive test suite (5 test targets)
+- 🔄 **Next Step**: Merge feature/watchos-target → develop → main and create v4.0.0 tag
 
 ---
 

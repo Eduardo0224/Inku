@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Eduardo0224/InkuUI",
       "state" : {
-        "revision" : "3237cd94c740415ba985537db85c5bbc68be5e52",
-        "version" : "1.15.1"
+        "revision" : "b8f2051c7d82f2ebaf95f2676a356c83b9430445",
+        "version" : "1.17.2"
       }
     }
   ],

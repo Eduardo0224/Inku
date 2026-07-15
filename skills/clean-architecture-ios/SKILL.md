@@ -1,671 +1,136 @@
-# Clean Architecture for iOS
+---
+name: clean-architecture-ios
+description: >-
+  Clean Architecture for iOS apps with SwiftUI. Four-layer pattern: Models,
+  Interactors (protocol-first), ViewModels (@Observable), and Views. Feature-based
+  folder organization. Use when creating new features, setting up project structure,
+  implementing MVVM with SwiftUI, or user mentions "Clean Architecture", "interactor",
+  "ViewModel", "dependency injection", "feature organization", or "protocol-first".
+user-invocable: true
+when_to_use: |
+  When creating a new feature or setting up feature-based folder structure. When implementing MVVM with SwiftUI, defining Interactor protocols, or setting up dependency injection. When the user mentions "Clean Architecture", "interactor", "ViewModel", "dependency injection", "feature organization", "protocol-first", or "feature-based".
+---
 
-## Description
+## Overview
 
-Clean Architecture pattern for iOS apps using SwiftUI, with 4 distinct layers: Models, Interactors, ViewModels, and Views. This pattern ensures separation of concerns, testability, and maintainability through protocol-first design and dependency injection.
+Implement every iOS feature using four layers with unidirectional dependency flow. Organize code by feature, not by layer. Every Interactor gets a protocol, a production implementation, a Mock (for previews), and a Spy (for tests).
 
-## When to Use
+> **Project-specific settings**: Before applying this skill, check the project's `CLAUDE.md` for:
+> - Minimum deployment target (affects available APIs)
+> - Concurrency settings (Strict Concurrency Checking level)
+> - Naming conventions (Mock vs. Stub, Spy vs. Fake)
+> - Localization pattern (enum name, key format)
+> - Design system package name (if any)
 
-- Building iOS apps with complex business logic
-- Projects requiring high test coverage
-- Teams working on different features simultaneously
-- Apps that need to scale beyond 5-10 screens
-- When UI framework might change (e.g., UIKit → SwiftUI)
+## Instructions
 
-## Architecture Layers
+1. **Start with Models** — pure structs, `Codable` + `Sendable`, no business logic
+2. **Define the Interactor protocol** — all methods the feature needs
+3. **Implement production Interactor** — inject services via initializer with defaults
+4. **Create Mock Interactor** — configurable stub data for SwiftUI previews (same feature folder)
+5. **Create Spy Interactor** — tracking `wasCalled` properties for unit tests (test target only)
+6. **Build the ViewModel** — `@Observable` + `@MainActor`, receives Interactor via `init`
+7. **Build the View** — owns ViewModel via `@State`, delegates all actions to ViewModel
+
+## Rules
+
+### Layer Responsibilities
+
+- **Model** — Pure data. `Identifiable`, `Codable`, `Hashable`, `Sendable`. No imports beyond Foundation. Computed properties for formatting only.
+- **Interactor** — All business logic and data access. Always protocol-first. Never import SwiftUI.
+- **ViewModel** — Presentation logic and state. `@Observable` + `@MainActor`. Mark non-observed dependencies `@ObservationIgnored`. Transform data for display, handle errors into user messages.
+- **View** — UI rendering only. Own ViewModel via `@State`. Pass Interactor to ViewModel in `init`. Delegate all actions to ViewModel. Zero business logic.
+
+### Dependency Injection
+
+- Every layer receives dependencies via initializer with default values
+- View receives optional Interactor protocol: `init(interactor: FooInteractorProtocol = FooInteractor())`
+- ViewModel receives Interactor protocol the same way
+- Interactor receives services (NetworkServiceProtocol, etc.) the same way
+
+### Three Implementations Per Interactor
+
+- **Production** (`[Feature]/Interactor/[Feature]Interactor.swift`) — real logic with real services
+- **Mock** (`[Feature]/Interactor/Mock[Feature]Interactor.swift`) — stub data, configurable error flag, for previews. No `wasCalled` tracking. Lives in app target.
+- **Spy** (`[App]Tests/Shared/Spies/Spy[Feature]Interactor.swift`) — `wasCalled` booleans, `last*` capture properties, `reset()` method. For unit tests only. Annotate with `@MainActor` — never use `@unchecked Sendable`.
+
+### Feature Organization
 
 ```
-┌─────────────────────────────────────────┐
-│              Views (SwiftUI)            │  ← UI only, no logic
-├─────────────────────────────────────────┤
-│        ViewModels (@Observable)         │  ← Presentation logic, state
-├─────────────────────────────────────────┤
-│      Interactors (Protocol-based)       │  ← Business logic, data access
-├─────────────────────────────────────────┤
-│              Models (Structs)           │  ← Pure data, no dependencies
-└─────────────────────────────────────────┘
+Features/[FeatureName]/
+├── Models/                     ← Feature-specific models
+├── Interactor/
+│   ├── Protocols/              ← Interactor protocol
+│   ├── [Feature]Interactor.swift
+│   └── Mock[Feature]Interactor.swift
+├── ViewModel/
+│   └── [Feature]ViewModel.swift
+└── Views/
+    ├── [Feature]View.swift
+    └── Components/             ← Child views used only by this feature
 ```
 
-## Rule 1: Model Layer - Pure Data
-
-**Models are pure Swift structs with no dependencies.**
-
-### Characteristics
-- Conform to `Identifiable`, `Codable`, `Hashable`, `Sendable` as needed
-- No imports beyond Foundation
-- No business logic
-- No dependencies on other layers
-
-### ✅ Correct
-
-```swift
-import Foundation
-
-struct Movie: Identifiable, Codable, Hashable, Sendable {
-    let id: UUID
-    let title: String
-    let overview: String
-    let releaseDate: Date
-    let posterURL: URL?
-    let rating: Double?
-
-    // Computed properties for presentation are OK
-    var formattedRating: String {
-        guard let rating = rating else { return "N/A" }
-        return rating.formatted(.number.precision(.fractionLength(1)))
-    }
-}
-```
-
-### ❌ Incorrect
-
-```swift
-// ❌ Has business logic
-struct Movie {
-    let title: String
-
-    func save() {  // ❌ Business logic belongs in Interactor
-        // saving logic
-    }
-}
-
-// ❌ Imports UIKit/SwiftUI
-import SwiftUI
-
-struct Movie {
-    var color: Color  // ❌ UI-specific type in Model
-}
-```
-
-## Rule 2: Interactor Layer - Business Logic
-
-**Interactors handle all business logic and data access. Always protocol-first with multiple implementations.**
-
-### Implementations Required
-
-| Implementation | Purpose | Location |
-|----------------|---------|----------|
-| **Production** | Real app logic | `Features/{Feature}/Interactor/` |
-| **Mock** | Previews & production testing | `Features/{Feature}/Interactor/` |
-| **Spy** | Unit testing with tracking | `{App}Tests/Shared/Spies/` |
-
-### Protocol Definition
-
-```swift
-// In Features/MovieList/Interactor/Protocols/MovieListInteractorProtocol.swift
-
-protocol MovieListInteractorProtocol: Sendable {
-    func fetchMovies(page: Int, per: Int) async throws -> [Movie]
-    func fetchMovie(id: UUID) async throws -> Movie
-    func saveToFavorites(_ movie: Movie) async throws
-    func deleteFromFavorites(id: UUID) async throws
-}
-```
-
-### Production Implementation
-
-```swift
-// In Features/MovieList/Interactor/MovieListInteractor.swift
-
-final class MovieListInteractor: MovieListInteractorProtocol {
-
-    // MARK: - Private Properties
-
-    private let networkService: NetworkServiceProtocol
-    private let cacheService: CacheServiceProtocol
-
-    // MARK: - Initializers
-
-    init(
-        networkService: NetworkServiceProtocol = NetworkService(),
-        cacheService: CacheServiceProtocol = CacheService()
-    ) {
-        self.networkService = networkService
-        self.cacheService = cacheService
-    }
-
-    // MARK: - Functions
-
-    func fetchMovies(page: Int, per: Int) async throws -> [Movie] {
-        let cacheKey = "movies_\(page)_\(per)"
-
-        if let cached: [Movie] = try? await cacheService.get(key: cacheKey) {
-            return cached
-        }
-
-        let movies: [Movie] = try await networkService.get(
-            endpoint: "/movies",
-            queryItems: [
-                URLQueryItem(name: "page", value: "\(page)"),
-                URLQueryItem(name: "per", value: "\(per)")
-            ]
-        )
-
-        try? await cacheService.set(key: cacheKey, value: movies)
-        return movies
-    }
-
-    func fetchMovie(id: UUID) async throws -> Movie {
-        try await networkService.get(endpoint: "/movies/\(id)")
-    }
-
-    func saveToFavorites(_ movie: Movie) async throws {
-        try await networkService.post(endpoint: "/favorites", body: movie)
-    }
-
-    func deleteFromFavorites(id: UUID) async throws {
-        try await networkService.delete(endpoint: "/favorites/\(id)")
-    }
-}
-```
-
-### Mock Implementation (for Previews)
-
-```swift
-// In Features/MovieList/Interactor/MockMovieListInteractor.swift
-
-final class MockMovieListInteractor: MovieListInteractorProtocol {
-
-    // MARK: - Properties
-
-    var moviesToReturn: [Movie] = []
-    var movieToReturn: Movie?
-    var shouldThrowError = false
-
-    // MARK: - Functions
-
-    func fetchMovies(page: Int, per: Int) async throws -> [Movie] {
-        if shouldThrowError {
-            throw NetworkError.serverError(500)
-        }
-        return moviesToReturn
-    }
-
-    func fetchMovie(id: UUID) async throws -> Movie {
-        if shouldThrowError {
-            throw NetworkError.notFound
-        }
-        guard let movie = movieToReturn ?? moviesToReturn.first(where: { $0.id == id }) else {
-            throw NetworkError.notFound
-        }
-        return movie
-    }
-
-    func saveToFavorites(_ movie: Movie) async throws {
-        if shouldThrowError {
-            throw NetworkError.serverError(500)
-        }
-        // No-op for mock
-    }
-
-    func deleteFromFavorites(id: UUID) async throws {
-        if shouldThrowError {
-            throw NetworkError.serverError(500)
-        }
-        // No-op for mock
-    }
-}
-```
-
-### Spy Implementation (for Unit Tests)
-
-**Location**: `{App}Tests/Shared/Spies/SpyMovieListInteractor.swift`
-
-```swift
-import Testing
-@testable import MyApp
-
-final class SpyMovieListInteractor: MovieListInteractorProtocol, @unchecked Sendable {
-
-    // MARK: - Spy Tracking (wasCalled properties)
-
-    private(set) var fetchMoviesWasCalled = false
-    private(set) var fetchMovieWasCalled = false
-    private(set) var saveToFavoritesWasCalled = false
-    private(set) var deleteFromFavoritesWasCalled = false
-
-    private(set) var lastFetchedMovieId: UUID?
-    private(set) var lastSavedMovie: Movie?
-    private(set) var lastDeletedMovieId: UUID?
-    private(set) var lastFetchMoviesPage: Int?
-    private(set) var lastFetchMoviesPer: Int?
-
-    // MARK: - Stub Data
-
-    var moviesToReturn: [Movie] = []
-    var movieToReturn: Movie?
-    var shouldThrowError = false
-    var errorToThrow: Error = NetworkError.serverError(500)
-
-    // MARK: - Functions
-
-    func fetchMovies(page: Int, per: Int) async throws -> [Movie] {
-        fetchMoviesWasCalled = true
-        lastFetchMoviesPage = page
-        lastFetchMoviesPer = per
-
-        if shouldThrowError {
-            throw errorToThrow
-        }
-        return moviesToReturn
-    }
-
-    func fetchMovie(id: UUID) async throws -> Movie {
-        fetchMovieWasCalled = true
-        lastFetchedMovieId = id
-
-        if shouldThrowError {
-            throw errorToThrow
-        }
-        guard let movie = movieToReturn ?? moviesToReturn.first(where: { $0.id == id }) else {
-            throw NetworkError.notFound
-        }
-        return movie
-    }
-
-    func saveToFavorites(_ movie: Movie) async throws {
-        saveToFavoritesWasCalled = true
-        lastSavedMovie = movie
-
-        if shouldThrowError {
-            throw errorToThrow
-        }
-        moviesToReturn.append(movie)
-    }
-
-    func deleteFromFavorites(id: UUID) async throws {
-        deleteFromFavoritesWasCalled = true
-        lastDeletedMovieId = id
-
-        if shouldThrowError {
-            throw errorToThrow
-        }
-        moviesToReturn.removeAll { $0.id == id }
-    }
-
-    // MARK: - Test Helpers
-
-    func reset() {
-        fetchMoviesWasCalled = false
-        fetchMovieWasCalled = false
-        saveToFavoritesWasCalled = false
-        deleteFromFavoritesWasCalled = false
-        lastFetchedMovieId = nil
-        lastSavedMovie = nil
-        lastDeletedMovieId = nil
-        lastFetchMoviesPage = nil
-        lastFetchMoviesPer = nil
-        moviesToReturn = []
-        movieToReturn = nil
-        shouldThrowError = false
-    }
-}
-```
-
-### Key Differences: Mock vs Spy
-
-| Aspect | Mock | Spy |
-|--------|------|-----|
-| **Location** | `Features/{Feature}/Interactor/` | `{App}Tests/Shared/Spies/` |
-| **Purpose** | Previews, manual testing | Unit tests with assertions |
-| **Tracking** | No tracking | Has `wasCalled` booleans |
-| **Import** | No test imports | `import Testing`, `@testable` |
-| **Methods** | Minimal implementation | Full tracking + stub data |
-
-## Rule 3: ViewModel Layer - Presentation Logic
-
-**ViewModels transform data for presentation and handle user interactions. Use `@Observable` macro.**
-
-### Characteristics
-- Marked with `@Observable` and `@MainActor`
-- Receives Interactor via initializer (DI)
-- Non-observed properties use `@ObservationIgnored`
-- Handles errors with user-friendly messages
-
-### ✅ Correct
-
-```swift
-import Observation
-
-@Observable
-@MainActor
-final class MovieListViewModel {
-
-    // MARK: - Private Properties
-
-    @ObservationIgnored
-    private let interactor: MovieListInteractorProtocol
-
-    @ObservationIgnored
-    private var currentPage = 1
-
-    // MARK: - Properties
-
-    var movies: [Movie] = []
-    var isLoading = false
-    var errorMessage: String?
-    var searchText = ""
-
-    var filteredMovies: [Movie] {
-        guard !searchText.isEmpty else { return movies }
-        return movies.filter {
-            $0.title.localizedCaseInsensitiveContains(searchText)
-        }
-    }
-
-    // MARK: - Initializers
-
-    init(interactor: MovieListInteractorProtocol = MovieListInteractor()) {
-        self.interactor = interactor
-    }
-
-    // MARK: - Functions
-
-    func loadMovies() async {
-        isLoading = true
-        defer { isLoading = false }
-
-        do {
-            movies = try await interactor.fetchMovies(page: currentPage, per: 20)
-            errorMessage = nil
-        } catch {
-            handleError(error)
-        }
-    }
-
-    func deleteMovie(_ movie: Movie) async {
-        do {
-            try await interactor.deleteFromFavorites(id: movie.id)
-            movies.removeAll { $0.id == movie.id }
-        } catch {
-            handleError(error)
-        }
-    }
-
-    // MARK: - Private Functions
-
-    private func handleError(_ error: Error) {
-        if let networkError = error as? NetworkError {
-            errorMessage = networkError.userMessage
-        } else {
-            errorMessage = error.localizedDescription
-        }
-    }
-}
-```
-
-## Rule 4: View Layer - UI Only
-
-**Views display data and delegate actions to ViewModels. Zero business logic.**
-
-### Characteristics
-- Uses `@State` to own ViewModel
-- Passes Interactor to ViewModel via initializer (DI)
-- Delegates all actions to ViewModel
-- Minimal logic (only UI-related decisions)
-
-### ✅ Correct
-
-```swift
-struct MovieListView: View {
-
-    // MARK: - States
-
-    @State private var viewModel: MovieListViewModel
-
-    // MARK: - Body
-
-    var body: some View {
-        NavigationStack {
-            contentView
-                .navigationTitle("Movies")
-                .searchable(text: $viewModel.searchText)
-        }
-        .task {
-            await viewModel.loadMovies()
-        }
-        .refreshable {
-            await viewModel.loadMovies()
-        }
-    }
-
-    // MARK: - Initializers
-
-    init(interactor: MovieListInteractorProtocol = MovieListInteractor()) {
-        self.viewModel = MovieListViewModel(interactor: interactor)
-    }
-
-    // MARK: - Private Views
-
-    @ViewBuilder
-    private var contentView: some View {
-        if viewModel.isLoading && viewModel.movies.isEmpty {
-            ProgressView()
-        } else if let error = viewModel.errorMessage {
-            ErrorView(message: error) {
-                Task { await viewModel.loadMovies() }
-            }
-        } else {
-            moviesList
-        }
-    }
-
-    @ViewBuilder
-    private var moviesList: some View {
-        List(viewModel.filteredMovies) { movie in
-            NavigationLink(value: movie) {
-                MovieRowView(movie: movie)
-            }
-        }
-        .navigationDestination(for: Movie.self) { movie in
-            MovieDetailView(movieId: movie.id)
-        }
-    }
-}
-```
-
-## Rule 5: Dependency Injection Pattern
-
-**Always inject dependencies through initializers with default values.**
-
-### View → ViewModel → Interactor Flow
-
-```swift
-// 1. View owns ViewModel
-struct MovieListView: View {
-    @State private var viewModel: MovieListViewModel
-
-    init(interactor: MovieListInteractorProtocol = MovieListInteractor()) {
-        self.viewModel = MovieListViewModel(interactor: interactor)
-    }
-}
-
-// 2. ViewModel receives Interactor
-@Observable
-@MainActor
-final class MovieListViewModel {
-    @ObservationIgnored
-    private let interactor: MovieListInteractorProtocol
-
-    init(interactor: MovieListInteractorProtocol = MovieListInteractor()) {
-        self.interactor = interactor
-    }
-}
-
-// 3. Interactor receives Services
-final class MovieListInteractor: MovieListInteractorProtocol {
-    private let networkService: NetworkServiceProtocol
-    private let cacheService: CacheServiceProtocol
-
-    init(
-        networkService: NetworkServiceProtocol = NetworkService(),
-        cacheService: CacheServiceProtocol = CacheService()
-    ) {
-        self.networkService = networkService
-        self.cacheService = cacheService
-    }
-}
-```
-
-### Testing with DI
-
-```swift
-// In unit tests
-@Test("Load movies successfully")
-@MainActor
-func loadMoviesSuccess() async {
-    // Given
-    let spyInteractor = SpyMovieListInteractor()
-    spyInteractor.moviesToReturn = [Movie.sample]
-    let viewModel = MovieListViewModel(interactor: spyInteractor)
-
-    // When
-    await viewModel.loadMovies()
-
-    // Then
-    #expect(spy Interactor.fetchMoviesWasCalled == true)
-    #expect(viewModel.movies.count == 1)
-}
-
-// In SwiftUI previews
-#Preview("Movie List") {
-    let mockInteractor = MockMovieListInteractor()
-    mockInteractor.moviesToReturn = Movie.samples
-
-    return NavigationStack {
-        MovieListView(interactor: mockInteractor)
-    }
-}
-```
-
-## Rule 6: Feature-based Organization
-
-**Organize code by feature, not by layer.**
-
-### ✅ Correct (Feature-based)
-
-```
-Features/
-└── MovieList/
-    ├── Models/
-    │   └── MovieListFilter.swift
-    ├── Interactor/
-    │   ├── Protocols/
-    │   │   └── MovieListInteractorProtocol.swift
-    │   ├── MovieListInteractor.swift
-    │   └── MockMovieListInteractor.swift
-    ├── ViewModel/
-    │   └── MovieListViewModel.swift
-    └── Views/
-        ├── MovieListView.swift
-        └── Components/
-            ├── MovieRowView.swift
-            └── FilterSheetView.swift
-```
-
-### ❌ Incorrect (Layer-based)
-
-```
-Models/
-  └── Movie.swift
-ViewModels/
-  └── MovieListViewModel.swift
-Views/
-  └── MovieListView.swift
-Interactors/
-  └── MovieListInteractor.swift
-```
-
-**Why feature-based is better:**
-- Scales better (easy to find "what does MovieList do?")
-- Self-contained features
-- Supports team collaboration (different features, different developers)
-- Easier to remove or refactor entire features
-
-## Checklist
-
-When implementing a new feature with Clean Architecture:
-
-- [ ] Define Models as pure structs (`Identifiable`, `Codable`, `Sendable`)
-- [ ] Create Interactor protocol with all methods
-- [ ] Implement Production Interactor with real logic
-- [ ] Implement Mock Interactor for previews
-- [ ] Implement Spy Interactor in test target (if writing tests)
-- [ ] Create ViewModel with `@Observable` and `@MainActor`
-- [ ] ViewModel receives Interactor via initializer
-- [ ] Mark non-observed ViewModel properties with `@ObservationIgnored`
-- [ ] View owns ViewModel with `@State`
+### MARK Comment Order
+
+In every Swift file, follow this exact order (customize in CLAUDE.md if different):
+
+1. `// MARK: - Private Properties`
+2. `// MARK: - States`
+3. `// MARK: - Bindings`
+4. `// MARK: - Environment`
+5. `// MARK: - Properties`
+6. `// MARK: - Body` (Views only)
+7. `// MARK: - Initializers`
+8. `// MARK: - Private Views` (Views only)
+9. `// MARK: - Private Functions`
+10. `// MARK: - Functions`
+
+### Concurrency Safety
+
+See also: `skills/swift-concurrency/SKILL.md` for detailed concurrency rules.
+
+- **Never** use `@unchecked Sendable` — it bypasses compiler verification
+- Use `@MainActor` on Spies — mutable test state is protected by the main actor
+- **Never** write `Task { @MainActor in ... }` inside a `@MainActor` class — the task inherits the actor context
+- The compiler settings should be: Strict Concurrency Checking = **Complete** (or whatever the project's CLAUDE.md specifies)
+- Every type crossing an isolation boundary must be `Sendable`
+
+### Dos and Don'ts
+
+- **DO** inject dependencies via protocol-typed initializer parameters with defaults
+- **DO** make every Interactor conform to a protocol before writing the implementation
+- **DO** use `@ObservationIgnored` for non-reactive properties in `@Observable` classes
+- **DO** keep feature folders self-contained — easy to remove or refactor
+- **DON'T** put business logic in Views — delegate to ViewModel
+- **DON'T** import SwiftUI in Interactors or Models
+- **DON'T** call network/API directly from Views or ViewModels — always through an Interactor
+- **DON'T** call a test-only class "Mock" — Mock = previews, Spy = tests
+- **DON'T** use `@unchecked Sendable` — it silences the compiler instead of fixing the concurrency issue
+
+## Verification Checklist
+
+- [ ] Models are pure structs with no business logic
+- [ ] Interactor protocol defined before implementation
+- [ ] Production, Mock, and Spy implementations all exist
+- [ ] ViewModel uses `@Observable` and `@MainActor`
+- [ ] Non-observed ViewModel properties marked `@ObservationIgnored`
+- [ ] View owns ViewModel via `@State`
 - [ ] View passes Interactor to ViewModel in `init`
 - [ ] All async operations use `async/await`
-- [ ] All dependencies injected through initializers with defaults
 - [ ] Feature organized in feature-based folder structure
-- [ ] No business logic in Views (delegate to ViewModel)
-- [ ] No UI code in Models or Interactors
+- [ ] Mock is in feature folder (app target), Spy is in test target
+- [ ] MARK comments follow the project's defined order
 
 ## Common Mistakes
 
-### ❌ Mistake 1: Business Logic in Views
+- **Business logic in Views** → Move to ViewModel via Interactor
+- **Missing protocol** → Always define the Interactor protocol first
+- **Hardcoded dependencies** → Inject via initializer with protocol type and default value
+- **Spy in production code** → Spy lives in test target; Mock lives in feature folder for previews
+- **ViewModel not @MainActor** → ViewModels MUST be `@MainActor` — published properties update UI on main thread
+- **Redundant `Task { @MainActor in }`** → Inside a `@MainActor` class, `Task {}` already inherits the actor. The annotation is noise that signals misunderstanding of actor isolation.
 
-```swift
-// ❌ BAD: View has business logic
-struct MovieListView: View {
-    @State private var movies: [Movie] = []
+## References
 
-    var body: some View {
-        List(movies) { movie in
-            Text(movie.title)
-        }
-        .task {
-            // ❌ Network call directly in View
-            movies = try! await NetworkService().get(endpoint: "/movies")
-        }
-    }
-}
-```
-
-**Fix**: Move to ViewModel via Interactor
-
-### ❌ Mistake 2: Wrong Implementation Names
-
-```swift
-// ❌ BAD: Called "Spy" but in production code
-final class SpyMovieInteractor: MovieInteractorProtocol {
-    // Used for previews
-}
-```
-
-**Fix**: Use `MockMovieInteractor` for previews, `SpyMovieInteractor` only in tests
-
-### ❌ Mistake 3: Missing Protocol
-
-```swift
-// ❌ BAD: Concrete class without protocol
-final class MovieInteractor {
-    func fetchMovies() async throws -> [Movie] { }
-}
-```
-
-**Fix**: Always create protocol first
-
-### ❌ Mistake 4: Hardcoded Dependencies
-
-```swift
-// ❌ BAD: Hardcoded NetworkService
-final class MovieInteractor {
-    private let networkService = NetworkService()  // ❌ Can't inject
-}
-```
-
-**Fix**: Inject via initializer with protocol
-
-## Examples
-
-See the Clean Architecture implementation in:
-- MangaList feature (complete example)
-- Search feature (search-specific patterns)
-- Collection feature (SwiftData integration)
-
-## Related Skills
-
-- `skills/swiftui-observable/SKILL.md` - ViewModel patterns with `@Observable`
-- `skills/swift-testing-patterns/SKILL.md` - Testing with Spy pattern
+- `${CLAUDE_SKILL_DIR}/references/examples.md` — Full code examples: Model, Interactor (Prod/Mock/Spy), ViewModel, View, DI flow
+- `skills/swift-concurrency/SKILL.md` — Detailed concurrency patterns and safety rules

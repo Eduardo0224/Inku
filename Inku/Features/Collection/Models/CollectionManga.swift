@@ -37,6 +37,7 @@ final class CollectionManga: Identifiable {
 
     // MARK: - Metadata
 
+    var score: Double?
     var dateAdded: Date
     var lastModified: Date
 
@@ -121,6 +122,7 @@ extension CollectionManga {
             coverImageURL: manga.mainPicture?.replacingOccurrences(of: "\"", with: ""),
             totalVolumes: manga.volumes
         )
+        self.score = manga.score
     }
 
     func updateModifiedDate() {

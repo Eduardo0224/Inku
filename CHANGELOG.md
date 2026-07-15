@@ -11,6 +11,160 @@ Nothing pending for next release.
 
 ---
 
+## [4.0.0] - 2026-07-14
+
+### ⌚ watchOS Companion App — InkuWatch
+
+**Inku v4.0.0** introduces a full watchOS companion app, enabling users to browse their manga collection, track reading progress, and view stats directly from their Apple Watch. The watch app syncs with the iPhone via WatchConnectivity and uses SwiftData for local persistence.
+
+### Added
+
+#### watchOS Companion App
+
+- **InkuWatch Target** — Full watchOS app with Clean Architecture
+  - TabView with 3 tabs: Now Reading, Collection, Stats
+  - NavigationStack-based navigation with carousel list style
+  - SwiftData local persistence with `ModelContainer` (no CloudKit)
+  - Protocol-first Interactors with dependency injection
+  - `@Observable @MainActor` ViewModel pattern
+  - Files: 16 Swift files in `InkuWatch/`
+
+- **Now Reading View** — Quick access to currently-reading manga
+  - Carousel list with cover images and progress bars
+  - Tap to view detail with full manga information
+  - Empty state with hint to start reading from collection
+
+- **Collection View** — Full manga collection browser
+  - Sorted by most recently added
+  - NavigationLink to detail view
+  - Empty state for new users
+
+- **Manga Detail View** — Comprehensive manga information
+  - Blurred cover image background with material overlay
+  - Japanese title, score, status badges
+  - Reading progress bar with volume count
+  - Current reading volume indicator
+  - Graceful fallback for missing cover images
+
+- **Stats View** — Collection analytics at a glance
+  - Total mangas, volumes owned, completed count
+  - Currently reading count, average progress, completion rate
+  - Uses `InkuStatCard` with SF Symbol icons and accent colors
+
+- **WatchMangaDisplayItem** — Value-type display model
+  - Decouples views from SwiftData `@Model` entities
+  - Enables previews without `ModelContainer`
+  - Computed properties: `readingProgress`, `isCurrentlyReading`, `isComplete`
+  - Preview data via `.watchPreview` static extension
+
+#### Watch Connectivity Sync
+
+- **WatchSessionManager** — WCSession wrapper (watch side)
+  - Receives sync payloads via `transferUserInfo` (no 100KB limit)
+  - Handles `sendMessage` for full sync requests
+  - `SessionDelegate` pattern with `@unchecked Sendable` justification
+  - Proper `@MainActor` hops from WCSession background queue
+
+- **SimulatorSyncBridge** — Dev-only simulator sync
+  - Reads from `/tmp/inku-simulator-sync/collection.json`
+  - Guarded by `#if targetEnvironment(simulator)`
+  - Enables full sync testing without physical devices
+
+- **WatchConnectivitySender** (iOS side) — Sends collection to watch
+  - Encodes manga collection as JSON with resized cover images (200px, JPEG 0.7)
+  - Uses `WCSession.transferUserInfo` for large payloads
+  - `SimulatorSyncWriter` for simulator development
+
+#### Watch Widget Extension
+
+- **InkuWatchWidget** — Complication support
+  - 4 complication families: rectangular, circular, corner, inline
+  - Reads from shared `ModelConfiguration("InkuWatch")` store
+  - Timeline refreshes every 30 minutes + on sync
+  - Text-only fallbacks (no emoji for consistent rendering)
+
+#### Architecture & Code Quality
+
+- **Swift Concurrency Skill** — New reusable skill
+  - Actor inheritance rules, Sendable patterns, Task lifecycle
+  - System callback → @MainActor hop idiomatic pattern
+  - `references/examples.md` with comprehensive code samples
+
+- **Skill Refactoring** — Modular skills with references
+  - Split large SKILL.md files into core docs + `references/examples.md`
+  - Added `swift-concurrency` skill to CLAUDE.md table
+  - Cross-references between clean-architecture-ios and swift-concurrency
+
+- **Comprehensive Audits** — 3-agent audit pipeline
+  - Architecture validation, code review, cross-reference validation
+  - 15 fixes applied across all severity levels
+  - Zero blockers, zero warnings remaining
+
+#### Documentation
+
+- **CLAUDE.md** — Updated for watchOS and SwiftData
+  - InkuWatch section with folder structure and key differences
+  - SwiftData + multi-platform info in Quick Reference
+  - Removed dead references (03-code-style.md, 07-ui-design.md, 09-inku-ui.md)
+  - Fixed Spy placement in project structure diagram
+  - Added `multi-platform-architecture.md` spec reference
+
+- **PROJECT_PLAN.md** — Phase 5: watchOS Companion
+  - Full feature breakdown and development roadmap
+  - Technology stack updated for multi-platform
+
+### Changed
+
+#### Localization
+
+- **Watch-specific keys** — Added to `Localizable.xcstrings`
+  - `WATCH_*` keys: collection, now reading, stats, status labels
+  - `WATCH_COMPLICATION_*`, `WATCH_VOLUME_FORMAT`
+  - Full Spanish/English coverage
+
+- **Shared keys** — iOS `L10n.Collection.Stats.*` reused by watch Stats view
+
+#### InkuUI
+
+- **InkuStatCard** — Added `.compact` size for watchOS
+  - Reduced padding and font sizes optimized for small screens
+  - Same API surface as iOS/macOS variants
+
+### Fixed
+
+- **Preview crashes** — Removed `NavigationStack` from watchOS `#Preview` blocks
+  - watchOS preview engine crash (`NavigationStackHostingControllerCache`)
+  - Views render correctly without NavigationStack wrapper
+  - `NavigationLink` displays as plain row, `.navigationTitle()` silently ignored
+
+- **Silent sync errors** — `handleIncomingSync` now sets `errorMessage`
+- **`.task` misuse** — Replaced with `.onAppear` for synchronous startup
+- **Spy improvements** — Removed dead code, added `last*` capture properties
+- **MARK comment ordering** — Fixed across InkuWatch views and ViewModel
+- **xcstrings auto-generated keys** — Removed 7 auto-generated entries
+- **Header formatting** — Fixed missing newline in `WatchConnectivitySender.swift`
+
+### Testing
+
+- **InkuWatchTests** — watchOS unit test bundle (Swift Testing)
+  - `WatchCollectionViewModel` tests (16 tests): CRUD, stats, error handling
+  - `WatchCollectionInteractor` tests (9 tests): fetch, sync, callbacks
+  - `WatchSessionManager` tests (7 tests): callback, state, nil safety
+  - Spy pattern: `SpyWatchSessionManager`, `SpyWatchCollectionInteractor`
+
+### Platform Support
+
+- iOS 26.2+ (iPhone/iPad)
+- macOS 15.0+ (Mac)
+- visionOS 2.0+ (Apple Vision Pro)
+- **watchOS 26.2+ (Apple Watch)** ← New
+
+### Breaking Changes
+
+**None** — v4.0.0 is fully backward compatible. The watchOS app is a new companion target that does not affect existing iOS, macOS, or visionOS functionality.
+
+---
+
 ## [3.0.1] - 2026-03-05
 
 ### 🔒 Security & Performance Improvements
@@ -1116,12 +1270,16 @@ The Minimum Viable Product is complete with all required features:
 - ✅ Spanish/English localization
 - ✅ Professional design system
 
-### Next Versions (Planned)
+### Version History
 
-- **v1.1.x**: Bug fixes and minor improvements
-- **v1.5.0**: Advanced filters and grid view (Medium version)
-- **v2.0.0**: Authentication and cloud sync (Advanced version)
-- **v3.0.0**: Multi-platform and widgets (Deluxe version)
+All planned versions have been released:
+
+- ✅ **v1.0.0** — MVP (browse, search, local collection)
+- ✅ **v1.5.0** — Advanced filters and grid view
+- ✅ **v2.0.0** — Authentication and cloud sync
+- ✅ **v3.0.0** — Multi-platform and widgets
+- ✅ **v3.0.1** — Security & performance improvements
+- ✅ **v4.0.0** — watchOS companion app
 
 ### Change Categories
 
@@ -1136,9 +1294,18 @@ The Minimum Viable Product is complete with all required features:
 
 **Project**: Inku - Manga Collection Management
 **Repository**: https://github.com/Eduardo0224/Inku
-**Target Platform**: iOS 18.6+ / iPadOS 18.6+
+**Target Platforms**: iOS 18.6+ / iPadOS 18.6+ / macOS 15.0+ / visionOS 2.0+ / watchOS 26.2+
 **Language**: Swift 6
 **UI Framework**: SwiftUI + Observation
 **Architecture**: Clean Architecture (4 layers)
 **Testing**: Swift Testing framework
 **Localization**: Spanish & English
+
+[Unreleased]: https://github.com/Eduardo0224/Inku/compare/v4.0.0...HEAD
+[4.0.0]: https://github.com/Eduardo0224/Inku/compare/v3.0.1...v4.0.0
+[3.0.1]: https://github.com/Eduardo0224/Inku/compare/v3.0.0...v3.0.1
+[3.0.0]: https://github.com/Eduardo0224/Inku/compare/v2.0.0...v3.0.0
+[2.0.0]: https://github.com/Eduardo0224/Inku/compare/v1.5.0...v2.0.0
+[1.5.0]: https://github.com/Eduardo0224/Inku/compare/v1.0.0...v1.5.0
+[1.0.0]: https://github.com/Eduardo0224/Inku/compare/v0.1.0...v1.0.0
+[0.1.0]: https://github.com/Eduardo0224/Inku/releases/tag/v0.1.0
